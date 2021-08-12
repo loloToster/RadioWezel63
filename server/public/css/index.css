@@ -1,0 +1,64 @@
+:root {
+    --song-padding: 10px
+}
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+#currentSong {
+    width: auto;
+    padding-bottom: 100%;
+    position: relative;
+    background-color: #2980b9;
+}
+
+#songContainer {
+    width: auto;
+}
+
+.song {
+    width: auto;
+    padding: var(--song-padding);
+    font-size: x-large;
+}
+
+.song:nth-child(even) {
+    background-color: lightskyblue;
+}
+
+.song:nth-child(odd) {
+    background-color: lightseagreen;
+}
+
+.songContent {
+    width: calc(auto - var(--song-padding) * 2);
+    position: relative;
+    height: fit-content;
+}
+
+.upvote {
+    position: absolute;
+    width: 50px;
+    height: 100%;
+    max-height: 50px;
+    background-color: darkmagenta;
+    right: 0;
+    top: 0;
+    text-align: center;
+}
+
+#addSongButton {
+    position: fixed;
+    bottom: 0;
+    display: block;
+    width: 80px;
+    height: 80px;
+    background-color: lime;
+    position: fixed;
+    float: left;
+    left: 20px;
+    bottom: 20px;
+    border-radius: 50%;
+}

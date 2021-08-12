@@ -1,0 +1,13 @@
+body {
+    margin: 0px;
+    padding: 0px;
+    font-family: Arial;
+    background-color: #4f4f4f;
+}
+
+#logo {
+    width: auto;
+    padding: 10px;
+    background-color: darkgray;
+    font-size: xx-large;
+}
