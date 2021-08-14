@@ -4,12 +4,10 @@ document.getElementById("submit").addEventListener("click", () => {
         console.log("Empty")
         return
     }
+    value = encodeURIComponent(value)
     console.log("Submitting: " + value)
     fetch("/submit/" + value).then(response => {
         console.log(response)
-        return response.json()
-    }).then(data => {
-        console.log(data)
         window.location.href = "/"
     })
 })

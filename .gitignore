@@ -1,3 +1,4 @@
 .vscode/
 testowy/
 node_modules/
+.env
