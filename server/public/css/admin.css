@@ -1,0 +1,14 @@
+.button {
+    margin-top: 10px;
+    width: 50%;
+    height: 100px;
+    float: left;
+}
+
+#deny {
+    background-color: red;
+}
+
+#accept {
+    background-color: lime;
+}

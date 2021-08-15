@@ -2,3 +2,5 @@
 testowy/
 node_modules/
 .env
+secrets.py
+__pycache__/

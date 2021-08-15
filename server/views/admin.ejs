@@ -6,8 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/admin.css">
     <script src="https://cdn.socket.io/4.1.3/socket.io.min.js"></script>
     <script defer src="/javascript/admin.js"></script>
+    <script defer src="/javascript/reconnection.js"></script>
     <title>RadioWęzeł</title>
 </head>
 
@@ -15,7 +17,7 @@
     <div id="logo">RadioWęzeł</div>
     <div id="songContainer">
         <% submitQueue.forEach(video=> { %>
-            <div class="song">
+            <div data-videoid="<%= video.id %>" class="song">
                 <div class="songContent">
                     <div>
                         <%= video.title %>
@@ -24,6 +26,11 @@
             </div>
             <%}) %>
     </div>
+    <!--<div id="buttons">
+        <div id="deny" class="button"></div>
+        <div id="accept" class="button"></div>
+        <div style="clear:both"></div>
+    </div>-->
 </body>
 
 </html>

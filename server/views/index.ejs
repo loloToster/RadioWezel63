@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/index.css">
     <script src="https://cdn.socket.io/4.1.3/socket.io.min.js"></script>
     <script defer src="/javascript/index.js"></script>
+    <script defer src="/javascript/reconnection.js"></script>
     <title>RadioWęzeł</title>
 </head>
 
@@ -17,14 +18,25 @@
         <input type="range" disabled>
     </div>
     <div id="songContainer">
-        <div class="song">
-            <div class="songContent">
-                <div>Title</div>
-                <div class="upvote">^</div>
+        <% votingQueue.forEach(voteElement=> { %>
+            <div class="song">
+                <div class="songContent">
+                    <div>
+                        <%= voteElement.video.title %>
+                    </div>
+                    <div data-videoid="<%= voteElement.video.id %>" class="upvote">^</div>
+                </div>
             </div>
-        </div>
+            <%}) %>
     </div>
     <div id="addSongButton"><a href="submit"><img src="images/plus.png"></a></div>
+    <!--
+    <div class="song">
+        <div class="songContent">
+            <div>Title</div>
+            <div class="upvote">^</div>
+        </div>
+    </div> -->
 </body>
 
 </html>

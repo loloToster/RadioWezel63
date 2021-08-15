@@ -34,3 +34,7 @@ input {
 #submit {
     background-color: lime;
 }
+
+img {
+    width: 100%;
+}
