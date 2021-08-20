@@ -1,8 +1,13 @@
-const socket = io()
+const DEF_YT_URL = "https://www.youtube.com/watch?v="
+const socket = io({
+    auth: {
+        role: "admin",
+        key: "-"
+    }
+})
 
 socket.on("connect", () => {
     console.log("connected")
-    socket.emit("joinRoom", "admin")
 })
 
 function createSongObject(video) {
@@ -12,7 +17,10 @@ function createSongObject(video) {
     let songContent = document.createElement("div")
     songContent.setAttribute("class", "songContent")
     let titleDiv = document.createElement("div")
-    titleDiv.innerText = video.title
+    let href = document.createElement("a")
+    href.setAttribute("target", "_blank")
+    href.innerText = video.title
+    titleDiv.appendChild(href)
     songContent.appendChild(titleDiv)
     object.appendChild(songContent)
     return object

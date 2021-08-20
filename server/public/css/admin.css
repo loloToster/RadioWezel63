@@ -5,6 +5,10 @@
     float: left;
 }
 
+#link {
+    background-color: lightblue;
+}
+
 #deny {
     background-color: red;
 }

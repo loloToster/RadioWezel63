@@ -11,18 +11,27 @@ document.getElementById("submit").addEventListener("click", () => {
         .then(response => response.json())
         .then(data => {
             console.log(data)
+            errorDiv = document.getElementById("error")
             switch (data.code) {
                 case "success":
                     onSuccess(data)
-                    break;
+                    break
 
                 case "toLong":
-                    document.getElementById("error").innerText = "Za długi film :("
+                    errorDiv.innerText = "Za długi film :("
                     input.value = ""
-                    break;
+                    break
+
+                case "alreadySubmitted":
+                    onSuccess(data)
+                    break
+
+                case "noVideoFound":
+                    errorDiv.innerText = "Nie znalazłem takiego video :("
+                    input.value = ""
 
                 default:
-                    break;
+                    break
             }
         })
 })

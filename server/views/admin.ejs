@@ -16,11 +16,13 @@
 <body>
     <div id="logo">RadioWęzeł</div>
     <div id="songContainer">
-        <% submitQueue.forEach(video=> { %>
+        <% submitQueue.forEach((video, index)=> { %>
             <div data-videoid="<%= video.id %>" class="song">
                 <div class="songContent">
                     <div>
-                        <%= video.title %>
+                        <a target="_blank">
+                            <%= video.title %>
+                        </a>
                     </div>
                 </div>
             </div>

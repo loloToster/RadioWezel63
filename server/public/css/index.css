@@ -9,9 +9,17 @@ img {
 
 #currentSong {
     width: auto;
-    padding-bottom: 100%;
-    position: relative;
     background-color: #2980b9;
+    padding: 20px;
+}
+
+#thumbnail {
+    width: 100%;
+    border-radius: 10px;
+}
+
+input {
+    width: 100%;
 }
 
 #songContainer {

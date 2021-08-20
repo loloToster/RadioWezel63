@@ -15,14 +15,18 @@
 <body>
     <div id="logo">RadioWęzeł</div>
     <div id="currentSong">
-        <input type="range" disabled>
+        <img id="thumbnail" src="https://i.ytimg.com/vi/qP-7GNoDJ5c/hqdefault.jpg">
+        <div style="height: 20px;width: 1px;"></div>
+        <input min="0" max="100" type="range" disabled>
     </div>
     <div id="songContainer">
         <% votingQueue.forEach(voteElement=> { %>
             <div class="song">
                 <div class="songContent">
                     <div>
-                        <%= voteElement.video.title %>
+                        <a href="<%= 'https://www.youtube.com/watch?v=' + voteElement.video.id %> " target="_blank">
+                            <%= voteElement.video.title %>
+                        </a>
                     </div>
                     <div data-videoid="<%= voteElement.video.id %>" class="upvote">^</div>
                 </div>

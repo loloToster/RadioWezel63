@@ -1,3 +1,4 @@
+const DEF_YT_URL = "https://www.youtube.com/watch?v="
 const socket = io()
 
 socket.on("connect", () => {
@@ -15,12 +16,15 @@ function createSongObject(video) {
     songContent.setAttribute("class", "songContent")
     object.appendChild(songContent)
     let title = document.createElement("div")
-    title.innerText = video.title
-    title.setAttribute("href", video.url)
+    let href = document.createElement("a")
+    href.setAttribute("href", DEF_YT_URL + video.id)
+    href.setAttribute("target", "_blank")
+    href.innerText = video.title
+    title.appendChild(href)
     songContent.appendChild(title)
     let upvote = document.createElement("div")
     upvote.setAttribute("class", "upvote")
-    upvote.setAttribute("data-videoid", upvote)
+    upvote.setAttribute("data-videoid", video.id)
     upvote.innerText = "^"
     upvote.addEventListener("click", event => onVote(video.id))
     songContent.appendChild(upvote)
@@ -28,7 +32,16 @@ function createSongObject(video) {
 }
 
 function onVote(id) {
-    console.log({ id })
+    id = encodeURIComponent(id)
+    fetch("/vote/" + id)
+        .then(response => response.text())
+        .then(data => {
+            console.log(data)
+            let button = document.querySelector(`[data-videoid='${id}']`)
+            button.innerText = data
+            let clone = button.cloneNode(true)
+            button.parentNode.replaceChild(clone, button)
+        })
 }
 
 socket.on("updateVotingQueue", voteElement => {
