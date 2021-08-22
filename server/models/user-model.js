@@ -6,6 +6,8 @@ const userSchema = new Schema({
     googleId: String,
     email: String,
     thumbnail: String,
+    role: { type: String, default: "user" },
+    votes: { type: Array, default: [] },
     notes: { type: Number, default: 30 }
 })
 
