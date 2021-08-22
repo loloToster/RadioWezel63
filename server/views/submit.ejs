@@ -5,22 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/submit.css">
-    <script defer src="/javascript/submit.js"></script>
+    <script defer src="/js/submit.js"></script>
     <title>Document</title>
 </head>
 
 <body>
-    <div id="logo">RadioWęzeł</div>
-    <div id="centerScreen">
-        <input type="text">
-        <div>
-            <a href="/">
-                <div class="button" id="exit"></div>
-            </a>
-            <div class="button" id="submit"></div>
+    <%- include('partials/header.ejs') %>
+        <div id="centerScreen">
+            <input type="text">
+            <div>
+                <a href="/">
+                    <div class="button" id="exit"></div>
+                </a>
+                <div class="button" id="submit"></div>
+            </div>
+            <div id="error"></div>
         </div>
-        <div id="error"></div>
-    </div>
 </body>
 
 </html>

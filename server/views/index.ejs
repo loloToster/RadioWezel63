@@ -7,34 +7,34 @@
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/index.css">
     <script src="https://cdn.socket.io/4.1.3/socket.io.min.js"></script>
-    <script defer src="/javascript/index.js"></script>
-    <script defer src="/javascript/reconnection.js"></script>
+    <script defer src="/js/index.js"></script>
+    <script defer src="/js/reconnection.js"></script>
     <title>RadioWęzeł</title>
 </head>
 
 <body>
-    <div id="logo">RadioWęzeł</div>
-    <div id="currentSong">
-        <img id="thumbnail" src="https://i.ytimg.com/vi/qP-7GNoDJ5c/hqdefault.jpg">
-        <div style="height: 20px;width: 1px;"></div>
-        <input min="0" max="100" type="range" disabled>
-    </div>
-    <div id="songContainer">
-        <% votingQueue.forEach(voteElement=> { %>
-            <div class="song">
-                <div class="songContent">
-                    <div>
-                        <a href="<%= 'https://www.youtube.com/watch?v=' + voteElement.video.id %> " target="_blank">
-                            <%= voteElement.video.title %>
-                        </a>
+    <%- include('partials/header.ejs',{user: user}) %>
+        <div id="currentSong">
+            <img id="thumbnail" src="https://i.ytimg.com/vi/qP-7GNoDJ5c/hqdefault.jpg">
+            <div style="height: 20px;width: 1px;"></div>
+            <input min="0" max="100" type="range" disabled>
+        </div>
+        <div id="songContainer">
+            <% votingQueue.forEach(voteElement=> { %>
+                <div class="song">
+                    <div class="songContent">
+                        <div>
+                            <a href="<%= 'https://www.youtube.com/watch?v=' + voteElement.video.id %> " target="_blank">
+                                <%= voteElement.video.title %>
+                            </a>
+                        </div>
+                        <div data-videoid="<%= voteElement.video.id %>" class="upvote">^</div>
                     </div>
-                    <div data-videoid="<%= voteElement.video.id %>" class="upvote">^</div>
                 </div>
-            </div>
-            <%}) %>
-    </div>
-    <div id="addSongButton"><a href="submit"><img src="images/plus.png"></a></div>
-    <!--
+                <%}) %>
+        </div>
+        <div id="addSongButton"><a href="submit"><img src="images/plus.png"></a></div>
+        <!--
     <div class="song">
         <div class="songContent">
             <div>Title</div>

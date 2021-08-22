@@ -1,3 +1,4 @@
+require('dotenv').config()
 const { google } = require('googleapis')
 
 const express = require("express")
@@ -7,28 +8,60 @@ const io = require("socket.io")(server) // , { cors: { origin: "*" } }
 
 const path = require("path")
 const iso = require("iso8601-duration")
-require('dotenv').config();
+
+const passport = require("passport")
+const passportSetup = require("./config/passport-setup")
+const mongoose = require("mongoose")
+const cookieSession = require("cookie-session")
 
 const YT_KEYS = process.env.YT_KEYS.split(" ")
 const PY_SECRET = process.env.PY_SECRET
+const COOKIE_SECRET = process.env.COOKIE_SECRET
+const MONGO_URL = process.env.MONGO_URL
 const MAX_DURATION = 300
 
 app.use(express.static(path.join(__dirname, "public")))
 app.use(express.urlencoded({ extended: false }))
 
 app.set("view engine", "ejs")
-app.set("views", path.join(__dirname, "views"))
+//app.set("views", path.join(__dirname, "views"))
+app.use(cookieSession({
+    maxAge: 24 * 60 * 60 * 1000,
+    keys: [COOKIE_SECRET]
+}))
+
+app.use(passport.initialize())
+app.use(passport.session())
+
+mongoose.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
+mongoose.connection.once("open", () => {
+    console.log("connected to db")
+})
 
 let submitQueue = []
 let votingQueue = []
 
 
 app.get("/", (req, res) => {
-    res.render("index", { votingQueue: votingQueue })
+    res.render("index", { votingQueue: votingQueue, user: req.user })
 })
 
-app.get("/login", (req, res) => {
-    res.render("login")
+app.get("/profile", (req, res) => {
+    if (!req.user) res.redirect("/login")
+    else res.render("profile", { user: req.user })
+})
+
+app.get("/login", passport.authenticate("google", {
+    scope: ["profile", "email"]
+}))
+
+app.get("/logout", (req, res) => {
+    req.logout()
+    res.redirect("/")
+})
+
+app.get("/redirect", passport.authenticate("google"), (req, res) => {
+    res.redirect("/")
 })
 
 app.get("/admin", (req, res) => {

@@ -5,9 +5,25 @@ body {
     background-color: #4f4f4f;
 }
 
-#logo {
+#header {
     width: auto;
     padding: 10px;
     background-color: darkgray;
     font-size: xx-large;
+    overflow: auto;
+    width: auto;
+}
+
+#logo {
+    float: left;
+}
+
+#profile {
+    float: right;
+    right: 0;
+}
+
+#profile img {
+    max-height: 37px;
+    border-radius: 50%;
 }

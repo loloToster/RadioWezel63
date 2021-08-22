@@ -1,0 +1,10 @@
+<div id="header">
+        <div id="logo">RadioWęzeł</div>
+        <div id="profile">
+                <% if (user) { %>
+                        <a href="/profile"><img src=<%=user.thumbnail%>></a>
+                        <% } else {%>
+                                <a href="/login">Log in</a>
+                                <% }%>
+        </div>
+</div>
