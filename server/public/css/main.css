@@ -2,14 +2,19 @@ body {
     margin: 0px;
     padding: 0px;
     font-family: Arial;
-    background-color: #4f4f4f;
+    background-color: #2d2d30;
+    color: #d4d4d4;
+}
+
+a {
+    color: #d4d4d4;
 }
 
 #header {
     width: auto;
     padding: 10px;
-    background-color: darkgray;
-    font-size: xx-large;
+    background-color: #3e3e42;
+    font-size: 10vw;
     overflow: auto;
     width: auto;
 }
@@ -20,10 +25,18 @@ body {
 
 #profile {
     float: right;
-    right: 0;
+    vertical-align: middle;
 }
 
 #profile img {
-    max-height: 37px;
+    height: 10vw;
     border-radius: 50%;
+    vertical-align: middle;
+}
+
+#gradientStrip {
+    background: rgb(2, 227, 51);
+    background: linear-gradient(90deg, rgba(2, 227, 51, 1) 0%, rgba(0, 153, 250, 1) 100%);
+    width: inherit;
+    height: 1vh;
 }

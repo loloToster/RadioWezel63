@@ -11,17 +11,12 @@ socket.on("connect", () => {
 })
 
 function createSongObject(video) {
-    let object = document.createElement("div")
+    object = document.createElement("div")
     object.setAttribute("class", "song")
     object.setAttribute("data-videoid", video.id)
     let songContent = document.createElement("div")
     songContent.setAttribute("class", "songContent")
-    let titleDiv = document.createElement("div")
-    let href = document.createElement("a")
-    href.setAttribute("target", "_blank")
-    href.innerText = video.title
-    titleDiv.appendChild(href)
-    songContent.appendChild(titleDiv)
+    songContent.innerText = video.title
     object.appendChild(songContent)
     return object
 }

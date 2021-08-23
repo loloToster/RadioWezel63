@@ -12,22 +12,23 @@ Array.from(document.getElementsByClassName("upvote")).forEach(element => {
 function createSongObject(video) {
     let object = document.createElement("div")
     object.setAttribute("class", "song")
-    let songContent = document.createElement("div")
-    songContent.setAttribute("class", "songContent")
-    object.appendChild(songContent)
-    let title = document.createElement("div")
     let href = document.createElement("a")
     href.setAttribute("href", DEF_YT_URL + video.id)
     href.setAttribute("target", "_blank")
-    href.innerText = video.title
-    title.appendChild(href)
-    songContent.appendChild(title)
+
+    let songContent = document.createElement("div")
+    songContent.setAttribute("class", "songContent")
+    songContent.innerText = video.title
+    href.appendChild(songContent)
+    object.appendChild(href)
+
     let upvote = document.createElement("div")
     upvote.setAttribute("class", "upvote")
     upvote.setAttribute("data-videoid", video.id)
     upvote.innerText = "^"
     upvote.addEventListener("click", event => onVote(video.id))
-    songContent.appendChild(upvote)
+    object.appendChild(upvote)
+
     return object
 }
 

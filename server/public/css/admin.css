@@ -5,14 +5,22 @@
     float: left;
 }
 
-#link {
-    background-color: lightblue;
-}
-
 #deny {
     background-color: red;
 }
 
 #accept {
     background-color: lime;
+}
+
+.song {
+    width: auto;
+    padding: 2vw;
+}
+
+.songContent {
+    font-size: 7vw;
+    white-space: nowrap;
+    max-width: 100vw;
+    overflow: scroll;
 }

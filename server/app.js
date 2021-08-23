@@ -71,14 +71,22 @@ mongoose.connection.once("open", () => {
 let submitQueue = []
 let votingQueue = []
 
+function checkIfLoggedIn(req, res, next) {
+    if (!req.user) res.status(500).send()
+    else next()
+}
+
+function checkIfAdmin(req, res, next) {
+    if (req.user.role == "admin") next()
+    else res.status(500).send()
+}
 
 app.get("/", (req, res) => {
     res.render("index", { votingQueue: votingQueue, user: req.user })
 })
 
-app.get("/profile", (req, res) => {
-    if (!req.user) res.redirect("/login")
-    else res.render("profile", { user: req.user })
+app.get("/profile", checkIfLoggedIn, (req, res) => {
+    res.render("profile", { user: req.user })
 })
 
 app.get("/login", passport.authenticate("google", {
@@ -94,11 +102,11 @@ app.get("/redirect", passport.authenticate("google"), (req, res) => {
     res.redirect("/")
 })
 
-app.get("/admin", (req, res) => {
+app.get("/admin", checkIfLoggedIn, checkIfAdmin, (req, res) => {
     res.render("admin", { submitQueue: submitQueue })
 })
 
-app.get("/submit", (req, res) => {
+app.get("/submit", checkIfLoggedIn, (req, res) => {
     res.render("submit")
 })
 
@@ -108,7 +116,7 @@ function addToVoting(video) {
     io.sockets.emit("updateVotingQueue", voteElement)
 }
 
-app.get("/admin/:option/:id", (req, res) => {
+app.get("/admin/:option/:id", checkIfLoggedIn, checkIfAdmin, (req, res) => {
     let id = decodeURIComponent(req.params.id)
     let index = submitQueue.findIndex(value => {
         return value.id == id
@@ -158,7 +166,7 @@ function handleSubmition(video) {
 
 const queryToVideo = require("./modules/query-to-video")
 
-app.get("/submit/:submition", async (req, res) => {
+app.get("/submit/:submition", checkIfLoggedIn, async (req, res) => {
     let submition = decodeURIComponent(req.params.submition)
     let response = await queryToVideo(submition)
     switch (response.code) {
@@ -176,14 +184,17 @@ app.get("/submit/:submition", async (req, res) => {
     }
 })
 
-app.get("/vote/:id", (req, res) => {
+app.get("/vote/:id", checkIfLoggedIn, async (req, res) => {
     let id = decodeURIComponent(req.params.id)
     let index = votingQueue.findIndex(value => {
         return id == value.video.id
     })
+    if (index == -1) return res.status(500).send()
+    let votedVideoId = votingQueue[index].video.id
+    //if (req.user.votes.includes(votedVideoId)) return res.status(500).send()
+    await User.findOneAndUpdate({ googleId: req.user.googleId }, { $push: { votes: votedVideoId } })
     votingQueue[index].votes++
-    let votes = votingQueue[index].votes
-    res.status(200).send(votes.toString())
+    res.status(200).send(votingQueue[index].votes.toString())
 })
 
 
@@ -213,6 +224,6 @@ io.on("disconnection", socket => {
     console.log(socket.id + " disconnected")
 })
 
-server.listen(8080, () => {
+server.listen(80, () => {
     console.log("Server running...")
 })

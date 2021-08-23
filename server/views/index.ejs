@@ -13,34 +13,30 @@
 </head>
 
 <body>
-    <%- include('partials/header.ejs',{user: user}) %>
+    <%- include('partials/header.ejs') %>
         <div id="currentSong">
             <img id="thumbnail" src="https://i.ytimg.com/vi/qP-7GNoDJ5c/hqdefault.jpg">
-            <div style="height: 20px;width: 1px;"></div>
+            <div style="height: 5vw;width: 1px;"></div>
             <input min="0" max="100" type="range" disabled>
         </div>
+        <!--<img src="/images/waves.png">-->
         <div id="songContainer">
             <% votingQueue.forEach(voteElement=> { %>
                 <div class="song">
-                    <div class="songContent">
-                        <div>
-                            <a href="<%= 'https://www.youtube.com/watch?v=' + voteElement.video.id %> " target="_blank">
-                                <%= voteElement.video.title %>
-                            </a>
+                    <a href="<%= 'https://www.youtube.com/watch?v=' + voteElement.video.id %> " target="_blank">
+                        <div class="songContent">
+                            <%= voteElement.video.title %>
                         </div>
+                    </a>
+                    <% if (user) { %>
                         <div data-videoid="<%= voteElement.video.id %>" class="upvote">^</div>
-                    </div>
+                        <% } %>
                 </div>
-                <%}) %>
+                <% }) %>
         </div>
-        <div id="addSongButton"><a href="submit"><img src="images/plus.png"></a></div>
-        <!--
-    <div class="song">
-        <div class="songContent">
-            <div>Title</div>
-            <div class="upvote">^</div>
-        </div>
-    </div> -->
+        <% if (user) { %>
+            <div id="addSongButton"><a href="submit"><img src="/images/plus.png"></a></div>
+            <% } %>
 </body>
 
 </html>

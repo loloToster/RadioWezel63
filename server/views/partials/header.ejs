@@ -1,12 +1,13 @@
 <div id="header">
-        <a href="/">
-                <div id="logo">RadioWęzeł</div>
-        </a>
-        <div id="profile">
-                <% if (user) { %>
-                        <a href="/profile"><img src=<%=user.thumbnail%>></a>
-                        <% } else {%>
-                                <a href="/login">Log in</a>
-                                <% }%>
-        </div>
+    <a href="/">
+        <div id="logo">RadioWęzeł</div>
+    </a>
+    <div id="profile">
+        <% if (user) { %>
+            <a href="/profile"><img src=<%=user.thumbnail%>></a>
+            <% } else {%>
+                <a href="/login">Log in</a>
+                <% }%>
+    </div>
 </div>
+<div id="gradientStrip"></div>
