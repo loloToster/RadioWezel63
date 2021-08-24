@@ -5,21 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/profile.css">
     <title>Profil</title>
-    <style>
-        body {
-            font-size: 5vh;
-        }
-    </style>
 </head>
 
 <body>
     <%- include('partials/header.ejs') %>
-        <a href="/logout">Log out</a>
-        <br>
-        <% if (user.role=="admin" ) { %>
-            <a href="/admin">Admin panel</a>
-            <% } %>
+        <div id="mainImage">
+            <img src="<%= user.thumbnail%>" alt="">
+            <div id="username">
+                <%= user.name%>
+            </div>
+        </div>
+        <div id="items">
+            <% if (user.role=="admin" ) { %>
+                <a href="/admin">Admin panel</a>
+                <% } %>
+                    <br>
+                    <a id="logout" href="/logout">Log out</a>
+        </div>
 </body>
 
 </html>

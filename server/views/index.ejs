@@ -15,11 +15,18 @@
 <body>
     <%- include('partials/header.ejs') %>
         <div id="currentSong">
-            <img id="thumbnail" src="https://i.ytimg.com/vi/qP-7GNoDJ5c/hqdefault.jpg">
-            <div style="height: 5vw;width: 1px;"></div>
-            <input min="0" max="100" type="range" disabled>
+            <img id="thumbnail" style="margin-bottom: 5vw;" src="https://i.ytimg.com/vi/qP-7GNoDJ5c/hqdefault.jpg">
+            <table id="progressBar">
+                <tr>
+                    <td id="left" class="progressNumber">00:00</td>
+                    <td class="bar">
+                        <input class="bar" min="0" max="100" type="range" disabled>
+                    </td>
+                    <td id="right" class="progressNumber">00:00</td>
+                </tr>
+            </table>
         </div>
-        <!--<img src="/images/waves.png">-->
+        <img style="position: relative; top: -3px;" src="/images/waves.png">
         <div id="songContainer">
             <% votingQueue.forEach(voteElement=> { %>
                 <div class="song">
@@ -30,7 +37,11 @@
                     </a>
                     <% if (user) { %>
                         <div data-videoid="<%= voteElement.video.id %>" class="upvote">^</div>
-                        <% } %>
+                        <% } else { %>
+                            <div data-videoid="<%= voteElement.video.id %>" class="upvote">
+                                <%= voteElement.votes %>
+                            </div>
+                            <% } %>
                 </div>
                 <% }) %>
         </div>

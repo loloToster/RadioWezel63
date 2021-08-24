@@ -24,16 +24,41 @@ function createSongObject(video) {
 function createButtonsObject(parent) {
     let object = document.createElement("div")
     object.setAttribute("id", "buttons")
+
     let deny = document.createElement("div")
     deny.setAttribute("id", "deny")
     deny.setAttribute("class", "button")
     deny.addEventListener("click", event => onButtonClick("deny", parent.dataset.videoid))
+
+    let img = document.createElement("img")
+    img.setAttribute("src", "/images/deny.png")
+    deny.appendChild(img)
     object.appendChild(deny)
+
     let accept = document.createElement("div")
     accept.setAttribute("id", "accept")
     accept.setAttribute("class", "button")
     accept.addEventListener("click", event => onButtonClick("accept", parent.dataset.videoid))
+
+    img = document.createElement("img")
+    img.setAttribute("src", "/images/accept.png")
+    accept.appendChild(img)
     object.appendChild(accept)
+
+    let link = document.createElement("div")
+    link.setAttribute("id", "link")
+    link.setAttribute("class", "button")
+
+    let href = document.createElement("a")
+    href.setAttribute("href", DEF_YT_URL + parent.dataset.videoid)
+    href.setAttribute("target", "_blank")
+
+    img = document.createElement("img")
+    img.setAttribute("src", "/images/link.png")
+    href.appendChild(img)
+    link.appendChild(href)
+    object.appendChild(link)
+
     let clear = document.createElement("div")
     clear.style.clear = "both"
     object.appendChild(clear)

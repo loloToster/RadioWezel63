@@ -6,7 +6,12 @@
         <% if (user) { %>
             <a href="/profile"><img src=<%=user.thumbnail%>></a>
             <% } else {%>
-                <a href="/login">Log in</a>
+                <a href="/login">
+                    <div id="login"><img src="/images/google.png">
+                        <div>
+                            login</div>
+                    </div>
+                </a>
                 <% }%>
     </div>
 </div>

@@ -1,16 +1,26 @@
 .button {
-    margin-top: 10px;
-    width: 50%;
-    height: 100px;
+    margin: 1vh;
+    width: 10vh;
+    height: 10vh;
     float: left;
+    border-radius: 3vh;
+}
+
+img {
+    max-height: 100%;
+    max-width: 100%;
 }
 
 #deny {
-    background-color: red;
+    background-color: #c02739;
 }
 
 #accept {
-    background-color: lime;
+    background-color: #4ef037;
+}
+
+#link {
+    background-color: #007acc;
 }
 
 .song {

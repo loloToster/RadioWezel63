@@ -18,40 +18,48 @@ img {
     border-radius: 3vw;
 }
 
-input {
-    width: 100%;
+table#progressBar {
+    font-size: 2vh;
+    margin-right: 1vw;
+    margin-left: 1vw;
 }
+
+td.bar {
+    width: 100%;
+    padding-right: 1vw;
+    padding-left: 1vw;
+}
+
+input.bar {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 1vh;
+    background: linear-gradient(to right, #01be97 0%, #01be97 50%, #fff 50%, #fff 100%);
+    border-radius: 1vh;
+    outline: none;
+}
+
+input.bar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 4vw;
+    height: 4vw;
+    border-radius: 50%;
+    background: #3e3e42;
+}
+
+input.bar::-moz-range-thumb {
+    width: 3vw;
+    height: 3vw;
+    border-radius: 50%;
+    background: #3e3e42;
+}
+
+/************************************/
 
 #songContainer {
     width: auto;
 }
-
-/************************************
-
-.song {
-    width: auto;
-    padding: var(--song-padding);
-    font-size: x-large;
-}
-
-.songContent {
-    width: calc(auto - var(--song-padding) * 2);
-    position: relative;
-    height: fit-content;
-}
-
-.upvote {
-    position: absolute;
-    width: 50px;
-    height: 100%;
-    max-height: 50px;
-    right: 0;
-    top: 0;
-    text-align: center;
-    background-attachment: fixed;
-    background-color: #4ef037;
-}
-*/
 
 .song {
     width: auto;

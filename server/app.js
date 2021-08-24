@@ -1,17 +1,19 @@
+const path = require("path")
 require('dotenv').config()
 
-const express = require("express")
-const app = express()
-const server = require("http").createServer(app)
-const io = require("socket.io")(server) // , { cors: { origin: "*" } }
+const express = require("express"),
+    app = express(),
+    server = require("http").createServer(app),
+    io = require("socket.io")(server) // , { cors: { origin: "*" } }
 
-const passport = require("passport")
-const googleStrategy = require("passport-google-oauth20")
+const passport = require("passport"),
+    googleStrategy = require("passport-google-oauth20")
 
-const mongoose = require("mongoose")
+const mongoose = require("mongoose"),
+    User = require(path.join(__dirname, "/models/user-model"))
+
 const cookieSession = require("cookie-session")
 
-const User = require("./models/user-model")
 
 passport.serializeUser((user, done) => {
     done(null, user.googleId)
@@ -30,7 +32,7 @@ passport.use(
     }, async (accessToken, refreshToken, profile, done) => {
         let currentUser = await User.findOne({ googleId: profile.id })
         if (currentUser) {
-            console.log("user is:" + currentUser)
+            console.log("User is: " + currentUser.name)
             done(null, currentUser)
         } else {
             let newUser = await new User({
@@ -39,7 +41,7 @@ passport.use(
                 email: profile._json.email,
                 thumbnail: profile._json.picture
             }).save()
-            console.log("New user: " + newUser)
+            console.log("New user: " + profile.displayName)
             done(null, newUser)
         }
     })
@@ -50,11 +52,11 @@ const COOKIE_SECRET = process.env.COOKIE_SECRET
 const MONGO_URL = process.env.MONGO_URL
 const MAX_DURATION = 300
 
-app.use(express.static("public"))
+app.use(express.static(path.join(__dirname, "public")))
 app.use(express.urlencoded({ extended: false }))
 
 app.set("view engine", "ejs")
-//app.set("views", path.join(__dirname, "views"))
+app.set("views", path.join(__dirname, "views"))
 app.use(cookieSession({
     maxAge: 24 * 60 * 60 * 1000,
     keys: [COOKIE_SECRET]
@@ -62,6 +64,8 @@ app.use(cookieSession({
 
 app.use(passport.initialize())
 app.use(passport.session())
+
+app.use(express.json());
 
 mongoose.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
 mongoose.connection.once("open", () => {
@@ -150,38 +154,34 @@ function checkIfSubmitted(video) {
 
 function handleSubmition(video) {
     let response = {}
-    if (video.duration > MAX_DURATION) {
-        response.code = "toLong"
-    } else if (checkIfSubmitted(video)) {
-        response.code = "alreadySubmitted"
-        response.video = video
-    } else {
-        submitQueue.push(video)
-        io.to("admin").emit("addSubmit", video)
-        response.code = "success"
-        response.video = video
-    }
+    submitQueue.push(video)
+    io.to("admin").emit("addSubmit", video)
+    response.code = "success"
+    response.video = video
     return response
 }
 
-const queryToVideo = require("./modules/query-to-video")
+const queryToVideos = require("./modules/query-to-video")
 
-app.get("/submit/:submition", checkIfLoggedIn, async (req, res) => {
-    let submition = decodeURIComponent(req.params.submition)
-    let response = await queryToVideo(submition)
-    switch (response.code) {
-        case "success":
-            res.status(200).send(handleSubmition(response.video))
-            break;
-
-        case "noVideoFound":
-            res.status(200).send({ code: "noVideoFound" })
-            break;
-
-        default:
-            res.status(500).send()
-            break;
+app.get("/submit/search/:query", checkIfLoggedIn, async (req, res) => {
+    let query = decodeURIComponent(req.params.query)
+    let videos = await queryToVideos(query)
+    if (videos.code == "success") {
+        videos.items = videos.items.filter(item => {
+            return item.duration < MAX_DURATION && !checkIfSubmitted(item)
+        })
+        if (videos.items.length)
+            res.json(videos)
+        else
+            res.json({ code: "noVideoFound" })
+    } else {
+        res.json({ code: "noVideoFound" })
     }
+})
+
+app.post("/submit/post", (req, res) => { // TODO: validate data & check if submitted
+    console.log(req.body)
+    res.json(handleSubmition(req.body))
 })
 
 app.get("/vote/:id", checkIfLoggedIn, async (req, res) => {

@@ -12,26 +12,47 @@ a {
 
 #header {
     width: auto;
-    padding: 10px;
+    height: 7vh;
     background-color: #3e3e42;
-    font-size: 10vw;
-    overflow: auto;
-    width: auto;
+    padding: 1.5vh;
 }
 
 #logo {
     float: left;
+    font-size: calc(7vh - 10px);
 }
 
 #profile {
     float: right;
-    vertical-align: middle;
 }
 
 #profile img {
-    height: 10vw;
+    height: 7vh;
     border-radius: 50%;
-    vertical-align: middle;
+}
+
+#login {
+    height: 7vh;
+    width: 30vw;
+    background-color: #121212;
+    border-radius: 100vw;
+}
+
+#login img {
+    position: relative;
+    left: -2px;
+    height: 7vh;
+    width: 7vh;
+    float: left;
+}
+
+#login div {
+    float: right;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    margin-right: 4vw;
+    font-size: 2vh;
 }
 
 #gradientStrip {
