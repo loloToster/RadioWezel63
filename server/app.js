@@ -197,6 +197,6 @@ io.on("disconnection", socket => {
     console.log(socket.id + " disconnected")
 })
 
-server.listen(80, () => {
+server.listen(80 || process.env.PORT, () => {
     logger.info("Server running...")
 })
