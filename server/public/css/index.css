@@ -57,13 +57,17 @@ input.bar::-moz-range-thumb {
 
 /************************************/
 
+.overflowWrapper {
+    width: calc(100% - 4vw);
+    overflow: scroll;
+    padding: 2vw;
+}
+
 .songContent {
     white-space: nowrap;
     font-size: 7vw;
-    min-width: 81vw;
-    max-width: 81vw;
-    padding: 2vw;
-    overflow: scroll;
+    min-width: 86vw;
+    max-width: 86vw;
 }
 
 .upvote {

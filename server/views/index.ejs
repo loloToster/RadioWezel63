@@ -31,9 +31,11 @@
             <% votingQueue.forEach(voteElement=> { %>
                 <tr class="song">
                     <td class="songContent">
-                        <a href="<%= 'https://www.youtube.com/watch?v=' + voteElement.video.id %>" target="_blank">
-                            <%- voteElement.video.title %>
-                        </a>
+                        <div class="overflowWrapper">
+                            <a href="<%= 'https://www.youtube.com/watch?v=' + voteElement.video.id %>" target="_blank">
+                                <%- voteElement.video.title %>
+                            </a>
+                        </div>
                     </td>
                     <% if (user && !user.votes.includes(voteElement.video.id)) { %>
                         <td data-videoid="<%= voteElement.video.id %>" class="upvote">&#11165;</td>

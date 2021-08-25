@@ -22,11 +22,17 @@ function createSongObject(video) {
 
     let songContent = document.createElement("td")
     songContent.setAttribute("class", "songContent")
+
+    let overflowWrapper = document.createElement("div")
+    overflowWrapper.setAttribute("class", "overflowWrapper")
+
     let href = document.createElement("a")
     href.setAttribute("href", DEF_YT_URL + video.id)
     href.setAttribute("target", "_blank")
     href.innerText = htmlDecode(video.title)
-    songContent.appendChild(href)
+
+    overflowWrapper.appendChild(href)
+    songContent.appendChild(overflowWrapper)
     object.appendChild(songContent)
 
     let upvote = document.createElement("td")
