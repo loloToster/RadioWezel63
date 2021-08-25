@@ -1,9 +1,13 @@
 body {
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
     font-family: Arial;
     background-color: #2d2d30;
     color: #d4d4d4;
+}
+
+::-webkit-scrollbar {
+    display: none;
 }
 
 a {
@@ -11,7 +15,6 @@ a {
 }
 
 #header {
-    width: auto;
     height: 7vh;
     background-color: #3e3e42;
     padding: 1.5vh;
@@ -34,7 +37,7 @@ a {
 #login {
     height: 7vh;
     width: 30vw;
-    background-color: #121212;
+    background-color: #1e1e1e;
     border-radius: 100vw;
 }
 

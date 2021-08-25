@@ -34,7 +34,7 @@ input.bar {
     width: 100%;
     -webkit-appearance: none;
     height: 1vh;
-    background: linear-gradient(to right, #01be97 0%, #01be97 50%, #fff 50%, #fff 100%);
+    background: linear-gradient(to right, #01be97 0%, #01be97 50%, #d4d4d4 50%, #d4d4d4 100%);
     border-radius: 1vh;
     outline: none;
 }
@@ -57,40 +57,21 @@ input.bar::-moz-range-thumb {
 
 /************************************/
 
-#songContainer {
-    width: auto;
-}
-
-.song {
-    width: auto;
-    display: flex;
-}
-
 .songContent {
-    width: auto;
-    padding: 2vw;
-    font-size: 7vw;
     white-space: nowrap;
-    max-width: 85vw;
+    font-size: 7vw;
+    min-width: 81vw;
+    max-width: 81vw;
+    padding: 2vw;
     overflow: scroll;
 }
 
-a.songHref {
-    max-width: 85vw;
-}
-
 .upvote {
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    border: 1px solid #2d2d30;
-    width: 12vw;
-    height: 12vw;
-    position: absolute;
-    right: 0;
-    padding: 1vw;
     font-size: 9vw;
     text-align: center;
+    min-width: 11vw;
+    max-width: 11vw;
+    padding: 1vw;
 }
 
 /************************************/

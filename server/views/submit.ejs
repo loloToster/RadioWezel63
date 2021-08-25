@@ -11,22 +11,19 @@
 
 <body>
     <%- include('partials/header.ejs') %>
-        <div id="searchBar">
-            <input type="text" autofocus placeholder="Wpisz szukaną piosenkę">
-            <div id="icon"><img src="/images/search.png"></div>
-            <div style="clear: both;"></div>
-        </div>
+        <table>
+            <tr>
+                <td id="inputTd">
+                    <input type="text" autofocus placeholder="Wpisz szukaną piosenkę">
+                </td>
+                <td id="icon">
+                    <img src="/images/search.png">
+                </td>
+            </tr>
+        </table>
         <div id="loading" class="info"><img src="/images/loading.gif"></div>
         <div id="noResults" class="info"><img src="/images/noresults.png"></div>
-        <div id="songContainer"></div>
-        <!--<div class="video">
-            <div class="thumbnail">
-                <img src="https://i.ytimg.com/vi/8lSZpTgDKGI/hqdefault.jpg">
-            </div>
-            <div class="titleDiv">
-                <div class="title">Why Cobble Here?</div>
-            </div>
-        </div>-->
+        <div id="resultContainer"></div>
 </body>
 
 </html>

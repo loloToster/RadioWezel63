@@ -1,9 +1,19 @@
 const DEF_YT_URL = "https://www.youtube.com/watch?v="
 
+function htmlDecode(input) {
+    var doc = new DOMParser().parseFromString(input, "text/html");
+    return doc.documentElement.textContent;
+}
+
 function createVideoElement(video) {
     let object = document.createElement("div")
     object.setAttribute("class", "video")
-
+    if (video.submitted) {
+        object.style.backgroundColor = "#57cc47"
+    } else {
+        delete video.submitted
+        object.addEventListener("click", event => onClick(video))
+    }
     let thumbnail = document.createElement("div")
     thumbnail.setAttribute("class", "thumbnail")
 
@@ -15,11 +25,9 @@ function createVideoElement(video) {
     let titleDiv = document.createElement("div")
     titleDiv.setAttribute("class", "titleDiv")
     let title = document.createElement("div")
-    title.innerText = video.title
+    title.innerText = htmlDecode(video.title)
     titleDiv.appendChild(title)
     object.appendChild(titleDiv)
-
-    object.addEventListener("click", event => onClick(video))
 
     return object
 }
@@ -43,13 +51,13 @@ function onClick(video) {
 
 
 document.getElementById("icon").addEventListener("click", event => {
-    let songContainer = document.getElementById("songContainer")
-    songContainer.innerHTML = ""
+    let resultContainer = document.getElementById("resultContainer")
+    resultContainer.innerHTML = ""
     let noResults = document.getElementById("noResults")
     noResults.style.display = "none"
     let loading = document.getElementById("loading")
     loading.style.display = "block"
-    let input = document.querySelector("#searchBar input")
+    let input = document.querySelector("#inputTd input")
     let value = input.value
     value = encodeURIComponent(value)
     console.log("Submitting: " + value)
@@ -59,7 +67,7 @@ document.getElementById("icon").addEventListener("click", event => {
             loading.style.display = "none"
             if (data.code == "success")
                 data.items.forEach(item => {
-                    songContainer.appendChild(createVideoElement(item))
+                    resultContainer.appendChild(createVideoElement(item))
                 })
             else {
                 noResults.style.display = "block"

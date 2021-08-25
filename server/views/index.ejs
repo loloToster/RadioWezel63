@@ -27,24 +27,24 @@
             </table>
         </div>
         <img style="position: relative; top: -3px;" src="/images/waves.png">
-        <div id="songContainer">
+        <table id="songContainer">
             <% votingQueue.forEach(voteElement=> { %>
-                <div class="song">
-                    <a href="<%= 'https://www.youtube.com/watch?v=' + voteElement.video.id %> " target="_blank">
-                        <div class="songContent">
-                            <%= voteElement.video.title %>
-                        </div>
-                    </a>
-                    <% if (user) { %>
-                        <div data-videoid="<%= voteElement.video.id %>" class="upvote">^</div>
+                <tr class="song">
+                    <td class="songContent">
+                        <a href="<%= 'https://www.youtube.com/watch?v=' + voteElement.video.id %>" target="_blank">
+                            <%- voteElement.video.title %>
+                        </a>
+                    </td>
+                    <% if (user && !user.votes.includes(voteElement.video.id)) { %>
+                        <td data-videoid="<%= voteElement.video.id %>" class="upvote">&#11165;</td>
                         <% } else { %>
-                            <div data-videoid="<%= voteElement.video.id %>" class="upvote">
-                                <%= voteElement.votes %>
-                            </div>
+                            <td data-videoid="<%= voteElement.video.id %>" data-voted="true" class="upvote">
+                                <%- voteElement.votes %>
+                            </td>
                             <% } %>
-                </div>
+                </tr>
                 <% }) %>
-        </div>
+        </table>
         <% if (user) { %>
             <div id="addSongButton"><a href="submit"><img src="/images/plus.png"></a></div>
             <% } %>

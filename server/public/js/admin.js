@@ -1,4 +1,10 @@
 const DEF_YT_URL = "https://www.youtube.com/watch?v="
+
+function htmlDecode(input) {
+    var doc = new DOMParser().parseFromString(input, "text/html");
+    return doc.documentElement.textContent;
+}
+
 const socket = io({
     auth: {
         role: "admin",
@@ -16,7 +22,7 @@ function createSongObject(video) {
     object.setAttribute("data-videoid", video.id)
     let songContent = document.createElement("div")
     songContent.setAttribute("class", "songContent")
-    songContent.innerText = video.title
+    songContent.innerText = htmlDecode(video.title)
     object.appendChild(songContent)
     return object
 }

@@ -1,7 +1,6 @@
 socket.on("disconnect", () => {
     console.log("disconnected")
-    document.body.innerHTML = ""
-    document.body.innerText = "disconnected"
+    document.body.innerHTML = "<div>disconnected</div>"
     reconnect()
 })
 

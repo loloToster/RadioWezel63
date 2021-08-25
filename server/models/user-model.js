@@ -8,7 +8,8 @@ const userSchema = new Schema({
     thumbnail: String,
     role: { type: String, default: "user" },
     votes: { type: Array, default: [] },
-    notes: { type: Number, default: 30 }
+    notes: { type: Number, default: 30 },
+    possibleSubmits: { type: Array, default: [] }
 })
 
 const User = mongoose.model("user", userSchema)

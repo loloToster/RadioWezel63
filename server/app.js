@@ -1,6 +1,8 @@
 const path = require("path")
 require('dotenv').config()
 
+const logger = require(path.join(__dirname, "/config/winston-setup"))
+
 const express = require("express"),
     app = express(),
     server = require("http").createServer(app),
@@ -68,8 +70,10 @@ app.use(passport.session())
 app.use(express.json());
 
 mongoose.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
-mongoose.connection.once("open", () => {
-    console.log("connected to db")
+mongoose.connection.once("open", async () => {
+    logger.info("Connected to db")
+    await User.updateMany({}, { votes: [] })
+    logger.info("Cleared votes")
 })
 
 let submitQueue = []
@@ -129,12 +133,12 @@ app.get("/admin/:option/:id", checkIfLoggedIn, checkIfAdmin, (req, res) => {
     let video = submitQueue.splice(index, 1)[0]
     switch (req.params.option) {
         case "accept":
-            console.log("accepting " + video.id)
+            logger.info(`${req.user.name}#${req.user.googleId} accepted: ${video.title} (${video.id})`)
             addToVoting(video)
             break;
 
         case "deny":
-            console.log("denying " + video.id)
+            logger.info(`${req.user.name}#${req.user.googleId} denied: ${video.title} (${video.id})`)
             break;
 
         default:
@@ -168,19 +172,20 @@ app.get("/submit/search/:query", checkIfLoggedIn, async (req, res) => {
     let videos = await queryToVideos(query)
     if (videos.code == "success") {
         videos.items = videos.items.filter(item => {
-            return item.duration < MAX_DURATION && !checkIfSubmitted(item)
+            return item.duration < MAX_DURATION
         })
-        if (videos.items.length)
+        if (videos.items.length) {
+            for (let i = 0; i < videos.items.length; i++) {
+                videos.items[i].submitted = checkIfSubmitted(videos.items[i])
+            }
             res.json(videos)
-        else
-            res.json({ code: "noVideoFound" })
-    } else {
-        res.json({ code: "noVideoFound" })
-    }
+        }
+        else { res.json({ code: "noVideoFound" }) }
+    } else { res.json({ code: "noVideoFound" }) }
 })
 
 app.post("/submit/post", (req, res) => { // TODO: validate data & check if submitted
-    console.log(req.body)
+    logger.info(`${req.user.googleId} submitted: ${req.body.title} (${req.body.id})`)
     res.json(handleSubmition(req.body))
 })
 
@@ -191,14 +196,15 @@ app.get("/vote/:id", checkIfLoggedIn, async (req, res) => {
     })
     if (index == -1) return res.status(500).send()
     let votedVideoId = votingQueue[index].video.id
-    //if (req.user.votes.includes(votedVideoId)) return res.status(500).send()
+    if (req.user.votes.includes(votedVideoId)) return res.status(500).send()
     await User.findOneAndUpdate({ googleId: req.user.googleId }, { $push: { votes: votedVideoId } })
     votingQueue[index].votes++
     res.status(200).send(votingQueue[index].votes.toString())
+    io.emit("updateVotes", votedVideoId, votingQueue[index].votes)
 })
 
 
-app.use(function (req, res) {
+app.use((req, res) => {
     res.status(404).render('error')
 })
 
@@ -225,5 +231,5 @@ io.on("disconnection", socket => {
 })
 
 server.listen(80, () => {
-    console.log("Server running...")
+    logger.info("Server running...")
 })

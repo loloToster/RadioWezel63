@@ -1,4 +1,10 @@
 const DEF_YT_URL = "https://www.youtube.com/watch?v="
+
+function htmlDecode(input) {
+    var doc = new DOMParser().parseFromString(input, "text/html");
+    return doc.documentElement.textContent;
+}
+
 const socket = io()
 
 socket.on("connect", () => {
@@ -6,26 +12,27 @@ socket.on("connect", () => {
 })
 
 Array.from(document.getElementsByClassName("upvote")).forEach(element => {
-    element.addEventListener("click", event => onVote(element.dataset.videoid))
+    if (!element.dataset.voted)
+        element.addEventListener("click", event => onVote(element.dataset.videoid))
 })
 
 function createSongObject(video) {
-    let object = document.createElement("div")
+    let object = document.createElement("tr")
     object.setAttribute("class", "song")
+
+    let songContent = document.createElement("td")
+    songContent.setAttribute("class", "songContent")
     let href = document.createElement("a")
     href.setAttribute("href", DEF_YT_URL + video.id)
     href.setAttribute("target", "_blank")
+    href.innerText = htmlDecode(video.title)
+    songContent.appendChild(href)
+    object.appendChild(songContent)
 
-    let songContent = document.createElement("div")
-    songContent.setAttribute("class", "songContent")
-    songContent.innerText = video.title
-    href.appendChild(songContent)
-    object.appendChild(href)
-
-    let upvote = document.createElement("div")
+    let upvote = document.createElement("td")
     upvote.setAttribute("class", "upvote")
     upvote.setAttribute("data-videoid", video.id)
-    upvote.innerText = "^"
+    upvote.innerText = "\u2b9d"
     upvote.addEventListener("click", event => onVote(video.id))
     object.appendChild(upvote)
 
@@ -39,6 +46,7 @@ function onVote(id) {
         .then(data => {
             console.log(data)
             let button = document.querySelector(`[data-videoid='${id}']`)
+            button.dataset.voted = "true"
             button.innerText = data
             let clone = button.cloneNode(true)
             button.parentNode.replaceChild(clone, button)
@@ -49,4 +57,11 @@ socket.on("updateVotingQueue", voteElement => {
     console.log(voteElement)
     console.log(voteElement.video.id)
     document.getElementById("songContainer").appendChild(createSongObject(voteElement.video))
+})
+
+socket.on("updateVotes", (id, votes) => {
+    console.log(`${id}: ${votes}`)
+    let button = document.querySelector(`[data-videoid='${id}']`)
+    if (!button.dataset.voted) return
+    button.innerText = votes
 })

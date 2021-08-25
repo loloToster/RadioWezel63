@@ -9,30 +9,27 @@
     font-size: 3vh;
 }
 
-#searchBar {
-    width: auto;
+#inputTd input {
+    width: calc(100% - 5vw);
+    font-size: 3vh;
+    height: 7vh;
+    padding-left: 5vw;
+    background-color: #848484;
+    border-radius: 50vh;
+    border: none;
+}
+
+#inputTd {
+    width: 100%;
     padding: 1vh;
 }
 
-#searchBar input {
-    width: calc(100% - 15vh);
-    height: 7vh;
-    background-color: #848484;
-    font-size: 3vh;
-    float: left;
-    border-radius: 50vw;
-    border: none;
-    padding-left: 5vw;
-}
-
-#searchBar #icon img {
-    max-height: 7vh;
-    max-width: 7vh;
-    float: right;
+#icon {
+    padding: 1vh;
 }
 
 #icon img {
-    width: 100%;
+    height: 7vh;
 }
 
 .info {
@@ -48,7 +45,7 @@
     display: block;
 }
 
-#songContainer {
+#resultContainer {
     width: auto;
 }
 

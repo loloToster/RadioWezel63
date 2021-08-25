@@ -14,7 +14,7 @@
         <div id="mainImage">
             <img src="<%= user.thumbnail%>" alt="">
             <div id="username">
-                <%= user.name%>
+                <%- user.name%>
             </div>
         </div>
         <div id="items">
@@ -22,7 +22,7 @@
                 <a href="/admin">Admin panel</a>
                 <% } %>
                     <br>
-                    <a id="logout" href="/logout">Log out</a>
+                    <a id="logout" href="/logout">Wyloguj</a>
         </div>
 </body>
 

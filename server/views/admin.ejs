@@ -17,16 +17,11 @@
             <% submitQueue.forEach(video=> { %>
                 <div data-videoid="<%= video.id %>" class="song">
                     <div class="songContent">
-                        <%= video.title %>
+                        <%- video.title %>
                     </div>
                 </div>
                 <% }) %>
         </div>
-        <!--<div id="buttons">
-        <div id="deny" class="button"></div>
-        <div id="accept" class="button"></div>
-        <div style="clear:both"></div>
-    </div>-->
 </body>
 
 </html>
