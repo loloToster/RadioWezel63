@@ -198,7 +198,6 @@ io.on("disconnection", socket => {
 })
 
 const PORT = process.env.PORT || 80
-console.log("PORT-------------: " + PORT)
 server.listen(PORT, () => {
-    logger.info("Server running...")
+    logger.info("Server running on port: " + PORT)
 })
