@@ -66,8 +66,8 @@ input.bar::-moz-range-thumb {
 .songContent {
     white-space: nowrap;
     font-size: 7vw;
-    min-width: 86vw;
-    max-width: 86vw;
+    min-width: 85vw;
+    max-width: 85vw;
 }
 
 .upvote {

@@ -38,7 +38,7 @@
                         </div>
                     </td>
                     <% if (user && !user.votes.includes(voteElement.video.id)) { %>
-                        <td data-videoid="<%= voteElement.video.id %>" class="upvote">&#11165;</td>
+                        <td data-videoid="<%= voteElement.video.id %>" class="upvote">&#9650;</td>
                         <% } else { %>
                             <td data-videoid="<%= voteElement.video.id %>" data-voted="true" class="upvote">
                                 <%- voteElement.votes %>

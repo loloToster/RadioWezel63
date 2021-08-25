@@ -38,7 +38,7 @@ function createSongObject(video) {
     let upvote = document.createElement("td")
     upvote.setAttribute("class", "upvote")
     upvote.setAttribute("data-videoid", video.id)
-    upvote.innerText = "\u2b9d"
+    upvote.innerText = "\u25b2"
     upvote.addEventListener("click", event => onVote(video.id))
     object.appendChild(upvote)
 

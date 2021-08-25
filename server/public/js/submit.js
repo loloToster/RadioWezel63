@@ -12,7 +12,7 @@ function createVideoElement(video) {
         object.style.backgroundColor = "#57cc47"
     } else {
         delete video.submitted
-        object.addEventListener("click", event => onClick(video))
+        object.addEventListener("click", event => onVideoClick(video))
     }
     let thumbnail = document.createElement("div")
     thumbnail.setAttribute("class", "thumbnail")
@@ -32,7 +32,14 @@ function createVideoElement(video) {
     return object
 }
 
-function onClick(video) {
+document.getElementById("icon").addEventListener("click", onSearch)
+document.querySelector("#inputTd input").addEventListener("keypress", event => {
+    if (event.key == "Enter") onSearch()
+})
+
+
+
+function onVideoClick(video) {
     console.log(video)
     fetch("/submit/post", {
         method: "POST",
@@ -49,18 +56,21 @@ function onClick(video) {
         })
 }
 
+var searching = false
 
-document.getElementById("icon").addEventListener("click", event => {
+function onSearch() {
+    let input = document.querySelector("#inputTd input")
+    let value = input.value
+    if (!value || searching) return
+    searching = true
     let resultContainer = document.getElementById("resultContainer")
     resultContainer.innerHTML = ""
     let noResults = document.getElementById("noResults")
     noResults.style.display = "none"
     let loading = document.getElementById("loading")
     loading.style.display = "block"
-    let input = document.querySelector("#inputTd input")
-    let value = input.value
     value = encodeURIComponent(value)
-    console.log("Submitting: " + value)
+    console.log("Searching: " + value)
     fetch("/submit/search/" + value)
         .then(response => response.json())
         .then(data => {
@@ -73,5 +83,9 @@ document.getElementById("icon").addEventListener("click", event => {
                 noResults.style.display = "block"
             }
             input.value = ""
+            searching = false
         })
-})
+        .catch(err => {
+            searching = false
+        })
+}
