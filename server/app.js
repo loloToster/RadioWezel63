@@ -1,3 +1,4 @@
+// git subtree push --prefix server heroku master
 const path = require("path")
 require('dotenv').config()
 
