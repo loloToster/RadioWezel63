@@ -6,4 +6,4 @@ Known visual bugs:
 Known bugs:
 
 TODO:
-- move submit and voting queues to DB
+- move submit and voting queues to DB ✔️

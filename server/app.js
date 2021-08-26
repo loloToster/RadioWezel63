@@ -42,8 +42,6 @@ app.use(express.json());
 mongoose.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
 mongoose.connection.once("open", async () => {
     logger.info("Connected to db")
-    await User.updateMany({}, { votes: [] })
-    logger.info("Cleared votes")
 })
 
 
@@ -119,15 +117,17 @@ app.get("/admin/:option/:id", checkIfLoggedIn, checkIfAdmin, async (req, res) =>
     io.to("admin").emit("removeSubmit", video.ytid)
 })
 
+app.get("/admin/reset", checkIfLoggedIn, checkIfAdmin, async (req, res) => {
+    logger.info(`${req.user.name} reseted data`)
+    await User.updateMany({}, { votes: [] })
+    await Submition.deleteMany({})
+    await VoteElement.deleteMany({})
+    res.json({ code: "success" })
+})
+
 async function checkIfSubmitted(video) {
-    let submitions = await Submition.find({})
-    let voteElements = await VoteElement.find({})
-    if ((voteElements.findIndex(value => {
-        return value.video.ytid == video.ytid
-    }) == -1) && (submitions.findIndex(value => {
-        return value.ytid == video.ytid
-    }) == -1)) return false
-    return true
+    if ((await Submition.findOne({ ytid: video.ytid })) || (await VoteElement.findOne({ 'video.ytid': video.ytid }))) return true
+    return false
 }
 
 async function handleSubmition(video) {
