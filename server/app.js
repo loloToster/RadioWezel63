@@ -15,7 +15,7 @@ const passport = require("passport"),
 const mongoose = require("mongoose"),
     User = require(path.join(__dirname, "/models/user-model")),
     Submition = require(path.join(__dirname, "/models/submition-model")),
-    voteElement = require(path.join(__dirname, "/models/voteElement-model"))
+    VoteElement = require(path.join(__dirname, "/models/voteElement-model"))
 
 const cookieSession = require("cookie-session")
 
@@ -46,8 +46,6 @@ mongoose.connection.once("open", async () => {
     logger.info("Cleared votes")
 })
 
-//var submitQueue = []
-var votingQueue = []
 
 function checkIfLoggedIn(req, res, next) {
     if (!req.user) res.status(500).send()
@@ -59,8 +57,8 @@ function checkIfAdmin(req, res, next) {
     else res.status(500).send()
 }
 
-app.get("/", (req, res) => {
-    res.render("index", { votingQueue: votingQueue, user: req.user })
+app.get("/", async (req, res) => {
+    res.render("index", { votingQueue: await VoteElement.find({}), user: req.user })
 })
 
 app.get("/profile", checkIfLoggedIn, (req, res) => {
@@ -81,18 +79,24 @@ app.get("/redirect", passport.authenticate("google"), (req, res) => {
 })
 
 app.get("/admin", checkIfLoggedIn, checkIfAdmin, async (req, res) => {
-    let submitions = await Submition.find({})
-    res.render("admin", { submitQueue: submitions })
+    res.render("admin", { submitQueue: await Submition.find({}) })
 })
 
 app.get("/submit", checkIfLoggedIn, (req, res) => {
     res.render("submit")
 })
 
-function addToVoting(video) {
-    let voteElement = { votes: 0, video: video }
-    votingQueue.push(voteElement)
-    io.sockets.emit("updateVotingQueue", voteElement)
+async function addToVoting(video) {
+    let element = {
+        votes: 0, video: {
+            ytid: video.ytid,
+            title: video.title,
+            thumbnail: video.thumbnail,
+            duration: video.duration
+        }
+    }
+    console.log(await new VoteElement(element).save())
+    io.sockets.emit("updateVotingQueue", element)
 }
 
 app.get("/admin/:option/:id", checkIfLoggedIn, checkIfAdmin, async (req, res) => {
@@ -102,7 +106,7 @@ app.get("/admin/:option/:id", checkIfLoggedIn, checkIfAdmin, async (req, res) =>
     switch (req.params.option) {
         case "accept":
             logger.info(`${req.user.name}#${req.user.googleId} accepted: ${video.title} (${video.ytid})`)
-            addToVoting(video)
+            await addToVoting(video)
             break;
 
         case "deny":
@@ -117,7 +121,8 @@ app.get("/admin/:option/:id", checkIfLoggedIn, checkIfAdmin, async (req, res) =>
 
 async function checkIfSubmitted(video) {
     let submitions = await Submition.find({})
-    if ((votingQueue.findIndex(value => {
+    let voteElements = await VoteElement.find({})
+    if ((voteElements.findIndex(value => {
         return value.video.ytid == video.ytid
     }) == -1) && (submitions.findIndex(value => {
         return value.ytid == video.ytid
@@ -127,7 +132,6 @@ async function checkIfSubmitted(video) {
 
 async function handleSubmition(video) {
     let response = {}
-    // submitQueue.push(video) // delete
     await new Submition(video).save()
     io.to("admin").emit("addSubmit", video)
     response.code = "success"
@@ -160,16 +164,14 @@ app.post("/submit/post", async (req, res) => { // TODO: validate data & check if
 
 app.get("/vote/:id", checkIfLoggedIn, async (req, res) => {
     let id = decodeURIComponent(req.params.id)
-    let index = votingQueue.findIndex(value => {
-        return id == value.video.ytid
-    })
-    if (index == -1) return res.status(500).send()
-    let votedVideoId = votingQueue[index].video.ytid
-    if (req.user.votes.includes(votedVideoId)) return res.status(500).send()
-    await User.findOneAndUpdate({ googleId: req.user.googleId }, { $push: { votes: votedVideoId } })
-    votingQueue[index].votes++
-    res.status(200).send(votingQueue[index].votes.toString())
-    io.emit("updateVotes", votedVideoId, votingQueue[index].votes)
+    if (req.user.votes.includes(id)) return res.status(500).send()
+    let element = await VoteElement.findOneAndUpdate({ 'video.ytid': id }, { $inc: { votes: 1 } })
+    console.log(element)
+    if (!element) return res.status(500).send()
+    await User.findOneAndUpdate({ googleId: req.user.googleId }, { $push: { votes: id } })
+    let votes = element.votes + 1
+    res.status(200).send(votes.toString())
+    io.emit("updateVotes", id, votes)
 })
 
 

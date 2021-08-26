@@ -6,6 +6,6 @@ const voteElementSchema = new Schema({
     video: Object
 })
 
-const VoteElement = mongoose.model("voteElements", voteElementSchema)
+const VoteElement = mongoose.model("voteelements", voteElementSchema)
 
 module.exports = VoteElement
