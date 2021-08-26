@@ -15,7 +15,7 @@
     <%- include('partials/header.ejs') %>
         <div id="songContainer">
             <% submitQueue.forEach(video=> { %>
-                <div data-videoid="<%= video.id %>" class="song">
+                <div data-videoid="<%= video.ytid %>" class="song">
                     <div class="songContent">
                         <%- video.title %>
                     </div>

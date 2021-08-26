@@ -13,7 +13,9 @@ const passport = require("passport"),
     passportSetup = require(path.join(__dirname, "/config/passport-setup"))
 
 const mongoose = require("mongoose"),
-    User = require(path.join(__dirname, "/models/user-model"))
+    User = require(path.join(__dirname, "/models/user-model")),
+    Submition = require(path.join(__dirname, "/models/submition-model")),
+    voteElement = require(path.join(__dirname, "/models/voteElement-model"))
 
 const cookieSession = require("cookie-session")
 
@@ -44,8 +46,8 @@ mongoose.connection.once("open", async () => {
     logger.info("Cleared votes")
 })
 
-let submitQueue = []
-let votingQueue = []
+//var submitQueue = []
+var votingQueue = []
 
 function checkIfLoggedIn(req, res, next) {
     if (!req.user) res.status(500).send()
@@ -78,8 +80,9 @@ app.get("/redirect", passport.authenticate("google"), (req, res) => {
     res.redirect("/")
 })
 
-app.get("/admin", checkIfLoggedIn, checkIfAdmin, (req, res) => {
-    res.render("admin", { submitQueue: submitQueue })
+app.get("/admin", checkIfLoggedIn, checkIfAdmin, async (req, res) => {
+    let submitions = await Submition.find({})
+    res.render("admin", { submitQueue: submitions })
 })
 
 app.get("/submit", checkIfLoggedIn, (req, res) => {
@@ -92,41 +95,40 @@ function addToVoting(video) {
     io.sockets.emit("updateVotingQueue", voteElement)
 }
 
-app.get("/admin/:option/:id", checkIfLoggedIn, checkIfAdmin, (req, res) => {
+app.get("/admin/:option/:id", checkIfLoggedIn, checkIfAdmin, async (req, res) => {
     let id = decodeURIComponent(req.params.id)
-    let index = submitQueue.findIndex(value => {
-        return value.id == id
-    })
-    if (index == -1) return res.status(500).send()
-    let video = submitQueue.splice(index, 1)[0]
+    let video = await Submition.findOneAndDelete({ ytid: id })
+    if (!video) return res.status(500).send()
     switch (req.params.option) {
         case "accept":
-            logger.info(`${req.user.name}#${req.user.googleId} accepted: ${video.title} (${video.id})`)
+            logger.info(`${req.user.name}#${req.user.googleId} accepted: ${video.title} (${video.ytid})`)
             addToVoting(video)
             break;
 
         case "deny":
-            logger.info(`${req.user.name}#${req.user.googleId} denied: ${video.title} (${video.id})`)
+            logger.info(`${req.user.name}#${req.user.googleId} denied: ${video.title} (${video.ytid})`)
             break;
 
         default:
             return res.status(500).send()
     }
-    io.to("admin").emit("removeSubmit", video.id)
+    io.to("admin").emit("removeSubmit", video.ytid)
 })
 
-function checkIfSubmitted(video) {
+async function checkIfSubmitted(video) {
+    let submitions = await Submition.find({})
     if ((votingQueue.findIndex(value => {
-        return value.video.id == video.id
-    }) == -1) && (submitQueue.findIndex(value => {
-        return value.id == video.id
+        return value.video.ytid == video.ytid
+    }) == -1) && (submitions.findIndex(value => {
+        return value.ytid == video.ytid
     }) == -1)) return false
     return true
 }
 
-function handleSubmition(video) {
+async function handleSubmition(video) {
     let response = {}
-    submitQueue.push(video)
+    // submitQueue.push(video) // delete
+    await new Submition(video).save()
     io.to("admin").emit("addSubmit", video)
     response.code = "success"
     response.video = video
@@ -144,26 +146,25 @@ app.get("/submit/search/:query", checkIfLoggedIn, async (req, res) => {
         })
         if (videos.items.length) {
             for (let i = 0; i < videos.items.length; i++) {
-                videos.items[i].submitted = checkIfSubmitted(videos.items[i])
+                videos.items[i].submitted = await checkIfSubmitted(videos.items[i])
             }
             res.json(videos)
-        }
-        else { res.json({ code: "noVideoFound" }) }
+        } else { res.json({ code: "noVideoFound" }) }
     } else { res.json({ code: "noVideoFound" }) }
 })
 
-app.post("/submit/post", (req, res) => { // TODO: validate data & check if submitted
-    logger.info(`${req.user.googleId} submitted: ${req.body.title} (${req.body.id})`)
-    res.json(handleSubmition(req.body))
+app.post("/submit/post", async (req, res) => { // TODO: validate data & check if submitted
+    logger.info(`${req.user.googleId} submitted: ${req.body.title} (${req.body.ytid})`)
+    res.json(await handleSubmition(req.body))
 })
 
 app.get("/vote/:id", checkIfLoggedIn, async (req, res) => {
     let id = decodeURIComponent(req.params.id)
     let index = votingQueue.findIndex(value => {
-        return id == value.video.id
+        return id == value.video.ytid
     })
     if (index == -1) return res.status(500).send()
-    let votedVideoId = votingQueue[index].video.id
+    let votedVideoId = votingQueue[index].video.ytid
     if (req.user.votes.includes(votedVideoId)) return res.status(500).send()
     await User.findOneAndUpdate({ googleId: req.user.googleId }, { $push: { votes: votedVideoId } })
     votingQueue[index].votes++

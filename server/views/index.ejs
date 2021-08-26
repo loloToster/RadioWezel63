@@ -32,15 +32,16 @@
                 <tr class="song">
                     <td class="songContent">
                         <div class="overflowWrapper">
-                            <a href="<%= 'https://www.youtube.com/watch?v=' + voteElement.video.id %>" target="_blank">
+                            <a href="<%= 'https://www.youtube.com/watch?v=' + voteElement.video.ytid %>"
+                                target="_blank">
                                 <%- voteElement.video.title %>
                             </a>
                         </div>
                     </td>
-                    <% if (user && !user.votes.includes(voteElement.video.id)) { %>
-                        <td data-videoid="<%= voteElement.video.id %>" class="upvote">&#9650;</td>
+                    <% if (user && !user.votes.includes(voteElement.video.ytid)) { %>
+                        <td data-videoid="<%= voteElement.video.ytid %>" class="upvote">&#9650;</td>
                         <% } else { %>
-                            <td data-videoid="<%= voteElement.video.id %>" data-voted="true" class="upvote">
+                            <td data-videoid="<%= voteElement.video.ytid %>" data-voted="true" class="upvote">
                                 <%- voteElement.votes %>
                             </td>
                             <% } %>

@@ -31,7 +31,7 @@ async function queryToVideos(query, maxResults = 10) {
         response = {
             code: "success",
             items: [{
-                id: data.id,
+                ytid: data.id,
                 title: data.snippet.title,
                 thumbnail: data.snippet.thumbnails.high.url,
                 duration: iso.toSeconds(iso.parse(data.contentDetails.duration))
@@ -60,11 +60,11 @@ async function queryToVideos(query, maxResults = 10) {
         for (let i = 0; i < data.length; i++) {
             const item = data[i];
             let video = {}
-            video.id = item.id.videoId
+            video.ytid = item.id.videoId
             let details = await google.youtube("v3").videos.list({
                 key: YT_KEYS[0],
                 part: "contentDetails",
-                id: video.id
+                id: video.ytid
             })
             video.title = item.snippet.title
             video.thumbnail = item.snippet.thumbnails.high.url

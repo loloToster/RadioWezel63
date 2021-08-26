@@ -19,7 +19,7 @@ socket.on("connect", () => {
 function createSongObject(video) {
     object = document.createElement("div")
     object.setAttribute("class", "song")
-    object.setAttribute("data-videoid", video.id)
+    object.setAttribute("data-videoid", video.ytid)
     let songContent = document.createElement("div")
     songContent.setAttribute("class", "songContent")
     songContent.innerText = htmlDecode(video.title)

@@ -27,7 +27,7 @@ function createSongObject(video) {
     overflowWrapper.setAttribute("class", "overflowWrapper")
 
     let href = document.createElement("a")
-    href.setAttribute("href", DEF_YT_URL + video.id)
+    href.setAttribute("href", DEF_YT_URL + video.ytid)
     href.setAttribute("target", "_blank")
     href.innerText = htmlDecode(video.title)
 
@@ -37,9 +37,9 @@ function createSongObject(video) {
 
     let upvote = document.createElement("td")
     upvote.setAttribute("class", "upvote")
-    upvote.setAttribute("data-videoid", video.id)
+    upvote.setAttribute("data-videoid", video.ytid)
     upvote.innerText = "\u25b2"
-    upvote.addEventListener("click", event => onVote(video.id))
+    upvote.addEventListener("click", event => onVote(video.ytid))
     object.appendChild(upvote)
 
     return object
@@ -61,7 +61,7 @@ function onVote(id) {
 
 socket.on("updateVotingQueue", voteElement => {
     console.log(voteElement)
-    console.log(voteElement.video.id)
+    console.log(voteElement.video.ytid)
     document.getElementById("songContainer").appendChild(createSongObject(voteElement.video))
 })
 

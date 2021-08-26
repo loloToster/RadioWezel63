@@ -74,6 +74,7 @@ function onSearch() {
     fetch("/submit/search/" + value)
         .then(response => response.json())
         .then(data => {
+            console.log(data)
             loading.style.display = "none"
             if (data.code == "success")
                 data.items.forEach(item => {
