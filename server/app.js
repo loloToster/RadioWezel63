@@ -11,10 +11,7 @@ const express = require("express"),
 const passport = require("passport"),
     passportSetup = require("./config/passport-setup")
 
-const mongoose = require("mongoose"),
-    User = require("./models/user"),
-    Submition = require("./models/submition"),
-    VoteElement = require("./models/voteElement")
+const mongoose = require("mongoose")
 
 const cookieSession = require("cookie-session")
 
@@ -62,10 +59,6 @@ io.on("connection", socket => {
         default:
             break;
     }
-})
-
-io.on("disconnection", socket => {
-    console.log(socket.id + " disconnected")
 })
 
 global.io = io

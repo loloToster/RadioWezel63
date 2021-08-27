@@ -83,10 +83,15 @@ function onSongClick(element) {
     element.appendChild(buttons)
 }
 
-function onButtonClick(type, id) {
-    console.log({ type, id })
-    id = encodeURIComponent(id)
-    fetch(`/admin/${type}/${id}`)
+function onButtonClick(option, id) {
+    console.log({ option, id })
+    fetch("/admin/verdict", {
+        method: "PUT",
+        headers: {
+            "Content-type": "application/json"
+        },
+        body: JSON.stringify({ id: id, option: option })
+    })
 }
 
 

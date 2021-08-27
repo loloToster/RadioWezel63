@@ -43,10 +43,10 @@ function onVideoClick(video) {
     console.log(video)
     fetch("/submit/post", {
         method: "POST",
-        body: JSON.stringify(video),
         headers: {
             "Content-Type": "application/json"
-        }
+        },
+        body: JSON.stringify(video)
     })
         .then(res => res.json())
         .then(data => {

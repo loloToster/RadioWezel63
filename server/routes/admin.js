@@ -27,11 +27,11 @@ async function addToVoting(video) {
     global.io.sockets.emit("updateVotingQueue", element)
 }
 
-router.get("/:option/:id", async (req, res) => {
-    let id = decodeURIComponent(req.params.id)
+router.put("/verdict", async (req, res) => {
+    let id = req.body.id
     let video = await Submition.findOneAndDelete({ ytid: id })
     if (!video) return res.status(500).send()
-    switch (req.params.option) {
+    switch (req.body.option) {
         case "accept":
             global.logger.info(`${req.user.name}#${req.user.googleId} accepted: ${video.title} (${video.ytid})`)
             await addToVoting(video)

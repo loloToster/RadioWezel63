@@ -3,7 +3,8 @@ const express = require("express"),
 
 const MAX_DURATION = 300
 
-const Submition = require("./../models/submition"),
+const User = require("./../models/user"),
+    Submition = require("./../models/submition"),
     VoteElement = require("./../models/voteElement")
 
 function checkIfLoggedIn(req, res, next) {
@@ -11,7 +12,9 @@ function checkIfLoggedIn(req, res, next) {
     else next()
 }
 
-router.get("/", checkIfLoggedIn, (req, res) => {
+router.use(checkIfLoggedIn)
+
+router.get("/", (req, res) => {
     res.render("submit")
 })
 
@@ -31,7 +34,7 @@ async function handleSubmition(video) {
 
 const queryToVideos = require("./../modules/query-to-video")
 
-router.get("/search/:query", checkIfLoggedIn, async (req, res) => {
+router.get("/search/:query", async (req, res) => {
     let query = decodeURIComponent(req.params.query)
     let videos = await queryToVideos(query)
     if (videos.code == "success") {
@@ -39,17 +42,28 @@ router.get("/search/:query", checkIfLoggedIn, async (req, res) => {
             return item.duration < MAX_DURATION
         })
         if (videos.items.length) {
+            let possibleSubmits = []
             for (let i = 0; i < videos.items.length; i++) {
-                videos.items[i].submitted = await checkIfSubmitted(videos.items[i])
+                let submitted = await checkIfSubmitted(videos.items[i])
+                if (!submitted) possibleSubmits.push(videos.items[i])
+                videos.items[i].submitted = submitted
             }
+            console.log(await User.updateOne({ googleId: req.user.googleId }, { possibleSubmits: possibleSubmits }))
             res.json(videos)
         } else { res.json({ code: "noVideoFound" }) }
     } else { res.json({ code: "noVideoFound" }) }
 })
 
-router.post("/post", checkIfLoggedIn, async (req, res) => { // TODO: validate data & check if submitted
-    global.logger.info(`${req.user.googleId} submitted: ${req.body.title} (${req.body.ytid})`)
-    res.json(await handleSubmition(req.body))
+router.post("/post", async (req, res) => { // ✔️ TODO: validate data & check if submitted
+    console.log(req.body)
+    const inPossibleSumbits = req.user.possibleSubmits.some(obj => obj.ytid === req.body.ytid && obj.title === req.body.title && obj.thumbnail === req.body.thumbnail && obj.duration === req.body.duration)
+    if (inPossibleSumbits) {
+        await User.updateOne({ googleId: req.user.googleId }, { possibleSubmits: [] })
+        global.logger.info(`${req.user.googleId} submitted: ${req.body.title} (${req.body.ytid})`)
+        res.json(await handleSubmition(req.body))
+    } else {
+        res.status(500).send()
+    }
 })
 
 module.exports = router
