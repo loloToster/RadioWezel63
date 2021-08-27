@@ -1,7 +1,6 @@
-const path = require("path"),
-    passport = require("passport"),
+const passport = require("passport"),
     googleStrategy = require("passport-google-oauth20"),
-    User = require(path.join(__dirname, "/../models/user-model"))
+    User = require("./../models/user")
 
 passport.serializeUser((user, done) => {
     done(null, user.googleId)
@@ -14,7 +13,7 @@ passport.deserializeUser(async (id, done) => {
 
 passport.use(
     new googleStrategy({
-        callbackURL: "/redirect",
+        callbackURL: "/auth/redirect",
         clientID: process.env.GOOGLE_AUTH_ID,
         clientSecret: process.env.GOOGLE_AUTH_SECRET
     }, async (accessToken, refreshToken, profile, done) => {

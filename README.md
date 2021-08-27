@@ -7,3 +7,4 @@ Known bugs:
 
 TODO:
 - move submit and voting queues to DB ✔️
+- multiple YT_KEYS
