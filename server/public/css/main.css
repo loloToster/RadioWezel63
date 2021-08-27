@@ -12,6 +12,7 @@ body {
 
 a {
     color: #d4d4d4;
+    text-decoration: inherit;
 }
 
 #header {
@@ -37,7 +38,7 @@ a {
 
 #login {
     height: 7vh;
-    width: 30vw;
+    width: 27vw;
     background-color: #1e1e1e;
     border-radius: 100vw;
 }
@@ -57,6 +58,36 @@ a {
     align-items: center;
     margin-right: 4vw;
     font-size: 2vh;
+}
+
+#dropdown {
+    position: relative;
+}
+
+#dropdownItems {
+    display: none;
+    position: absolute;
+    margin-top: 0.5vh;
+    right: 0;
+    width: fit-content;
+    max-width: 97vw;
+    background-color: #2d2d30;
+    overflow: hidden;
+    border-radius: 1vw;
+}
+
+#dropdownItems div {
+    font-size: 3vh;
+    padding: 1.5vh;
+    white-space: nowrap;
+}
+
+.show {
+    display: block !important;
+}
+
+#logout {
+    color: #c02739;
 }
 
 #gradientStrip {

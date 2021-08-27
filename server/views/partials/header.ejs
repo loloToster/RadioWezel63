@@ -4,7 +4,32 @@
     </a>
     <div id="profile">
         <% if (user) { %>
-            <a href="/profile"><img src=<%=user.thumbnail%>></a>
+            <div id="dropdown">
+                <img id="dropdownController" src=<%=user.thumbnail%>>
+                <div id="dropdownItems">
+                    <div>
+                        <%=user.name%>
+                    </div>
+                    <% if ( user.role=="admin" ) { %>
+                        <div><a href="/admin">Admin panel</a></div>
+                        <% } %>
+                            <div>Ustawienia</div>
+                            <div><a id="logout" href="/auth/logout">Wyloguj</a></div>
+                </div>
+            </div>
+            <script>
+                document.getElementById("dropdownController").addEventListener("click", () => {
+                    document.getElementById("dropdownItems").classList.toggle("show");
+                })
+                window.onclick = event => {
+                    if (!event.target.matches('#dropdownController')) {
+                        let dropdown = document.getElementById("dropdownItems")
+                        if (dropdown.classList.contains('show')) {
+                            dropdown.classList.remove('show')
+                        }
+                    }
+                }
+            </script>
             <% } else {%>
                 <a href="/auth/login">
                     <div id="login"><img src="/images/google.png">

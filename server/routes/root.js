@@ -14,10 +14,6 @@ router.get("/", async (req, res) => {
     res.render("index", { votingQueue: await VoteElement.find({}), user: req.user })
 })
 
-router.get("/profile", checkIfLoggedIn, (req, res) => {
-    res.render("profile", { user: req.user })
-})
-
 router.get("/vote/:id", checkIfLoggedIn, async (req, res) => {
     let id = decodeURIComponent(req.params.id)
     if (req.user.votes.includes(id)) return res.status(500).send()
