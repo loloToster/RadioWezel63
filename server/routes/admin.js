@@ -23,7 +23,7 @@ async function addToVoting(video) {
             duration: video.duration
         }
     }
-    console.log(await new VoteElement(element).save())
+    await new VoteElement(element).save()
     global.io.sockets.emit("updateVotingQueue", element)
 }
 

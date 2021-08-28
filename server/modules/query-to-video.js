@@ -23,10 +23,11 @@ async function queryToVideos(query, key, maxResults = 10) {
     let id = youtubeUrlToId(query)
 
     // Scraping Search
-    let videos = await scrapSearch.search(query)
-    if (videos.length) {
+    let videos = await scrapSearch.search(id ? id : query)
+    if (videos.length && videos) {
+        console.log("Searching with Scraping")
         let items = []
-        for (let i = 0; i < videos.length || items.length <= maxResults; i++) {
+        for (let i = 0; i < videos.length && items.length <= maxResults; i++) {
             const video = videos[i];
             let duration = video.duration_raw
             if (!duration) { continue }
@@ -42,6 +43,7 @@ async function queryToVideos(query, key, maxResults = 10) {
     }
 
     // Google Api Search
+    console.log("Searching with API")
     if (id) {
         let snippetAndDetails
         try {
