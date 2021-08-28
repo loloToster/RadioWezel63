@@ -8,4 +8,4 @@ Known bugs:
 TODO:
 - move submit and voting queues to DB ✔️
 - multiple YT_KEYS
-- add youtube-search-without-api-key
+- add youtube-search-without-api-key ✔️

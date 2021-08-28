@@ -1,6 +1,7 @@
 const express = require("express"),
     router = express.Router()
 
+const YT_KEYS = process.env.YT_KEYS.split(" ")
 const MAX_DURATION = 300
 
 const User = require("./../models/user"),
@@ -36,7 +37,7 @@ const queryToVideos = require("./../modules/query-to-video")
 
 router.get("/search/:query", async (req, res) => {
     let query = decodeURIComponent(req.params.query)
-    let videos = await queryToVideos(query)
+    let videos = await queryToVideos(query, YT_KEYS[0])
     if (videos.code == "success") {
         videos.items = videos.items.filter(item => {
             return item.duration < MAX_DURATION
@@ -48,14 +49,13 @@ router.get("/search/:query", async (req, res) => {
                 if (!submitted) possibleSubmits.push(videos.items[i])
                 videos.items[i].submitted = submitted
             }
-            console.log(await User.updateOne({ googleId: req.user.googleId }, { possibleSubmits: possibleSubmits }))
+            await User.updateOne({ googleId: req.user.googleId }, { possibleSubmits: possibleSubmits })
             res.json(videos)
         } else { res.json({ code: "noVideoFound" }) }
     } else { res.json({ code: "noVideoFound" }) }
 })
 
 router.post("/post", async (req, res) => { // ✔️ TODO: validate data & check if submitted
-    console.log(req.body)
     const inPossibleSumbits = req.user.possibleSubmits.some(obj => obj.ytid === req.body.ytid && obj.title === req.body.title && obj.thumbnail === req.body.thumbnail && obj.duration === req.body.duration)
     if (inPossibleSumbits) {
         await User.updateOne({ googleId: req.user.googleId }, { possibleSubmits: [] })
