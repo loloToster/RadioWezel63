@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/index.css">
-    <script src="https://cdn.socket.io/4.1.3/socket.io.min.js"></script>
+    <script defer src="/socket.io/socket.io.js"></script>
     <script defer src="/js/index.js"></script>
     <script defer src="/js/reconnection.js"></script>
     <title>RadioWęzeł</title>
@@ -17,7 +17,7 @@
         <div id="currentSong">
             <img id="thumbnail" style="margin-bottom: 5vw;"
                 src="https://i.ytimg.com/vi/MEg-oqI9qmw/hq720.jpg?sqp=-oaymwEXCNAFEJQDSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLBOVQrl2TtK1DkdB-kfyGr_hAqYMw">
-            <table id="progressBar">
+            <!--<table id="progressBar">
                 <tr>
                     <td id="left" class="progressNumber">00:00</td>
                     <td class="bar">
@@ -25,32 +25,40 @@
                     </td>
                     <td id="right" class="progressNumber">00:00</td>
                 </tr>
-            </table>
+            </table>-->
+            <div id="progressBar">
+                <div id="left" class="progressNumber">00:00</div>
+                <div class="bar">
+                    <input class="bar" min="0" max="100" type="range" disabled>
+                </div>
+                <div id="right" class="progressNumber">00:00</div>
+            </div>
         </div>
         <img style="position: relative; top: -3px;" src="/images/waves.png">
-        <table id="songContainer">
+        <div id="songContainer">
             <% votingQueue.forEach(voteElement=> { %>
-                <tr class="song">
-                    <td class="songContent">
-                        <div class="overflowWrapper">
-                            <a href="<%= 'https://www.youtube.com/watch?v=' + voteElement.video.ytid %>"
-                                target="_blank">
-                                <%- voteElement.video.title %>
-                            </a>
-                        </div>
-                    </td>
+                <div class="song">
+                    <div class="title">
+                        <a href="<%= 'https://www.youtube.com/watch?v=' + voteElement.video.ytid %>">
+                            <%- voteElement.video.title %>
+                        </a>
+                    </div>
                     <% if (user && !user.votes.includes(voteElement.video.ytid)) { %>
-                        <td data-videoid="<%= voteElement.video.ytid %>" class="upvote">&#9650;</td>
+                        <div data-videoid="<%= voteElement.video.ytid %>" class="upvote">&#9650;</div>
                         <% } else { %>
-                            <td data-videoid="<%= voteElement.video.ytid %>" data-voted="true" class="upvote">
+                            <div data-videoid="<%= voteElement.video.ytid %>" data-voted="true" class="upvote">
                                 <%- voteElement.votes %>
-                            </td>
+                            </div>
                             <% } %>
-                </tr>
+                </div>
                 <% }) %>
-        </table>
+        </div>
         <% if (user) { %>
-            <div id="addSongButton"><a href="submit"><img src="/images/plus.png"></a></div>
+            <a href="/submit">
+                <div id="addSongButton">
+                    <img id="plus" src="/images/plus.png">
+                </div>
+            </a>
             <% } %>
 </body>
 

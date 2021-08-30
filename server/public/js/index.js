@@ -11,29 +11,31 @@ socket.on("connect", () => {
     console.log("connected")
 })
 
+let addSong = document.getElementById("plus")
+
+addSong.addEventListener("click", () => {
+    addSong.setAttribute("class", "clicked")
+})
+
 Array.from(document.getElementsByClassName("upvote")).forEach(element => {
     if (!element.dataset.voted)
         element.addEventListener("click", event => onVote(element.dataset.videoid))
 })
 
 function createSongObject(video) {
-    let object = document.createElement("tr")
+    let object = document.createElement("div")
     object.setAttribute("class", "song")
 
-    let songContent = document.createElement("td")
-    songContent.setAttribute("class", "songContent")
-
-    let overflowWrapper = document.createElement("div")
-    overflowWrapper.setAttribute("class", "overflowWrapper")
+    let title = document.createElement("div")
+    title.setAttribute("class", "title")
 
     let href = document.createElement("a")
     href.setAttribute("href", DEF_YT_URL + video.ytid)
     href.setAttribute("target", "_blank")
     href.innerText = htmlDecode(video.title)
 
-    overflowWrapper.appendChild(href)
-    songContent.appendChild(overflowWrapper)
-    object.appendChild(songContent)
+    title.appendChild(href)
+    object.appendChild(title)
 
     let upvote = document.createElement("td")
     upvote.setAttribute("class", "upvote")
