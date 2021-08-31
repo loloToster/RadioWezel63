@@ -9,4 +9,4 @@ TODO:
 - move submit and voting queues to DB ✔️
 - multiple YT_KEYS
 - add youtube-search-without-api-key ✔️
-- zembedowane yt na admin panelu
+- zembedowane yt na admin panelu ✔️

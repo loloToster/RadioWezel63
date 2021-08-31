@@ -1,4 +1,5 @@
-const DEF_YT_URL = "https://www.youtube.com/watch?v="
+const DEF_YT_URL = "https://www.youtube.com/watch?v=",
+    DEF_EMBED_YT = "https://www.youtube.com/embed/"
 
 function htmlDecode(input) {
     var doc = new DOMParser().parseFromString(input, "text/html");
@@ -27,9 +28,21 @@ function createSongObject(video) {
     return object
 }
 
-function createButtonsObject(parent) {
+function createManageObject(parent) {
     let object = document.createElement("div")
-    object.setAttribute("id", "buttons")
+    object.setAttribute("id", "manage")
+
+    let iframeWrapper = document.createElement("div")
+    iframeWrapper.setAttribute("id", "iframeWrapper")
+
+    let iframe = document.createElement("iframe")
+    iframe.setAttribute("frameborder", "0")
+    iframe.setAttribute("src", DEF_EMBED_YT + parent.dataset.videoid)
+    iframeWrapper.appendChild(iframe)
+    object.appendChild(iframeWrapper)
+
+    let buttons = document.createElement("div")
+    buttons.setAttribute("id", "buttons")
 
     let deny = document.createElement("div")
     deny.setAttribute("id", "deny")
@@ -39,7 +52,7 @@ function createButtonsObject(parent) {
     let img = document.createElement("img")
     img.setAttribute("src", "/images/deny.png")
     deny.appendChild(img)
-    object.appendChild(deny)
+    buttons.appendChild(deny)
 
     let accept = document.createElement("div")
     accept.setAttribute("id", "accept")
@@ -49,7 +62,7 @@ function createButtonsObject(parent) {
     img = document.createElement("img")
     img.setAttribute("src", "/images/accept.png")
     accept.appendChild(img)
-    object.appendChild(accept)
+    buttons.appendChild(accept)
 
     let link = document.createElement("div")
     link.setAttribute("id", "link")
@@ -63,11 +76,9 @@ function createButtonsObject(parent) {
     img.setAttribute("src", "/images/link.png")
     href.appendChild(img)
     link.appendChild(href)
-    object.appendChild(link)
+    buttons.appendChild(link)
+    object.appendChild(buttons)
 
-    let clear = document.createElement("div")
-    clear.style.clear = "both"
-    object.appendChild(clear)
     return object
 }
 
@@ -77,10 +88,10 @@ Array.from(document.getElementsByClassName("song")).forEach(element => {
 
 function onSongClick(element) {
     console.log(element.dataset.videoid)
-    let buttons = document.getElementById("buttons")
-    if (buttons) buttons.remove()
-    buttons = createButtonsObject(element)
-    element.appendChild(buttons)
+    let manage = document.getElementById("manage")
+    if (manage) manage.remove()
+    manage = createManageObject(element)
+    element.appendChild(manage)
 }
 
 function onButtonClick(option, id) {
