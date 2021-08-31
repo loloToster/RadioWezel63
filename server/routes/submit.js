@@ -37,7 +37,7 @@ const queryToVideos = require("./../modules/query-to-video")
 
 router.get("/search/:query", async (req, res) => {
     let query = decodeURIComponent(req.params.query)
-    let videos = await queryToVideos(query, YT_KEYS[0])
+    let videos = await queryToVideos(query, YT_KEYS)
     if (videos.code == "success") {
         videos.items = videos.items.filter(item => {
             return item.duration < MAX_DURATION

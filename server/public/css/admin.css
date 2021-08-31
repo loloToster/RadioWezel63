@@ -10,15 +10,21 @@
     overflow: scroll;
 }
 
+#manage {
+    margin: 1vh;
+}
+
 #buttons {
     display: flex;
+    overflow: scroll;
 }
 
 .button {
-    margin: 1vh;
-    width: 10vh;
+    min-width: 10vh;
+    max-width: 10vh;
     height: 10vh;
     border-radius: 3vh;
+    margin-right: 1vh;
 }
 
 img {
@@ -39,8 +45,7 @@ img {
 }
 
 #iframeWrapper {
-    box-sizing: border-box;
-    padding: 1vh;
+    margin-bottom: 1vh;
 }
 
 iframe {

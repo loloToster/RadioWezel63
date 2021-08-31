@@ -7,6 +7,7 @@ Known bugs:
 
 TODO:
 - move submit and voting queues to DB ✔️
-- multiple YT_KEYS
+- multiple YT_KEYS ✔️
 - add youtube-search-without-api-key ✔️
 - zembedowane yt na admin panelu ✔️
+- videos that exceed max duration showing up in /submit 

@@ -9,30 +9,36 @@
     font-size: 3vh;
 }
 
-#inputTd input {
-    width: calc(100% - 5vw);
-    font-size: 3vh;
+#search {
+    display: flex;
+}
+
+#search #bar {
+    flex-grow: 1;
+    padding: 1vh;
+}
+
+#search #bar input {
+    width: 100%;
     height: 7vh;
+    box-sizing: border-box;
+    font-size: 3vh;
     padding-left: 5vw;
     background-color: #848484;
     border-radius: 50vh;
     border: none;
 }
 
-#inputTd input:focus {
+#search #bar input {
     outline-width: 0;
 }
 
-#inputTd {
-    width: 100%;
-    padding: 1vh;
+#search #icon {
+    padding: 1vh 1vh 1vh 0;
 }
 
-#icon {
-    padding: 1vh;
-}
-
-#icon img {
+#search #icon img {
+    width: 7vh;
     height: 7vh;
 }
 

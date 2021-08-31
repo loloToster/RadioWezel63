@@ -18,14 +18,10 @@ function youtubeUrlToId(url) {
     return (match && match[7].length == 11) ? match[7] : false
 }
 
-async function queryToVideos(query, key, maxResults = 10) {
-    let response
+async function searchWithScraping(query, maxResults) {
     let id = youtubeUrlToId(query)
-
-    // Scraping Search
     let videos = await scrapSearch.search(id ? id : query)
     if (videos.length && videos) {
-        console.log("Searching with Scraping")
         let items = []
         for (let i = 0; i < videos.length && items.length <= maxResults; i++) {
             const video = videos[i];
@@ -38,12 +34,13 @@ async function queryToVideos(query, key, maxResults = 10) {
                 duration: hmsToSeconds(video.duration_raw)
             })
         }
-        response = { code: "success", items: items }
-        return response
+        return { done: true, items: items }
     }
+    return { done: false }
+}
 
-    // Google Api Search
-    console.log("Searching with API")
+async function searchWithApi(query, key, maxResults) {
+    let id = youtubeUrlToId(query)
     if (id) {
         let snippetAndDetails
         try {
@@ -53,15 +50,16 @@ async function queryToVideos(query, key, maxResults = 10) {
                 id: id
             })
         } catch (err) {
-            console.error(err)
-            return { code: "error" }
+            //console.error(err)
+            return { done: false, code: "error" }
         }
         let data = snippetAndDetails.data.items[0]
         if (!data) {
             console.log("noVideoFound")
-            return { code: "noVideoFound" }
+            return { done: false, code: "noVideoFound" }
         }
-        response = {
+        return {
+            done: true,
             code: "success",
             items: [{
                 ytid: data.id,
@@ -81,32 +79,53 @@ async function queryToVideos(query, key, maxResults = 10) {
                 q: query
             })
         } catch (err) {
-            console.error(err)
-            return { code: "error" }
+            //console.error(err)
+            return { done: false, code: "error" }
         }
         let data = snippets.data.items
         if (!data.length) {
             console.log("noVideoFound")
-            return { code: "noVideoFound" }
+            return { done: false, code: "noVideoFound" }
         }
         let newItems = []
         for (let i = 0; i < data.length; i++) {
             const item = data[i];
             let video = {}
             video.ytid = item.id.videoId
-            let details = await google.youtube("v3").videos.list({
-                key: key,
-                part: "contentDetails",
-                id: video.ytid
-            })
+            let details
+            try {
+                details = await google.youtube("v3").videos.list({
+                    key: key,
+                    part: "contentDetails",
+                    id: video.ytid
+                })
+            } catch (err) {
+                //console.error(err)
+                return { done: false, code: "error" }
+            }
             video.title = item.snippet.title
             video.thumbnail = item.snippet.thumbnails.high.url
             video.duration = iso.toSeconds(iso.parse(details.data.items[0].contentDetails.duration))
             newItems.push(video)
         }
-        response = { code: "success", items: newItems }
+        return { done: true, code: "success", items: newItems }
     }
-    return response
+}
+
+async function queryToVideos(query, keys, maxResults = 10) {
+    console.log("Searching with Scraping")
+    let result = await searchWithScraping(query, maxResults)
+    if (result.done) return { code: "success", items: result.items }
+
+    console.log("Searching with API")
+    for (let i = 0; i < keys.length; i++) {
+        const key = keys[i]
+        console.log("Searching with key: " + key)
+        result = await searchWithApi(query, key, maxResults)
+        if (result.done) return { code: "success", items: result.items }
+        if (result.code == "noVideoFound") return { code: "noVideoFound" }
+    }
+    return { code: "error" }
 }
 
 module.exports = queryToVideos

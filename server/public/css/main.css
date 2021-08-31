@@ -18,11 +18,12 @@ a {
     height: 7vh;
     background-color: #3e3e42;
     padding: 1.5vh;
+    display: flex;
 }
 
 #logo {
-    float: left;
-    font-size: 6.5vh
+    font-size: 6.5vh;
+    flex-grow: 1;
 }
 
 #login {
@@ -47,10 +48,6 @@ a {
     align-items: center;
     margin-right: 4vw;
     font-size: 2vh;
-}
-
-#menu {
-    float: right;
 }
 
 /*burger*/

@@ -33,7 +33,7 @@ function createVideoElement(video) {
 }
 
 document.getElementById("icon").addEventListener("click", onSearch)
-document.querySelector("#inputTd input").addEventListener("keypress", event => {
+document.querySelector("#search #bar input").addEventListener("keypress", event => {
     if (event.key == "Enter") onSearch()
 })
 
@@ -59,7 +59,7 @@ function onVideoClick(video) {
 var searching = false
 
 function onSearch() {
-    let input = document.querySelector("#inputTd input")
+    let input = document.querySelector("#search #bar input")
     let value = input.value
     if (!value || searching) return
     searching = true
