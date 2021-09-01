@@ -1,2 +1,4 @@
 youtube_dl
 python-socketio[client]
+pymongo
+pymongo[srv]
