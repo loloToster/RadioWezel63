@@ -9,13 +9,13 @@ class BadBreaksError(Exception):
 
 class BreakHandler:
     def __init__(self, BREAKS):
-        self._validateBreaks(BREAKS)
+        self._validate(BREAKS)
         self.BREAKS = BREAKS
         self._onStart = []
         self._onStop = []
         self.previousBreak = self.isBreakNow()
 
-    def _validateBreaks(self, BREAKS):
+    def _validate(self, BREAKS):
         for BREAK in BREAKS:
             BREAK = {
                 "breakStart": {
@@ -40,13 +40,15 @@ class BreakHandler:
 
     async def loop(self):
         print("Starting BreakHandler loop")
+        # await self._callStart()  #! delete this
         while True:
             isThereBreak = self.isBreakNow()
             if isThereBreak != self.previousBreak:
+                print("calling")
                 if isThereBreak:
-                    self._callStart()
+                    await self._callStart()
                 else:
-                    self._callStop()
+                    await self._callStop()
             self.previousBreak = isThereBreak
             await asyncio.sleep(1)
 
@@ -70,13 +72,13 @@ class BreakHandler:
                 return True
         return False
 
-    def _callStart(self):
+    async def _callStart(self):
         for handler in self._onStart:
-            handler()
+            await handler()
 
-    def _callStop(self):
+    async def _callStop(self):
         for handler in self._onStop:
-            handler()
+            await handler()
 
     def breakStart(self):
         def registerhandler(handler):

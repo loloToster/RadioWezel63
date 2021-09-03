@@ -6,7 +6,7 @@ const logger = require("./config/winston-setup")
 const express = require("express"),
     app = express(),
     server = require("http").createServer(app),
-    io = require("socket.io")(server) // , { cors: { origin: "*" } }
+    io = require("socket.io")(server, {}) // , { cors: { origin: "*" } }
 
 const passport = require("passport"),
     passportSetup = require("./config/passport-setup")
@@ -15,7 +15,7 @@ const mongoose = require("mongoose")
 
 const cookieSession = require("cookie-session")
 
-const PY_SECRET = process.env.PY_SECRET
+const RPI_SECRET = process.env.RPI_SECRET
 const COOKIE_SECRET = process.env.COOKIE_SECRET
 const MONGO_URL = process.env.MONGO_URL
 
@@ -38,6 +38,7 @@ app.use("/", require("./routes/root"))
 app.use("/auth", require("./routes/auth"))
 app.use("/admin", require("./routes/admin"))
 app.use("/submit", require("./routes/submit"))
+app.use("/rpi", require("./routes/rpi"))
 
 app.use((req, res) => {
     res.status(404).render('error')
@@ -52,8 +53,12 @@ io.on("connection", socket => {
             break;
 
         case "python":
-            if (auth.key == PY_SECRET)
-                socket.join("python")
+            if (auth.key == RPI_SECRET) {
+                socket.join("rpi")
+                logger.info("rPi connected")
+            } else {
+                socket.disconnect()
+            }
             break;
 
         default:

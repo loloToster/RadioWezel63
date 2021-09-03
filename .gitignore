@@ -1,6 +1,9 @@
 .vscode/
 node_modules/
+__pycache__/
+
 .env
 secrets.py
-__pycache__/
+
 *.log
+*.mp3
