@@ -7,28 +7,15 @@ import os
 
 from socketio import AsyncClient
 from playsound import playsound
-from youtube_dl import YoutubeDL
 
 from modules.breakHandler import BreakHandler
+from modules.downloader import download
 
 PATH = os.path.dirname(os.path.realpath(__file__))
-
-DEF_YT_URL = "https://www.youtube.com/watch?v="
-YDL_OPTS = {
-    "format": "worst",
-    "postprocessors": [
-        {
-            "key": "FFmpegExtractAudio",
-            "preferredcodec": "mp3",
-            "preferredquality": "192",
-        }
-    ],
-    "outtmpl": None,
-    "quiet": False,
-}
+AUDIO_PATH = PATH + "/audio"
 # SERVER = "http://radiowezel.herokuapp.com/"
 SERVER = "http://localhost/"
-ROUTE = "http://localhost/rpi"
+ROUTE = SERVER + "rpi"
 CONNECTION_SECRET = secrets.CONNECTION_SECRET
 
 BREAKS = [
@@ -58,13 +45,8 @@ async def onBreakStart():
         if song["votes"] >= votes:
             mostPopular = song
             votes = song["votes"]
-    print(mostPopular)
-    YDL_OPTS["outtmpl"] = f"{PATH}/{mostPopular['video']['ytid']}.%(ext)s"
-    with YoutubeDL(YDL_OPTS) as ydl:
-        try:
-            ydl.download([DEF_YT_URL + mostPopular["video"]["ytid"]])
-        except Exception as e:
-            print(e)
+    done = await download(AUDIO_PATH, mostPopular["video"]["ytid"])
+    print(f"Download: {done}, {mostPopular['video']['ytid']}")
 
 
 @breakHandler.breakStop()
