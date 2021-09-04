@@ -6,7 +6,7 @@ const logger = require("./config/winston-setup")
 const express = require("express"),
     app = express(),
     server = require("http").createServer(app),
-    io = require("socket.io")(server, {}) // , { cors: { origin: "*" } }
+    io = require("socket.io")(server) // , { cors: { origin: "*" } }
 
 const passport = require("passport"),
     passportSetup = require("./config/passport-setup")
@@ -56,6 +56,7 @@ io.on("connection", socket => {
             if (auth.key == RPI_SECRET) {
                 socket.join("rpi")
                 logger.info("rPi connected")
+                socket.on("update", onUpdate)
             } else {
                 socket.disconnect()
             }
@@ -65,6 +66,10 @@ io.on("connection", socket => {
             break;
     }
 })
+
+function onUpdate(arg) {
+    io.emit("updateDuration", arg)
+}
 
 global.io = io
 global.logger = logger

@@ -73,3 +73,35 @@ socket.on("updateVotes", (id, votes) => {
     if (!button.dataset.voted) return
     button.innerText = votes
 })
+
+socket.on("updateDuration", arg => {
+    if (arg.currentDuration == -1) {
+        document.getElementById("currentSong").style.display = "none"
+        document.getElementById("waves").style.display = "none"
+    } else {
+        document.getElementById("currentSong").style.display = "block"
+        document.getElementById("waves").style.display = "block"
+    }
+    document.getElementById("thumbnail").setAttribute("src", arg.video.thumbnail)
+    let progressBar = document.querySelector("input.bar")
+    let left = document.getElementById("left")
+    let right = document.getElementById("right")
+    let duration = arg.video.duration
+    let minutes = Math.floor(duration / 60)
+    let seconds = duration - minutes * 60
+    right.innerText = `${zeroFill(minutes)}:${zeroFill(seconds)}`
+    let currentDuration = arg.currentDuration
+    minutes = Math.floor(currentDuration / 60)
+    seconds = currentDuration - minutes * 60
+    left.innerText = `${zeroFill(minutes)}:${zeroFill(seconds)}`
+    let percentage = Math.round((currentDuration / duration) * 100)
+    progressBar.value = percentage
+    progressBar.style.background = `linear-gradient(to right, #01be97 0%, #01be97 ${percentage}%, #d4d4d4 ${percentage}%, #d4d4d4 100%)`
+})
+
+function zeroFill(number, width = 2) {
+    width -= number.toString().length
+    if (width > 0)
+        return new Array(width + (/\./.test(number) ? 2 : 1)).join('0') + number
+    return number + ""
+}

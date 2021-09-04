@@ -16,4 +16,9 @@ router.get("/songs", async (req, res) => {
     res.json(await VoteElement.find({}))
 })
 
+router.delete("/remove/:id", async (req, res) => {
+    global.logger.info("removing " + req.params.id)
+    res.status(200).send()
+})
+
 module.exports = router

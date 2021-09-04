@@ -14,6 +14,7 @@ class BreakHandler:
         self._onStart = []
         self._onStop = []
         self.previousBreak = self.isBreakNow()
+        self.stopLoop = False
 
     def _validate(self, BREAKS):
         for BREAK in BREAKS:
@@ -42,6 +43,9 @@ class BreakHandler:
         print("Starting BreakHandler loop")
         # await self._callStart()  #! delete this
         while True:
+            if self.stopLoop:
+                self.stopLoop = False
+                break
             isThereBreak = self.isBreakNow()
             if isThereBreak != self.previousBreak:
                 print("calling")

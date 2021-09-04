@@ -11,3 +11,4 @@ TODO:
 - add youtube-search-without-api-key ✔️
 - zembedowane yt na admin panelu ✔️
 - videos that exceed max duration showing up in /submit 
+- optimize current video handling
