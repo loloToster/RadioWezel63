@@ -33,7 +33,8 @@ img {
     align-items: center;
 }
 
-input.bar {
+input {
+    width: 100%;
     -webkit-appearance: none;
     height: 1vh;
     background: linear-gradient(to right, #01be97 0%, #01be97 50%, #d4d4d4 50%, #d4d4d4 100%);
@@ -41,7 +42,7 @@ input.bar {
     outline: none;
 }
 
-input.bar::-webkit-slider-thumb {
+input::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 4vw;
@@ -50,7 +51,7 @@ input.bar::-webkit-slider-thumb {
     background: #3e3e42;
 }
 
-input.bar::-moz-range-thumb {
+input::-moz-range-thumb {
     width: 3vw;
     height: 3vw;
     border-radius: 50%;

@@ -62,11 +62,30 @@
 .video {
     width: auto;
     overflow: hidden;
+    position: relative;
 }
 
 .video div {
     float: left;
     padding: 2vw;
+    font-size: 3vh;
+}
+
+submitted {
+    background-color: #57cc47bb;
+}
+
+tolong {
+    background-color: #c02739bb;
+}
+
+.unclickable {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 3vh;
 }
 

@@ -83,7 +83,7 @@ socket.on("updateDuration", arg => {
         document.getElementById("waves").style.display = "block"
     }
     document.getElementById("thumbnail").setAttribute("src", arg.video.thumbnail)
-    let progressBar = document.querySelector("input.bar")
+    let progressBar = document.querySelector("input")
     let left = document.getElementById("left")
     let right = document.getElementById("right")
     let duration = arg.video.duration
@@ -94,7 +94,7 @@ socket.on("updateDuration", arg => {
     minutes = Math.floor(currentDuration / 60)
     seconds = currentDuration - minutes * 60
     left.innerText = `${zeroFill(minutes)}:${zeroFill(seconds)}`
-    let percentage = Math.round((currentDuration / duration) * 100)
+    let percentage = (currentDuration / duration) * 100
     progressBar.value = percentage
     progressBar.style.background = `linear-gradient(to right, #01be97 0%, #01be97 ${percentage}%, #d4d4d4 ${percentage}%, #d4d4d4 100%)`
 })
@@ -104,4 +104,18 @@ function zeroFill(number, width = 2) {
     if (width > 0)
         return new Array(width + (/\./.test(number) ? 2 : 1)).join('0') + number
     return number + ""
+}
+
+function test(cDur = 0, dur = 30) {
+    console.log("exe")
+    let progressBar = document.querySelector("input")
+    // progressBar.max = dur
+
+    let value = Math.round((cDur / dur) * 100)
+    progressBar.value = value
+    progressBar.style.background = `linear-gradient(to right, #01be97 0%, #01be97 ${value}%, #d4d4d4 ${value}%, #d4d4d4 100%)`
+
+    cDur++
+    if (cDur == dur) return
+    setTimeout(test, 1000, cDur, dur)
 }

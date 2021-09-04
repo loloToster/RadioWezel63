@@ -39,19 +39,16 @@ router.get("/search/:query", async (req, res) => {
     let query = decodeURIComponent(req.params.query)
     let videos = await queryToVideos(query, YT_KEYS)
     if (videos.code == "success") {
-        videos.items = videos.items.filter(item => {
-            return item.duration < MAX_DURATION
-        })
-        if (videos.items.length) {
-            let possibleSubmits = []
-            for (let i = 0; i < videos.items.length; i++) {
-                let submitted = await checkIfSubmitted(videos.items[i])
-                if (!submitted) possibleSubmits.push(videos.items[i])
-                videos.items[i].submitted = submitted
-            }
-            await User.updateOne({ googleId: req.user.googleId }, { possibleSubmits: possibleSubmits })
-            res.json(videos)
-        } else { res.json({ code: "noVideoFound" }) }
+        let possibleSubmits = []
+        for (let i = 0; i < videos.items.length; i++) {
+            let submitted = await checkIfSubmitted(videos.items[i])
+            let toLong = videos.items[i].duration > MAX_DURATION
+            if (!submitted && !toLong) possibleSubmits.push(videos.items[i])
+            videos.items[i].submitted = submitted
+            videos.items[i].toLong = toLong
+        }
+        await User.updateOne({ googleId: req.user.googleId }, { possibleSubmits: possibleSubmits })
+        res.json(videos)
     } else { res.json({ code: "noVideoFound" }) }
 })
 
