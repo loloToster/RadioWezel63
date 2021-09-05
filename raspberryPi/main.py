@@ -29,16 +29,18 @@ BREAKS = [
     ("14:50", "14:55"),
 ]
 
+BREAKS = []
 
-def createTestBreak(n=0, o=2):
+
+def createTestBreak(n=0, o=1):
     from datetime import datetime, timedelta
 
     now = datetime.now() + timedelta(minutes=n)
-    offset = now + timedelta(minutes=o)
+    offset = now + timedelta(minutes=n + o)
     return (f"{now.hour}:{now.minute}", f"{offset.hour}:{offset.minute}")
 
 
-BREAKS.append(createTestBreak())
+BREAKS.append(createTestBreak(1))
 
 print(BREAKS[-1])
 
@@ -57,42 +59,55 @@ async def updateServer(override=False):
     )
 
 
-@breakHandler.breakStart()
 async def onBreakStart():
     print(f"break started")
-    while breakHandler.isBreakNow():
-        if audio.isPlaying():
-            await updateServer()
-            await asyncio.sleep(1)
-            continue
-        songs = requests.get(
-            ROUTE + "/songs", headers={"auth": CONNECTION_SECRET}
-        ).json()
-        songs.sort(key=lambda ve: ve["votes"], reverse=True)
-        mostPopular = songs[0]
-        done = await download(AUDIO_PATH, mostPopular["video"]["ytid"])
-        print(f"Download: {done}, {mostPopular['video']['ytid']}")
-        requests.delete(
-            ROUTE + "/remove/" + mostPopular["video"]["ytid"],
-            headers={"auth": CONNECTION_SECRET},
-        )
-        print("Playing")
-        audio.play(
-            f"{AUDIO_PATH}/{mostPopular['video']['ytid']}.mp3", mostPopular["video"]
-        )
+    if audio.isPlaying():
+        await updateServer()
+        return
+    songs = requests.get(ROUTE + "/songs", headers={"auth": CONNECTION_SECRET}).json()
+    songs.sort(key=lambda ve: ve["votes"], reverse=True)
+    mostPopular = songs[0]
+    done = await download(AUDIO_PATH, mostPopular["video"]["ytid"])
+    print(f"Download: {done}, {mostPopular['video']['ytid']}")
+    requests.delete(
+        ROUTE + "/remove/" + mostPopular["video"]["ytid"],
+        headers={"auth": CONNECTION_SECRET},
+    )
+    print("Playing")
+    audio.play(f"{AUDIO_PATH}/{mostPopular['video']['ytid']}.mp3", mostPopular["video"])
 
 
-@breakHandler.breakStop()
 async def onBreakStop():
     print("break stop")
     audio.stop()
     await updateServer(True)
 
 
+previousBreak = breakHandler.isBreakNow()
+
+
+async def mainLoop():
+    global previousBreak
+    isThereBreak = breakHandler.isBreakNow()
+    if isThereBreak == previousBreak:
+        return
+    previousBreak = isThereBreak
+    if isThereBreak:
+        await onBreakStart()
+    else:
+        await onBreakStop()
+
+
+async def mainLoopWrapper():
+    while True:
+        await mainLoop()
+        await socket.sleep(1)
+
+
 @socket.event
 async def connect():
     print("Connected to the server")
-    socket.start_background_task(breakHandler.loop)
+    socket.start_background_task(mainLoopWrapper)
 
 
 @socket.event
