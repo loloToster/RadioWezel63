@@ -13,44 +13,49 @@
 </head>
 
 <body>
-    <%- include('partials/header.ejs') %>
-        <div id="currentSong">
-            <img id="thumbnail" style="margin-bottom: 5vw;"
-                src="https://i.ytimg.com/vi/MEg-oqI9qmw/hq720.jpg?sqp=-oaymwEXCNAFEJQDSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLBOVQrl2TtK1DkdB-kfyGr_hAqYMw">
-            <div id="progressBar">
-                <div id="left" class="progressNumber">00:00</div>
-                <div class="bar">
-                    <input min="0" max="100" type="range" disabled>
-                </div>
-                <div id="right" class="progressNumber">00:00</div>
-            </div>
-        </div>
-        <img id="waves" style="position: relative; top: -3px;" src="/images/waves.png">
-        <div id="songContainer">
-            <% votingQueue.forEach(voteElement=> { %>
-                <div class="song">
-                    <div class="title">
-                        <a href="<%= 'https://www.youtube.com/watch?v=' + voteElement.video.ytid %>">
-                            <%- voteElement.video.title %>
-                        </a>
+    <div id="contentWrapper">
+        <%- include('partials/header.ejs') %>
+            <div id="currentWrapper">
+                <div id="currentSong">
+                    <img id="thumbnail" style="margin-bottom: 5vw;"
+                        src="https://i.ytimg.com/vi/MEg-oqI9qmw/hq720.jpg?sqp=-oaymwEXCNAFEJQDSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLBOVQrl2TtK1DkdB-kfyGr_hAqYMw">
+                    <div id="progressBar">
+                        <div id="left" class="progressNumber">00:00</div>
+                        <div class="bar">
+                            <input min="0" max="100" type="range" disabled>
+                        </div>
+                        <div id="right" class="progressNumber">00:00</div>
                     </div>
-                    <% if (user && !user.votes.includes(voteElement.video.ytid)) { %>
-                        <div data-videoid="<%= voteElement.video.ytid %>" class="upvote">&#9650;</div>
-                        <% } else { %>
-                            <div data-videoid="<%= voteElement.video.ytid %>" data-voted="true" class="upvote">
-                                <%- voteElement.votes %>
-                            </div>
-                            <% } %>
                 </div>
-                <% }) %>
-        </div>
-        <% if (user) { %>
-            <a href="/submit">
-                <div id="addSongButton">
-                    <img id="plus" src="/images/plus.png">
-                </div>
-            </a>
-            <% } %>
+                <img id="waves" style="position: relative; top: -3px;" src="/images/waves.png">
+            </div>
+            <div id="songContainer">
+                <% votingQueue.forEach(voteElement=> { %>
+                    <div class="song">
+                        <div class="title">
+                            <a href="<%= 'https://www.youtube.com/watch?v=' + voteElement.video.ytid %>">
+                                <%- voteElement.video.title %>
+                            </a>
+                        </div>
+                        <% if (user && !user.votes.includes(voteElement.video.ytid)) { %>
+                            <div data-videoid="<%= voteElement.video.ytid %>" class="upvote">&#9650;</div>
+                            <% } else { %>
+                                <div data-videoid="<%= voteElement.video.ytid %>" data-voted="true" class="upvote">
+                                    <%- voteElement.votes %>
+                                </div>
+                                <% } %>
+                    </div>
+                    <% }) %>
+            </div>
+            <% if (user) { %>
+                <a href="/submit">
+                    <div id="addSongButton">
+                        <img id="plus" src="/images/plus.png">
+                    </div>
+                </a>
+                <% } %>
+    </div>
+    <%- include('partials/footer.ejs') %>
 </body>
 
 </html>

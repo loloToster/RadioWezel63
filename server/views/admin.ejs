@@ -12,16 +12,19 @@
 </head>
 
 <body>
-    <%- include('partials/header.ejs') %>
-        <div id="songContainer">
-            <% submitQueue.forEach(video=> { %>
-                <div data-videoid="<%= video.ytid %>" class="song">
-                    <div class="songContent">
-                        <%- video.title %>
+    <div id="contentWrapper">
+        <%- include('partials/header.ejs') %>
+            <div id="songContainer">
+                <% submitQueue.forEach(video=> { %>
+                    <div data-videoid="<%= video.ytid %>" class="song">
+                        <div class="songContent">
+                            <%- video.title %>
+                        </div>
                     </div>
-                </div>
-                <% }) %>
-        </div>
+                    <% }) %>
+            </div>
+    </div>
+    <%- include('partials/footer.ejs') %>
 </body>
 
 </html>

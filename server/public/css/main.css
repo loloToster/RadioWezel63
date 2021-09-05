@@ -3,6 +3,13 @@ body {
     font-family: Arial;
     background-color: #2d2d30;
     color: #d4d4d4;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+#contentWrapper {
+    flex-grow: 1;
 }
 
 ::-webkit-scrollbar {
@@ -139,4 +146,17 @@ a {
     background: linear-gradient(90deg, rgba(2, 227, 51, 1) 0%, rgba(0, 153, 250, 1) 100%);
     width: inherit;
     height: 1vh;
+}
+
+#footer {
+    box-sizing: border-box;
+    width: auto;
+    height: 5vh;
+    padding: 2vh;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    background-color: #262626;
+    color: #4e4e52;
+    font-size: 1.3vh;
 }

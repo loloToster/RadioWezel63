@@ -33,7 +33,7 @@ img {
     align-items: center;
 }
 
-input {
+.bar input {
     width: 100%;
     -webkit-appearance: none;
     height: 1vh;
@@ -42,7 +42,7 @@ input {
     outline: none;
 }
 
-input::-webkit-slider-thumb {
+.bar input::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 4vw;
@@ -51,7 +51,7 @@ input::-webkit-slider-thumb {
     background: #3e3e42;
 }
 
-input::-moz-range-thumb {
+.bar input::-moz-range-thumb {
     width: 3vw;
     height: 3vw;
     border-radius: 50%;

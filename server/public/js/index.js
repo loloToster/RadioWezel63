@@ -76,11 +76,10 @@ socket.on("updateVotes", (id, votes) => {
 
 socket.on("updateDuration", arg => {
     if (arg.currentDuration == -1) {
-        document.getElementById("currentSong").style.display = "none"
-        document.getElementById("waves").style.display = "none"
+        document.getElementById("currentWrapper").style.display = "none"
+        return
     } else {
-        document.getElementById("currentSong").style.display = "block"
-        document.getElementById("waves").style.display = "block"
+        document.getElementById("currentWrapper").style.display = "block"
     }
     document.getElementById("thumbnail").setAttribute("src", arg.video.thumbnail)
     let progressBar = document.querySelector("input")
