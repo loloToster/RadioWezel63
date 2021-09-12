@@ -56,7 +56,7 @@ function clearTitle(title) {
     title = title.replace(/\(.*\)/, "")
     list.forEach(element => {
         title = title.replace(element, "")
-    });
+    })
     return title
 }
 

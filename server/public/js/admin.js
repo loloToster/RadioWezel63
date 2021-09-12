@@ -2,8 +2,8 @@ const DEF_YT_URL = "https://www.youtube.com/watch?v=",
     DEF_EMBED_YT = "https://www.youtube.com/embed/"
 
 function htmlDecode(input) {
-    var doc = new DOMParser().parseFromString(input, "text/html");
-    return doc.documentElement.textContent;
+    var doc = new DOMParser().parseFromString(input, "text/html")
+    return doc.documentElement.textContent
 }
 
 const socket = io({
