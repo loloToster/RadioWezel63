@@ -12,10 +12,11 @@ socket.on("connect", () => {
 })
 
 let addSong = document.getElementById("plus")
-
-addSong.addEventListener("click", () => {
-    addSong.setAttribute("class", "clicked")
-})
+if (addSong) {
+    addSong.addEventListener("click", () => {
+        addSong.setAttribute("class", "clicked")
+    })
+}
 
 Array.from(document.getElementsByClassName("upvote")).forEach(element => {
     if (!element.dataset.voted)
@@ -74,7 +75,15 @@ socket.on("updateVotes", (id, votes) => {
     button.innerText = votes
 })
 
-socket.on("updateDuration", arg => {
+function zeroFill(number, width = 2) {
+    width -= number.toString().length
+    if (width > 0)
+        return new Array(width + (/\./.test(number) ? 2 : 1)).join('0') + number
+    return number + ""
+}
+
+function drawCurrent(arg) {
+    console.log("updating")
     if (arg.currentDuration == -1) {
         document.getElementById("currentWrapper").style.display = "none"
         return
@@ -96,25 +105,25 @@ socket.on("updateDuration", arg => {
     let percentage = (currentDuration / duration) * 100
     progressBar.value = percentage
     progressBar.style.background = `linear-gradient(to right, #01be97 0%, #01be97 ${percentage}%, #d4d4d4 ${percentage}%, #d4d4d4 100%)`
+}
+
+var currentTimer = null
+
+socket.on("updateDuration", arg => {
+    current = arg
+    updateCurrent()
 })
 
-function zeroFill(number, width = 2) {
-    width -= number.toString().length
-    if (width > 0)
-        return new Array(width + (/\./.test(number) ? 2 : 1)).join('0') + number
-    return number + ""
+function updateCurrent() {
+    if (currentTimer) clearTimeout(currentTimer)
+    drawCurrent(current)
+    if (current.currentDuration > current.video.duration) {
+        current.currentDuration = -1
+        drawCurrent(current)
+        return
+    }
+    current.currentDuration++
+    currentTimer = setTimeout(updateCurrent, 1000)
 }
 
-function test(cDur = 0, dur = 30) {
-    console.log("exe")
-    let progressBar = document.querySelector("input")
-    // progressBar.max = dur
-
-    let value = Math.round((cDur / dur) * 100)
-    progressBar.value = value
-    progressBar.style.background = `linear-gradient(to right, #01be97 0%, #01be97 ${value}%, #d4d4d4 ${value}%, #d4d4d4 100%)`
-
-    cDur++
-    if (cDur == dur) return
-    setTimeout(test, 1000, cDur, dur)
-}
+updateCurrent()

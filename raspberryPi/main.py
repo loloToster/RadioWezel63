@@ -8,7 +8,7 @@ import math
 from socketio import AsyncClient
 
 from modules.breakHandler import BreakHandler
-from modules.downloader import download
+from modules.downloader import Downloader
 from modules.audio import Audio
 
 PATH = os.path.dirname(os.path.realpath(__file__))
@@ -35,18 +35,18 @@ BREAKS = []
 def createTestBreak(n=0, o=1):
     from datetime import datetime, timedelta
 
-    now = datetime.now() + timedelta(minutes=n)
-    offset = now + timedelta(minutes=n + o)
-    return (f"{now.hour}:{now.minute}", f"{offset.hour}:{offset.minute}")
+    breakStart = datetime.now() + timedelta(minutes=n)
+    offset = breakStart + timedelta(minutes=o)
+    return (f"{breakStart.hour}:{breakStart.minute}", f"{offset.hour}:{offset.minute}")
 
 
 BREAKS.append(createTestBreak(1))
 
-print(BREAKS[-1])
 
 breakHandler = BreakHandler(BREAKS)
 socket = AsyncClient(reconnection_attempts=math.inf, reconnection_delay=5)
 audio = Audio()
+downloader = Downloader()
 
 
 async def updateServer(override=False):
@@ -59,15 +59,14 @@ async def updateServer(override=False):
     )
 
 
-async def onBreakStart():
-    print(f"break started")
+async def breakLoop():
     if audio.isPlaying():
         await updateServer()
         return
     songs = requests.get(ROUTE + "/songs", headers={"auth": CONNECTION_SECRET}).json()
     songs.sort(key=lambda ve: ve["votes"], reverse=True)
     mostPopular = songs[0]
-    done = await download(AUDIO_PATH, mostPopular["video"]["ytid"])
+    done = await downloader.download(AUDIO_PATH, mostPopular["video"]["ytid"])
     print(f"Download: {done}, {mostPopular['video']['ytid']}")
     requests.delete(
         ROUTE + "/remove/" + mostPopular["video"]["ytid"],
@@ -77,37 +76,24 @@ async def onBreakStart():
     audio.play(f"{AUDIO_PATH}/{mostPopular['video']['ytid']}.mp3", mostPopular["video"])
 
 
-async def onBreakStop():
-    print("break stop")
+async def lessonLoop():
     audio.stop()
     await updateServer(True)
 
 
-previousBreak = breakHandler.isBreakNow()
-
-
 async def mainLoop():
-    global previousBreak
-    isThereBreak = breakHandler.isBreakNow()
-    if isThereBreak == previousBreak:
-        return
-    previousBreak = isThereBreak
-    if isThereBreak:
-        await onBreakStart()
-    else:
-        await onBreakStop()
-
-
-async def mainLoopWrapper():
     while True:
-        await mainLoop()
+        if breakHandler.isBreakNow() or True:  #! delete `or True`
+            await breakLoop()
+        else:
+            await lessonLoop()
         await socket.sleep(1)
 
 
 @socket.event
 async def connect():
     print("Connected to the server")
-    socket.start_background_task(mainLoopWrapper)
+    socket.start_background_task(mainLoop)
 
 
 @socket.event

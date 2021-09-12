@@ -7,6 +7,8 @@ img {
     height: 100%;
 }
 
+/*currentSong:*/
+
 #currentSong {
     width: auto;
     background-color: #1e1e1e;
@@ -36,9 +38,8 @@ img {
 .bar input {
     width: 100%;
     -webkit-appearance: none;
-    height: 1vh;
+    height: 0.3vh;
     background: linear-gradient(to right, #01be97 0%, #01be97 50%, #d4d4d4 50%, #d4d4d4 100%);
-    border-radius: 1vh;
     outline: none;
 }
 
@@ -48,17 +49,17 @@ img {
     width: 4vw;
     height: 4vw;
     border-radius: 50%;
-    background: #3e3e42;
+    background: #01be97;
 }
 
 .bar input::-moz-range-thumb {
-    width: 3vw;
-    height: 3vw;
+    width: 4vw;
+    height: 4vw;
     border-radius: 50%;
-    background: #3e3e42;
+    background: #01be97;
 }
 
-/************************************/
+/*song:*/
 
 .song {
     display: flex;

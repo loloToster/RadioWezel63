@@ -68,7 +68,9 @@ io.on("connection", socket => {
 })
 
 function onUpdate(arg) {
-    io.emit("updateDuration", arg)
+    global.duration = arg
+    if (global.duration.video.ytid != arg.video.ytid)
+        io.emit("updateDuration", arg)
 }
 
 global.io = io

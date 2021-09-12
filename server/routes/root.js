@@ -11,7 +11,11 @@ function checkIfLoggedIn(req, res, next) {
 }
 
 router.get("/", async (req, res) => {
-    res.render("index", { votingQueue: await VoteElement.find({}), user: req.user })
+    res.render("index", {
+        votingQueue: await VoteElement.find({}),
+        user: req.user,
+        currentDuration: global.duration ? JSON.stringify(global.duration) : '{"currentDuration":-1}'
+    })
 })
 
 router.get("/vote/:id", checkIfLoggedIn, async (req, res) => {
