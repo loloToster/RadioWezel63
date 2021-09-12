@@ -77,7 +77,21 @@ function createManageObject(parent) {
     href.appendChild(img)
     link.appendChild(href)
     buttons.appendChild(link)
+
+    let lyrics = document.createElement("div")
+    lyrics.setAttribute("id", "lyrics")
+    lyrics.setAttribute("class", "button")
+    img = document.createElement("img")
+    img.setAttribute("src", "/images/lyrics.png")
+    lyrics.appendChild(img)
+    lyrics.addEventListener("click", event => getLyrics(parent.getElementsByClassName("songContent")[0].innerText))
+    buttons.appendChild(lyrics)
+
     object.appendChild(buttons)
+
+    let lyricsText = document.createElement("div")
+    lyricsText.setAttribute("id", "lyricsText")
+    object.appendChild(lyricsText)
 
     return object
 }
@@ -86,7 +100,11 @@ Array.from(document.getElementsByClassName("song")).forEach(element => {
     element.addEventListener("click", event => onSongClick(element))
 })
 
+var activeSong = null
+
 function onSongClick(element) {
+    if (activeSong == element) return
+    activeSong = element
     console.log(element.dataset.videoid)
     let manage = document.getElementById("manage")
     if (manage) manage.remove()
@@ -103,6 +121,19 @@ function onButtonClick(option, id) {
         },
         body: JSON.stringify({ id: id, option: option })
     })
+}
+
+function getLyrics(title) {
+    console.log(title)
+    title = encodeURIComponent(title)
+    fetch("/admin/lyrics/" + title)
+        .then(response => response.text())
+        .then(data => {
+            console.log(data)
+            let div = document.getElementById("lyricsText")
+            if (!div) return
+            div.innerText = data
+        })
 }
 
 

@@ -14,9 +14,36 @@
     margin: 1vh;
 }
 
+#iframeWrapper {
+    margin-bottom: 1vh;
+}
+
+iframe {
+    width: 100%;
+    animation: iframe-loading 1s linear infinite alternate;
+    height: 25vh;
+}
+
+@supports (aspect-ratio: 1 / 1) {
+    iframe {
+        aspect-ratio: 16 / 9;
+        height: auto;
+    }
+}
+
+@keyframes iframe-loading {
+    0% {
+        background-color: #fff2;
+    }
+    100% {
+        background-color: #eeee;
+    }
+}
+
 #buttons {
     display: flex;
     overflow: scroll;
+    margin-bottom: 1vh;
 }
 
 .button {
@@ -44,28 +71,10 @@ img {
     background-color: #007acc;
 }
 
-#iframeWrapper {
-    margin-bottom: 1vh;
+#lyrics {
+    background-color: #f6c90e;
 }
 
-iframe {
-    width: 100%;
-    animation: iframe-loading 1s linear infinite alternate;
-    height: 25vh;
-}
-
-@supports (aspect-ratio: 1 / 1) {
-    iframe {
-        aspect-ratio: 16 / 9;
-        height: auto;
-    }
-}
-
-@keyframes iframe-loading {
-    0% {
-        background-color: #fff2;
-    }
-    100% {
-        background-color: #eeee;
-    }
+#lyricsText {
+    font-size: 2vh;
 }
