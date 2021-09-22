@@ -16,7 +16,7 @@ AUDIO_PATH = PATH + "/audio"
 
 # SERVER = "http://radiowezel.herokuapp.com/"
 SERVER = "http://localhost/"
-ROUTE = SERVER + "rpi"
+ROUTE = SERVER + "player"
 CONNECTION_SECRET = secrets.CONNECTION_SECRET
 
 BREAKS = [

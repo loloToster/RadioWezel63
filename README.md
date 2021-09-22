@@ -51,59 +51,59 @@
 
 # Struktura:
 * 📁RadioWezel
-    * <span class="dot">.gitignore</span>
+    * .gitignore
     * README<span>.</span>md
     * 📁raspberryPi
       * 📁audio
-        * <span class="procfile">pliki.mp3</span>
+        * pliki.mp3
       * 📁modules
-        * <span class="python">audio<span>.</span>py</span>
-        * <span class="python">breakHandler<span>.</span>py</span>
-        * <span class="python">downloader<span>.</span>py</span>
-      * <span class="python">main<span>.</span>py</span>
+        * audio<span>.</span>py
+        * breakHandler<span>.</span>py
+        * downloader<span>.</span>py
+      * main<span>.</span>py
       * requirements.txt
-      * <span class="python">secrets<span>.</span>py</span>
+      * secrets<span>.</span>py
     * 📁server
-      * <span class="dot">.env</span>
-      * <span class="js">app.js</span>
-      * <span class="json">package-lock.json</span>
-      * <span class="json">package.json</span>
-      * <span class="procfile">Procfile</span>
+      * .env
+      * app.js
+      * package-lock.json
+      * package.json
+      * Procfile
       * 📁config
-        * <span class="js">passport-setup.js</span>
-        * <span class="js">winston-setup.js</span>
+        * passport-setup.js
+        * winston-setup.js
       * 📁logs
-        * <span class="log">pliki.log</span>
+        * pliki.log
       * 📁models
-        * <span class="js">submition.js</span>
-        * <span class="js">user.js</span>
-        * <span class="js">voteElement.js</span>
+        * submition.js
+        * user.js
+        * voteElement.js
       * 📁public
-        * <span class="ico">favicon.ico</span>
+        * favicon.ico
         * 📁css
-          * <span class="css">admin.css</span>
-          * <span class="css">index.css</span>
-          * <span class="css">main.css</span>
-          * <span class="css">profile.css</span>
-          * <span class="css">submit.css</span>
+          * admin.css
+          * index.css
+          * main.css
+          * profile.css
+          * submit.css
         * 📁images
-          * <span class="log">pliki.png</span>
+          * pliki.png
         * 📁js
-          * <span class="js">admin.js</span>
-          * <span class="js">index.js</span>
-          * <span class="js">reconnection.js</span>
-          * <span class="js">submit.js</span>
+          * admin.js
+          * index.js
+          * reconnection.js
+          * submit.js
         * 📁routes
-          * <span class="js">admin.js</span>
-          * <span class="js">auth.js</span>
-          * <span class="js">root.js</span>
-          * <span class="js">rpi.js</span>
-          * <span class="js">submit.js</span>
+          * admin.js
+          * auth.js
+          * root.js
+          * player.js
+          * submit.js
         * 📁views
-          * <span class="ejs">admin.ejs</span>
-          * <span class="ejs">error.ejs</span>
-          * <span class="ejs">index.ejs</span>
-          * <span class="ejs">submit.ejs</span>
+          * admin.ejs
+          * error.ejs
+          * index.ejs
+          * submit.ejs
             * 📁partials
-              * <span class="ejs">footer.ejs</span>
-              * <span class="ejs">header.ejs</span>
+              * footer.ejs
+              * header.ejs

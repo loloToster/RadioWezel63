@@ -1,12 +1,12 @@
 const express = require("express"),
     router = express.Router()
 
-const RPI_SECRET = process.env.RPI_SECRET
+const PLAYER_SECRET = process.env.PLAYER_SECRET
 
-const VoteElement = require("./../models/voteElement")
+const VoteElement = require("../models/voteElement")
 
 router.use((req, res, next) => {
-    if (req.get("auth") == RPI_SECRET)
+    if (req.get("auth") == PLAYER_SECRET)
         next()
     else
         res.status(404).render('error')
