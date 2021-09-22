@@ -19,8 +19,6 @@ const PLAYER_SECRET = process.env.PLAYER_SECRET
 const COOKIE_SECRET = process.env.COOKIE_SECRET
 const MONGO_URL = process.env.MONGO_URL
 
-const axios = require("axios").default // ! delete
-var startTime = new Date()
 
 app.use(express.static("public"))
 app.use(express.urlencoded({ extended: false }))
@@ -44,7 +42,8 @@ app.use("/submit", require("./routes/submit"))
 app.use("/player", require("./routes/player"))
 
 
-app.get("/time", (req, res) => { // ! delete
+var startTime = new Date()// ! delete
+app.get("/time", (req, res) => {
     res.send(startTime.toISOString())
 })
 
@@ -83,6 +82,7 @@ function onUpdate(arg) {
 
 global.io = io
 global.logger = logger
+const keep_awake = require("./modules/keep-heroku-awake")
 
 mongoose.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
 mongoose.connection.once("open", async () => {
@@ -90,9 +90,6 @@ mongoose.connection.once("open", async () => {
     const PORT = process.env.PORT || 80
     server.listen(PORT, () => {
         logger.info("Server running on port: " + PORT)
+        keep_awake.start()
     })
-    setInterval(() => {
-        console.log("keeping awake")
-        axios.get("http://radiowezel.herokuapp.com/time")
-    }, 10 * 60 * 1000)
 })
