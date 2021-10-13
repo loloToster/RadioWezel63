@@ -2,6 +2,9 @@
 node_modules/
 __pycache__/
 
+# deprecated (13.10.21)
+raspberryPi/
+
 .env
 secrets.py
 

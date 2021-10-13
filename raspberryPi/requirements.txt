@@ -1,3 +1,0 @@
-youtube_dl
-python-socketio[asyncio_client]
-pygame
