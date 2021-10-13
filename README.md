@@ -16,6 +16,6 @@
 * zembedowane yt na admin panelu ✔️
 * videos that exceed max duration showing up in /submit ✔️
 * optimize current video handling ✔️
-* make `breakHandler.isBreakNow()` based on `datetime` ✔️
+<!-- * make `breakHandler.isBreakNow()` based on `datetime` ✔️ -->
 * lyrics on admim panel ✔️
 
