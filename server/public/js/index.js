@@ -23,7 +23,8 @@ Array.from(document.getElementsByClassName("upvote")).forEach(element => {
         element.addEventListener("click", event => onVote(element.dataset.videoid))
 })
 
-function createSongObject(video) {
+
+/* function createSongObject(video) {
     let object = document.createElement("div")
     object.setAttribute("class", "song")
 
@@ -46,6 +47,20 @@ function createSongObject(video) {
     object.appendChild(upvote)
 
     return object
+} */
+
+const songTemplate = document.getElementById("songTemplate")
+songTemplate.removeAttribute("id")
+
+function createSongObject(video) {
+    let clone = songTemplate.cloneNode(true)
+    let a = clone.querySelector(".title a")
+    a.innerText = htmlDecode(video.title)
+    a.setAttribute("href", DEF_YT_URL + video.ytid)
+    let upvote = clone.querySelector(".upvote")
+    upvote.setAttribute("data-videoid", video.ytid)
+    upvote.addEventListener("click", event => onVote(video.ytid))
+    return clone
 }
 
 function onVote(id) {

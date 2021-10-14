@@ -17,7 +17,7 @@ socket.on("connect", () => {
     console.log("connected")
 })
 
-function createSongObject(video) {
+/* function createSongObject(video) {
     object = document.createElement("div")
     object.setAttribute("class", "song")
     object.setAttribute("data-videoid", video.ytid)
@@ -26,9 +26,19 @@ function createSongObject(video) {
     songContent.innerText = htmlDecode(video.title)
     object.appendChild(songContent)
     return object
+} */
+
+const songTemplate = document.getElementById("songTemplate")
+songTemplate.removeAttribute("id")
+
+function createSongObject(video) {
+    clone = songTemplate.cloneNode(true)
+    clone.querySelector(".songContent").innerText = htmlDecode(video.title)
+    clone.setAttribute("data-videoid", video.ytid)
+    return clone
 }
 
-function createManageObject(parent) {
+/* function createManageObject(parent) {
     let object = document.createElement("div")
     object.setAttribute("id", "manage")
 
@@ -94,6 +104,23 @@ function createManageObject(parent) {
     object.appendChild(lyricsText)
 
     return object
+} */
+
+const manageTemplate = document.getElementById("manageTemplate")
+manageTemplate.removeAttribute("id")
+
+function createManageObject(parent) {
+    let clone = manageTemplate.cloneNode(true)
+    clone.setAttribute("id", "manage")
+
+    clone.querySelector("iframe").setAttribute("src", DEF_EMBED_YT + parent.dataset.videoid)
+    clone.querySelector("#link a").setAttribute("href", DEF_YT_URL + parent.dataset.videoid)
+
+    clone.querySelector("#deny").addEventListener("click", event => onButtonClick("deny", parent.dataset.videoid))
+    clone.querySelector("#accept").addEventListener("click", event => onButtonClick("accept", parent.dataset.videoid))
+    clone.querySelector("#lyrics").addEventListener("click", event => getLyrics(parent.getElementsByClassName("songContent")[0].innerText))
+
+    return clone
 }
 
 Array.from(document.getElementsByClassName("song")).forEach(element => {

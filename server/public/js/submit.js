@@ -5,7 +5,7 @@ function htmlDecode(input) {
     return doc.documentElement.textContent;
 }
 
-function createVideoElement(video) {
+/* function createVideoElement(video) {
     let object = document.createElement("div")
     object.setAttribute("class", "video")
     if (video.submitted) {
@@ -41,6 +41,34 @@ function createVideoElement(video) {
     object.appendChild(titleDiv)
 
     return object
+} */
+
+const videoTemplate = document.getElementById("videoTemplate")
+videoTemplate.removeAttribute("id")
+
+function createVideoElement(video) {
+    let clone = videoTemplate.cloneNode(true)
+    if (video.submitted) {
+        clone.style.backgroundColor = "#57cc47"
+        let submitted = document.createElement("submitted")
+        submitted.setAttribute("class", "unclickable")
+        submitted.innerText = "Ta piosenka jest już dodana"
+        clone.appendChild(submitted)
+    } else if (video.toLong) {
+        clone.style.backgroundColor = "#c02739"
+        let toLong = document.createElement("tolong")
+        toLong.setAttribute("class", "unclickable")
+        toLong.innerText = "Ta piosenka jest za długa"
+        clone.appendChild(toLong)
+    } else {
+        delete video.submitted
+        delete video.toLong
+        clone.addEventListener("click", event => onVideoClick(video))
+    }
+    console.log(clone)
+    clone.querySelector(".thumbnail img").setAttribute("src", video.thumbnail)
+    clone.querySelector(".titleDiv div").innerText = htmlDecode(video.title)
+    return clone
 }
 
 document.getElementById("icon").addEventListener("click", onSearch)

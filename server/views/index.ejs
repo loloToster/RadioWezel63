@@ -33,6 +33,17 @@
                 <img id="waves" style="position: relative; top: -3px;" src="/images/waves.png">
             </div>
             <div id="songContainer">
+                <div style="display: none;">
+                    <div id="songTemplate" class="song">
+                        <div class="title">
+                            <a href="">
+                            </a>
+                        </div>
+                        <div data-videoid="" class="upvote">
+                            ▲
+                        </div>
+                    </div>
+                </div>
                 <% votingQueue.forEach(voteElement=> { %>
                     <div class="song">
                         <div class="title">
