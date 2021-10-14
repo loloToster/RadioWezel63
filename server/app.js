@@ -35,6 +35,9 @@ app.use(passport.session())
 
 app.use(express.json())
 
+global.io = io
+global.logger = logger
+
 app.use("/", require("./routes/root"))
 app.use("/auth", require("./routes/auth"))
 app.use("/admin", require("./routes/admin"))
@@ -53,35 +56,8 @@ app.use((req, res) => {
 
 io.on("connection", socket => {
     console.log(socket.id + " connected")
-    let auth = socket.handshake.auth
-    switch (auth.role) {
-        case "admin":
-            socket.join("admin")
-            break;
-
-        case "player":
-            if (auth.key == PLAYER_SECRET) {
-                socket.join("player")
-                logger.info("player connected")
-                socket.on("update", onUpdate)
-            } else {
-                socket.disconnect()
-            }
-            break;
-
-        default:
-            break;
-    }
 })
 
-function onUpdate(arg) {
-    if (global.duration.video.ytid != arg.video.ytid || global.duration.currentDuration < arg.currentDuration)
-        io.emit("updateDuration", arg)
-    global.duration = arg
-}
-
-global.io = io
-global.logger = logger
 const keep_awake = require("./modules/keep-heroku-awake")
 
 mongoose.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })

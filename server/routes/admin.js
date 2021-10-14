@@ -80,4 +80,10 @@ router.get("/reset", async (req, res) => {
     res.json({ code: "success" })
 })
 
+global.io.on("connection", socket => {
+    let auth = socket.handshake.auth
+    if (auth.role == "admin")
+        socket.join("admin")
+})
+
 module.exports = router

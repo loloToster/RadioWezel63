@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/player.css">
+    <script defer src="/socket.io/socket.io.js"></script>
+    <script defer src="https://www.youtube.com/iframe_api"></script>
+    <script defer src="/js/player.js"></script>
+    <script defer src="/js/reconnection.js"></script>
+    <title>Odtwarzacz</title>
+</head>
+
+<body>
+    <div id="contentWrapper">
+        <%- include('partials/header.ejs') %>
+            <div id="player"></div>
+            <div id="controls">
+                <button>skip</button>
+            </div>
+    </div>
+    <%- include('partials/footer.ejs') %>
+</body>
+
+</html>
