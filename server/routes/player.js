@@ -6,7 +6,7 @@ const PLAYER_SECRET = process.env.PLAYER_SECRET
 const VoteElement = require("../models/voteElement")
 
 let playerSocket = null
-let duration = { current: -1 }
+let current = { duration: -1 }
 
 router.get("/", async (req, res) => {
     if (!playerSocket)
@@ -15,8 +15,8 @@ router.get("/", async (req, res) => {
         res.status(404).render("error")
 })
 
-router.get("/duration", async (req, res) => {
-    res.json(duration)
+router.get("/current", async (req, res) => {
+    res.json(current)
 })
 
 router.get("/song", async (req, res) => {
@@ -35,6 +35,8 @@ global.io.on("connection", socket => {
             socket.on("disconnect", () => {
                 console.log("disconnect")
                 playerSocket = null
+                current = { duration: -1 }
+                io.emit("updateDuration", current)
             })
         } else {
             socket.disconnect()
@@ -43,9 +45,9 @@ global.io.on("connection", socket => {
 })
 
 function onUpdate(arg) {
-    duration = arg
-    if (duration.video.ytid != arg.video.ytid || duration.currentDuration < arg.currentDuration)
-        io.emit("updateDuration", arg)
+    current = arg
+    /* if (current.video.ytid != arg.video.ytid || current.duration < arg.currentDuration)*/
+    io.emit("updateDuration", arg)
 }
 
 

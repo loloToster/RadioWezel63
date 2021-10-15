@@ -4,32 +4,56 @@ const socket = io({
     }
 })
 
-socket.on("connect", () => {
+socket.on("connect", () => { // todo: handle disconnection
     console.log("connected")
 })
 
 let player
+let currentVideo = null
+
 function onYouTubeIframeAPIReady() {
-    fetch("/player/song").then(res => res.json()).then(data => {
-        player = new YT.Player("player", {
-            width: null,
-            height: null,
-            videoId: data.video.ytid,
-            events: {
-                "onReady": onPlayerReady
-            }
-        })
+    player = new YT.Player("player", {
+        width: null,
+        height: null,
+        events: {
+            /* onReady: onPlayerReady, */
+            onStateChange: onPlayerStateChange
+        }
     })
 }
 
-function onPlayerReady(event) {
-    event.target.playVideo()
+/* async function onPlayerReady(event) {
+    player.loadVideoById(await getNextVideoId())
+} */
+
+async function onPlayerStateChange(event) {
+    if (event.data == 0)
+        await loadNextVideo()
 }
 
+async function loadNextVideo() {
+    let res = await fetch("/player/song")
+    data = await res.json()
+    currentVideo = data.video
+    player.loadVideoById(data.video.ytid)
+}
+
+const button = document.querySelector("button")
+button.addEventListener("click", async () => {
+    await loadNextVideo()
+    button.innerText = "skip"
+})
+
 async function updateServer() {
+    let dur
+    try { // todo: get ridoff trycatch
+        dur = Math.round(player.getCurrentTime())
+    } catch (error) {
+        dur = -1
+    }
     await socket.emit("update", {
-        current: Math.round(player.getCurrentTime()),
-        video: {}
+        duration: dur,
+        video: currentVideo
     })
 }
 

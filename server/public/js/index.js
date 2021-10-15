@@ -5,6 +5,7 @@ function htmlDecode(input) {
     return doc.documentElement.textContent;
 }
 
+let current
 const socket = io()
 
 socket.on("connect", () => {
@@ -97,23 +98,23 @@ function zeroFill(number, width = 2) {
     return number + ""
 }
 
-function drawCurrent(arg) {
+function drawCurrent(cur) {
     console.log("updating")
-    if (arg.currentDuration == -1) {
+    if (cur.duration == -1) {
         document.getElementById("currentWrapper").style.display = "none"
         return
     } else {
         document.getElementById("currentWrapper").style.display = "block"
     }
-    document.getElementById("thumbnail").setAttribute("src", arg.video.thumbnail)
+    document.getElementById("thumbnail").setAttribute("src", cur.video.thumbnail)
     let progressBar = document.querySelector("input")
     let left = document.getElementById("left")
     let right = document.getElementById("right")
-    let duration = arg.video.duration
+    let duration = cur.video.duration
     let minutes = Math.floor(duration / 60)
     let seconds = duration - minutes * 60
     right.innerText = `${zeroFill(minutes)}:${zeroFill(seconds)}`
-    let currentDuration = arg.currentDuration
+    let currentDuration = cur.duration
     minutes = Math.floor(currentDuration / 60)
     seconds = currentDuration - minutes * 60
     left.innerText = `${zeroFill(minutes)}:${zeroFill(seconds)}`
@@ -126,19 +127,22 @@ var currentTimer = null
 
 socket.on("updateDuration", arg => {
     current = arg
-    updateCurrent()
+    drawCurrent(arg)
 })
 
-function updateCurrent() {
+/* function updateCurrent() {
     if (currentTimer) clearTimeout(currentTimer)
     drawCurrent(current)
-    if (current.currentDuration > current.video.duration) {
-        current.currentDuration = -1
+    if (current.duration > current.video.duration) {
+        current.duration = -1
         drawCurrent(current)
         return
     }
-    current.currentDuration++
+    current.duration++
     currentTimer = setTimeout(updateCurrent, 1000)
 }
 
-updateCurrent()
+fetch("/player/current").then(res => res.json()).then(data => {
+    current = data
+    updateCurrent()
+}) */
