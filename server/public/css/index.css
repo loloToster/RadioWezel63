@@ -83,6 +83,19 @@ img {
     overflow: hidden;
 }
 
+.upvote:not([data-voted="true"]) {
+    animation: notVoted .3s infinite alternate;
+}
+
+@keyframes notVoted {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-5%);
+    }
+}
+
 /*addSongButton:*/
 
 #addSongButton {
@@ -102,10 +115,10 @@ img {
 }
 
 .clicked {
-    animation: animation 1s infinite ease;
+    animation: addButtonClicked 1s infinite ease;
 }
 
-@keyframes animation {
+@keyframes addButtonClicked {
     0% {
         transform: rotate(0);
     }
