@@ -4,6 +4,9 @@ iframe {
 }
 
 button {
+    margin-top: 10vh;
+    margin-left: 25vw;
     width: 50vw;
     height: 10vh;
+    font-size: 5vh;
 }
