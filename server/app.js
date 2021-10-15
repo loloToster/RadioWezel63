@@ -1,5 +1,5 @@
 // git subtree push --prefix server heroku master
-require('dotenv').config()
+require("dotenv").config()
 
 const logger = require("./config/winston-setup")
 
@@ -15,7 +15,6 @@ const mongoose = require("mongoose")
 
 const cookieSession = require("cookie-session")
 
-const PLAYER_SECRET = process.env.PLAYER_SECRET
 const COOKIE_SECRET = process.env.COOKIE_SECRET
 const MONGO_URL = process.env.MONGO_URL
 
