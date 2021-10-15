@@ -78,21 +78,18 @@ document.querySelector("#search #bar input").addEventListener("keypress", event 
 
 
 
-function onVideoClick(video) {
+async function onVideoClick(video) {
     console.log(video)
-    fetch("/submit/post", {
+    let res = await fetch("/submit/post", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify(video)
     })
-        .then(res => res.json())
-        .then(data => {
-            if (data.code == "success") {
-                window.location.href = "/"
-            }
-        })
+    let data = await res.json()
+    if (data.code == "success")
+        window.location.href = "/"
 }
 
 var searching = false

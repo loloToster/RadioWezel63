@@ -150,17 +150,14 @@ function onButtonClick(option, id) {
     })
 }
 
-function getLyrics(title) {
+async function getLyrics(title) {
     console.log(title)
     title = encodeURIComponent(title)
-    fetch("/admin/lyrics/" + title)
-        .then(response => response.text())
-        .then(data => {
-            console.log(data)
-            let div = document.getElementById("lyricsText")
-            if (!div) return
-            div.innerText = data
-        })
+    let res = await fetch("/admin/lyrics/" + title)
+    let data = await res.text()
+    let div = document.getElementById("lyricsText")
+    if (!div) return
+    div.innerText = data
 }
 
 
