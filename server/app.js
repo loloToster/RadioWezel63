@@ -8,6 +8,9 @@ const express = require("express"),
     server = require("http").createServer(app),
     io = require("socket.io")(server) // , { cors: { origin: "*" } }
 
+global.io = io
+global.logger = logger
+
 const passport = require("passport"),
     passportSetup = require("./config/passport-setup")
 
@@ -34,8 +37,6 @@ app.use(passport.session())
 
 app.use(express.json())
 
-global.io = io
-global.logger = logger
 
 app.use("/", require("./routes/root"))
 app.use("/auth", require("./routes/auth"))

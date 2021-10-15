@@ -4,6 +4,8 @@ const express = require("express"),
 const passport = require("passport")
 
 router.get("/login", passport.authenticate("google", {
+    hd: process.env.MAIL_DOMAIN,
+    prompt: "select_account",
     scope: ["profile", "email"]
 }))
 
