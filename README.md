@@ -6,7 +6,6 @@
   * some browsers not supporting "⮝" ✔️
 
 * ### Functional:
-  <!-- * `main.py` won't play next song after the first one ✔️ -->
 
 # ToDo:
 
@@ -15,8 +14,9 @@
 * add youtube-search-without-api-key ✔️
 * zembedowane yt na admin panelu ✔️
 * videos that exceed max duration showing up in /submit ✔️
-* optimize current video handling
-<!-- * make `breakHandler.isBreakNow()` based on `datetime` ✔️ -->
 * lyrics on admim panel ✔️
 * add auth to player connection
+* optimize current video handling
+* auto vote on added song
+* auto submit accept if user is admin
 
