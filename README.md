@@ -6,6 +6,7 @@
   * some browsers not supporting "⮝" ✔️
 
 * ### Functional:
+  * song adds with upvote arrow when not logged in on update ✔️
 
 # ToDo:
 

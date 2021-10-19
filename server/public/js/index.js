@@ -59,8 +59,13 @@ function createSongObject(video) {
     a.innerText = htmlDecode(video.title)
     a.setAttribute("href", DEF_YT_URL + video.ytid)
     let upvote = clone.querySelector(".upvote")
-    upvote.setAttribute("data-videoid", video.ytid)
-    upvote.addEventListener("click", event => onVote(video.ytid))
+    if (loggedIn) {
+        upvote.setAttribute("data-videoid", video.ytid)
+        upvote.addEventListener("click", event => onVote(video.ytid))
+    } else {
+        upvote.setAttribute("data-voted", "true")
+        upvote.innerText = 0
+    }
     return clone
 }
 

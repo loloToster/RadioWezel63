@@ -9,6 +9,9 @@
     <script defer src="/socket.io/socket.io.js"></script>
     <script defer src="/js/index.js"></script>
     <script defer src="/js/reconnection.js"></script>
+    <script>
+        loggedIn = <%= !!user %>
+    </script>
     <!-- <script defer>
         var current = JSON.parse('<%- //currentDuration %>')
     </script> -->
@@ -17,7 +20,7 @@
 
 <body>
     <div id="contentWrapper">
-        <%- include('partials/header.ejs') %>
+        <%- include("partials/header.ejs") %>
             <div id="currentWrapper">
                 <div id="currentSong">
                     <img id="thumbnail" style="margin-bottom: 5vw;"
@@ -69,7 +72,7 @@
                 </a>
                 <% } %>
     </div>
-    <%- include('partials/footer.ejs') %>
+    <%- include("partials/footer.ejs") %>
 </body>
 
 </html>
