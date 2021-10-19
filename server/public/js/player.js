@@ -1,11 +1,16 @@
 const socket = io({
     auth: {
-        role: "player"
+        role: "player",
+        key: playerKey
     }
 })
 
-socket.on("connect", () => { // todo: handle disconnection
+socket.on("connect", () => {
     console.log("connected")
+})
+
+socket.on("disconnect", () => { // todo: handle disconnection
+    console.log("disconnected")
 })
 
 let player

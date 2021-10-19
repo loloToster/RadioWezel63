@@ -16,7 +16,7 @@
 * zembedowane yt na admin panelu ✔️
 * videos that exceed max duration showing up in /submit ✔️
 * lyrics on admim panel ✔️
-* add auth to player connection
+* add auth to player connection ✔️
 * optimize current video handling
 * auto vote on added song
 * auto submit accept if user is admin

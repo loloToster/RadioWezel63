@@ -1,18 +1,28 @@
 const express = require("express"),
     router = express.Router()
 
-const PLAYER_SECRET = process.env.PLAYER_SECRET
-
 const VoteElement = require("../models/voteElement")
 
+//https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
+function generateKey(length = 5) {
+    const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+    let result = ""
+    for (let i = 0; i < length; i++)
+        result += CHARS.charAt(Math.floor(Math.random() * CHARS.length))
+    return result
+}
+
 let playerSocket = null
+let playerKey = generateKey()
 let current = { duration: -1 }
 
 router.get("/", async (req, res) => {
-    if (!playerSocket)
-        res.render("player")
-    else
+    if (!playerSocket) {
+        playerKey = generateKey()
+        res.render("player", { playerKey: playerKey })
+    } else {
         res.status(404).render("error")
+    }
 })
 
 router.get("/current", async (req, res) => {
@@ -26,14 +36,13 @@ router.get("/song", async (req, res) => {
 
 global.io.on("connection", socket => {
     let auth = socket.handshake.auth
-    if (auth.role == "player") {
+    if (auth.role == "player" && auth.key == playerKey) {
         if (!playerSocket) {
             playerSocket = socket.id
-            socket.join("player")
-            logger.info("player connected")
+            logger.info(`player with id ${socket.id} connected with key: ${auth.key}`)
             socket.on("update", onUpdate)
             socket.on("disconnect", () => {
-                console.log("disconnect")
+                logger.info(`player with id ${socket.id} disconnected`)
                 playerSocket = null
                 current = { duration: -1 }
                 io.emit("updateDuration", current)
@@ -46,7 +55,7 @@ global.io.on("connection", socket => {
 
 function onUpdate(arg) {
     current = arg
-    /* if (current.video.ytid != arg.video.ytid || current.duration < arg.currentDuration)*/
+    /* if (current.video.ytid != arg.video.ytid || current.duration < arg.currentDuration) */
     io.emit("updateDuration", arg)
 }
 
