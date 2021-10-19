@@ -20,10 +20,8 @@ router.get("/", async (req, res) => {
 router.get("/vote/:id", checkIfLoggedIn, async (req, res) => {
     let id = decodeURIComponent(req.params.id)
     if (req.user.votes.includes(id)) return res.status(500).send()
-    let element = await VoteElement.findOneAndUpdate({ "video.ytid": id }, { $inc: { votes: 1 } })
-    if (!element) return res.status(500).send()
-    await User.findOneAndUpdate({ googleId: req.user.googleId }, { $push: { votes: id } })
-    let votes = element.votes + 1
+    let votes = await User.vote(id, req.user.googleId)
+    if (!votes) return res.status(500).send()
     res.status(200).send(votes.toString())
     global.io.emit("updateVotes", id, votes)
 })

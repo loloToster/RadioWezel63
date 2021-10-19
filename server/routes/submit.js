@@ -5,8 +5,7 @@ const YT_KEYS = process.env.YT_KEYS.split(" ")
 const MAX_DURATION = 300
 
 const User = require("./../models/user"),
-    Submition = require("./../models/submition"),
-    VoteElement = require("./../models/voteElement")
+    Submition = require("./../models/submition")
 
 function checkIfLoggedIn(req, res, next) {
     if (!req.user) res.status(500).send()
@@ -18,11 +17,6 @@ router.use(checkIfLoggedIn)
 router.get("/", (req, res) => {
     res.render("submit")
 })
-
-async function checkIfSubmitted(video) {
-    if ((await Submition.findOne({ ytid: video.ytid })) || (await VoteElement.findOne({ 'video.ytid': video.ytid }))) return true
-    return false
-}
 
 async function handleSubmition(video) {
     let response = {}
@@ -41,7 +35,7 @@ router.get("/search/:query", async (req, res) => {
     if (videos.code == "success") {
         let possibleSubmits = []
         for (let i = 0; i < videos.items.length; i++) {
-            let submitted = await checkIfSubmitted(videos.items[i])
+            let submitted = await Submition.submitted(videos.items[i])
             let toLong = videos.items[i].duration > MAX_DURATION
             if (!submitted && !toLong) possibleSubmits.push(videos.items[i])
             videos.items[i].submitted = submitted
@@ -52,9 +46,9 @@ router.get("/search/:query", async (req, res) => {
     } else { res.json({ code: "noVideoFound" }) }
 })
 
-router.post("/post", async (req, res) => { // ✔️ TODO: validate data & check if submitted
-    const inPossibleSumbits = req.user.possibleSubmits.some(obj => obj.ytid === req.body.ytid && obj.title === req.body.title && obj.thumbnail === req.body.thumbnail && obj.duration === req.body.duration)
-    if (inPossibleSumbits) {
+router.post("/post", async (req, res) => {
+    const inPossibleSubmits = req.user.possibleSubmits.some(obj => obj.ytid === req.body.ytid && obj.title === req.body.title && obj.thumbnail === req.body.thumbnail && obj.duration === req.body.duration)
+    if (inPossibleSubmits) {
         await User.updateOne({ googleId: req.user.googleId }, { possibleSubmits: [] })
         global.logger.info(`${req.user.googleId} submitted: ${req.body.title} (${req.body.ytid})`)
         res.json(await handleSubmition(req.body))

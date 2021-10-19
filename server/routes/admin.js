@@ -17,19 +17,6 @@ router.get("/", async (req, res) => {
     res.render("admin", { submitQueue: await Submition.find({}) })
 })
 
-async function addToVoting(video) {
-    let element = {
-        votes: 0, video: {
-            ytid: video.ytid,
-            title: video.title,
-            thumbnail: video.thumbnail,
-            duration: video.duration
-        }
-    }
-    await new VoteElement(element).save()
-    global.io.sockets.emit("updateVotingQueue", element)
-}
-
 router.put("/verdict", async (req, res) => {
     let id = req.body.id
     let video = await Submition.findOneAndDelete({ ytid: id })
@@ -37,12 +24,12 @@ router.put("/verdict", async (req, res) => {
     switch (req.body.option) {
         case "accept":
             global.logger.info(`${req.user.name}#${req.user.googleId} accepted: ${video.title} (${video.ytid})`)
-            await addToVoting(video)
-            break;
+            global.io.sockets.emit("updateVotingQueue", await VoteElement.add(video))
+            break
 
         case "deny":
             global.logger.info(`${req.user.name}#${req.user.googleId} denied: ${video.title} (${video.ytid})`)
-            break;
+            break
 
         default:
             return res.status(500).send()

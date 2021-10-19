@@ -8,4 +8,12 @@ const voteElementSchema = new Schema({
 
 const VoteElement = mongoose.model("voteelements", voteElementSchema)
 
+VoteElement.add = async video => {
+    let element = {
+        votes: 0, video: video
+    }
+    await new VoteElement(element).save()
+    return element
+}
+
 module.exports = VoteElement
