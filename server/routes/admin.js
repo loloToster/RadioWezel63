@@ -5,8 +5,7 @@ const User = require("./../models/user"),
     Submition = require("./../models/submition"),
     VoteElement = require("./../models/voteElement")
 
-const Genius = require("genius-lyrics"),
-    lyricsClient = new Genius.Client()
+const lyricsClient = require("lyrics-finder")
 
 router.use((req, res, next) => {
     if (!req.user || !(req.user.role == "admin")) res.status(500).send()
@@ -38,7 +37,7 @@ router.put("/verdict", async (req, res) => {
 })
 
 function clearTitle(title) {
-    let list = ["official video", "official lyric video", "official music video"]
+    let list = ["official", "official video", "official lyric video", "official music video"]
     title = title.toLowerCase()
     title = title.replace(/\(.*\)/, "")
     list.forEach(element => {
@@ -50,13 +49,7 @@ function clearTitle(title) {
 router.get("/lyrics/:title", async (req, res) => {
     let title = clearTitle(decodeURIComponent(req.params.title))
     console.log("requesting lyrics for:", title)
-    try {
-        let searches = await lyricsClient.songs.search(title)
-        let topSong = searches[0]
-        res.send(await topSong.lyrics())
-    } catch (error) {
-        res.send("Nie znalazłem takiej piosenki")
-    }
+    res.send(await lyricsClient(title) || "Nie znalazłem takiej piosenki")
 })
 
 router.get("/reset", async (req, res) => {
