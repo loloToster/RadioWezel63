@@ -18,6 +18,7 @@ img {
 #thumbnail {
     width: 100%;
     border-radius: 3vw;
+    margin-bottom: 5vw;
 }
 
 #progressBar {
