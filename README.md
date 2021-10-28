@@ -20,4 +20,4 @@
 * optimize current video handling
 * auto vote on added song
 * auto submit accept if user is admin
-
+* add developer and testers email handling
