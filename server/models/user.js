@@ -9,7 +9,6 @@ const userSchema = new Schema({
     email: String,
     thumbnail: String,
     role: { type: String, default: "user" },
-    votes: { type: Array, default: [] },
     notes: { type: Number, default: 30 },
     possibleSubmits: { type: Array, default: [] }
 })
@@ -17,10 +16,13 @@ const userSchema = new Schema({
 const User = mongoose.model("user", userSchema)
 
 User.vote = async (videoId, userId) => {
-    let element = await VoteElement.findOneAndUpdate({ "video.ytid": videoId }, { $inc: { votes: 1 } })
-    if (!element) return 0
-    await User.findOneAndUpdate({ googleId: userId }, { $push: { votes: videoId } })
-    return element.votes + 1
+    console.log(videoId, userId)
+    let element = await VoteElement.findOne({ "video.ytid": videoId })
+    if (!element || element.votes.includes(userId))
+        return 0
+    element.votes.push(userId)
+    await element.save()
+    return element.votes.length
 }
 
 module.exports = User

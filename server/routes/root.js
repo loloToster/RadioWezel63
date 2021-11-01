@@ -19,7 +19,6 @@ router.get("/", async (req, res) => {
 
 router.get("/vote/:id", checkIfLoggedIn, async (req, res) => {
     let id = decodeURIComponent(req.params.id)
-    if (req.user.votes.includes(id)) return res.status(500).send()
     let votes = await User.vote(id, req.user.googleId)
     if (!votes) return res.status(500).send()
     res.status(200).send(votes.toString())

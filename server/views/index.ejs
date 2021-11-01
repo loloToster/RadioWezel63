@@ -53,11 +53,11 @@
                                 <%- voteElement.video.title %>
                             </a>
                         </div>
-                        <% if (user && !user.votes.includes(voteElement.video.ytid)) { %>
+                        <% if (user && !voteElement.votes.includes(user.googleId)) { %>
                             <div data-videoid="<%= voteElement.video.ytid %>" class="upvote">&#9650;</div>
                             <% } else { %>
                                 <div data-videoid="<%= voteElement.video.ytid %>" data-voted="true" class="upvote">
-                                    <%- voteElement.votes %>
+                                    <%- voteElement.votes.length %>
                                 </div>
                                 <% } %>
                     </div>
