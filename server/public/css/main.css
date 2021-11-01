@@ -1,7 +1,7 @@
 body {
     margin: 0;
     font-family: Arial;
-    background-color: #2d2d30;
+    background-color: #2a2a2c;
     color: #d4d4d4;
     display: flex;
     min-height: 100vh;
@@ -23,7 +23,7 @@ a {
 
 #header {
     height: 7vh;
-    background-color: #3e3e42;
+    background-color: #2d2d2f;
     padding: 1.5vh;
     display: flex;
 }

@@ -18,6 +18,7 @@
                     </div>
                     <% if ( user.role=="admin" ) { %>
                         <div><a href="/admin">Admin panel</a></div>
+                        <div><a href="/player">Odtwarzacz</a></div>
                         <% } %>
                             <div>Ustawienia</div>
                             <div><a id="logout" href="/auth/logout">Wyloguj</a></div>
@@ -32,7 +33,6 @@
                     if (!(event.target.id == "burger" || event.target.id == "dropdownController")) {
                         let dropdown = document.getElementById("dropdownItems")
                         if (dropdown.classList.contains("show")) {
-                            console.log("removing")
                             dropdown.classList.remove("show")
                             document.getElementById("dropdownController").classList.remove("show")
                         }
