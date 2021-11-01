@@ -121,10 +121,11 @@ a {
     right: 0;
     width: fit-content;
     max-width: 97vw;
-    background-color: #2d2d30;
+    background-color: #2a2a2c;
     overflow: hidden;
     border-radius: 1vw;
     flex-direction: column;
+    z-index: 1;
 }
 
 #dropdownItems>div {
