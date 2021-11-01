@@ -94,6 +94,10 @@ socket.on("updateVotes", (id, votes) => {
     button.innerText = votes
 })
 
+socket.on("removeVoteElement", (id) => {
+    document.querySelector(`[data-videoid='${id}']`).closest(".song").remove()
+})
+
 function zeroFill(number, width = 2) {
     width -= number.toString().length
     if (width > 0)
@@ -130,6 +134,7 @@ var currentTimer = null
 
 socket.on("updateDuration", arg => {
     current = arg
+    if (!arg.video) return
     drawCurrent(arg)
 })
 

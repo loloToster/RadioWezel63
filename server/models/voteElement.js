@@ -16,4 +16,9 @@ VoteElement.add = async video => {
     return element
 }
 
+VoteElement.mostPopular = async () => {
+    return await VoteElement.findOne({}).sort("-votes")
+}
+
+
 module.exports = VoteElement

@@ -30,8 +30,11 @@ router.get("/current", async (req, res) => {
 })
 
 router.get("/song", async (req, res) => {
-    let mostPopular = await VoteElement.findOne({}).sort("-votes")
+    let mostPopular = await VoteElement.mostPopular()
     res.json(mostPopular)
+    if (!mostPopular) return
+    await mostPopular.delete()
+    io.emit("removeVoteElement", mostPopular.video.ytid)
 })
 
 global.io.on("connection", socket => {
