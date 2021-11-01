@@ -29,13 +29,14 @@ songTemplate.removeAttribute("id")
 
 function createSongObject(video) {
     let clone = songTemplate.cloneNode(true)
+    clone.querySelector(".songIcon").style.backgroundImage = `url('${video.thumbnail}')`
     let a = clone.querySelector(".title a")
     a.innerText = htmlDecode(video.title)
     a.href = DEF_YT_URL + video.ytid
     let upvote = clone.querySelector(".upvote")
     if (loggedIn) {
         upvote.dataset.videoid = video.ytid
-        upvote.addEventListener("click", event => onVote(video.ytid))
+        upvote.addEventListener("click", () => onVote(video.ytid))
     } else {
         upvote.dataset.voted = "true"
         upvote.innerText = 0

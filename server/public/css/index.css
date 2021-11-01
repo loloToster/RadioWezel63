@@ -64,20 +64,30 @@ img {
 
 .song {
     display: flex;
+    align-items: center;
+}
+
+.songIcon {
+    height: 9vw;
+    min-width: 11vw;
+    background-color: #232323;
+    margin-left: 2vw;
+    border-radius: 1vw;
+    background-size: cover;
+    background-position: center;
 }
 
 .title {
     font-size: 4vh;
     overflow: scroll;
     white-space: nowrap;
-    padding: 2vw;
+    margin: 2vw;
     flex-grow: 1;
-    display: flex;
 }
 
 .upvote {
     font-size: 5vh;
-    padding: 1vw;
+    margin: 1vw;
     text-align: center;
     min-width: 11vw;
     max-width: 11vw;

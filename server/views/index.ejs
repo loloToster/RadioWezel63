@@ -37,9 +37,9 @@
             <div id="songContainer">
                 <div style="display: none;">
                     <div id="songTemplate" class="song">
+                        <div class="songIcon"></div>
                         <div class="title">
-                            <a href="">
-                            </a>
+                            <a href=""></a>
                         </div>
                         <div data-videoid="" class="upvote">
                             ▲
@@ -48,6 +48,8 @@
                 </div>
                 <% votingQueue.forEach(voteElement=> { %>
                     <div class="song">
+                        <div class="songIcon" style="background-image: url('<%- voteElement.video.thumbnail %>');">
+                        </div>
                         <div class="title">
                             <a href="<%= 'https://www.youtube.com/watch?v=' + voteElement.video.ytid %>">
                                 <%- voteElement.video.title %>
