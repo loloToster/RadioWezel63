@@ -15,40 +15,14 @@ socket.on("connect", () => {
 let addSong = document.getElementById("plus")
 if (addSong) {
     addSong.addEventListener("click", () => {
-        addSong.setAttribute("class", "clicked")
+        addSong.classList.add("clicked")
     })
 }
 
 Array.from(document.getElementsByClassName("upvote")).forEach(element => {
     if (!element.dataset.voted)
-        element.addEventListener("click", event => onVote(element.dataset.videoid))
+        element.addEventListener("click", () => onVote(element.dataset.videoid))
 })
-
-
-/* function createSongObject(video) {
-    let object = document.createElement("div")
-    object.setAttribute("class", "song")
-
-    let title = document.createElement("div")
-    title.setAttribute("class", "title")
-
-    let href = document.createElement("a")
-    href.setAttribute("href", DEF_YT_URL + video.ytid)
-    href.setAttribute("target", "_blank")
-    href.innerText = htmlDecode(video.title)
-
-    title.appendChild(href)
-    object.appendChild(title)
-
-    let upvote = document.createElement("td")
-    upvote.setAttribute("class", "upvote")
-    upvote.setAttribute("data-videoid", video.ytid)
-    upvote.innerText = "\u25b2"
-    upvote.addEventListener("click", event => onVote(video.ytid))
-    object.appendChild(upvote)
-
-    return object
-} */
 
 const songTemplate = document.getElementById("songTemplate")
 songTemplate.removeAttribute("id")
@@ -57,13 +31,13 @@ function createSongObject(video) {
     let clone = songTemplate.cloneNode(true)
     let a = clone.querySelector(".title a")
     a.innerText = htmlDecode(video.title)
-    a.setAttribute("href", DEF_YT_URL + video.ytid)
+    a.href = DEF_YT_URL + video.ytid
     let upvote = clone.querySelector(".upvote")
     if (loggedIn) {
-        upvote.setAttribute("data-videoid", video.ytid)
+        upvote.dataset.videoid = video.ytid
         upvote.addEventListener("click", event => onVote(video.ytid))
     } else {
-        upvote.setAttribute("data-voted", "true")
+        upvote.dataset.voted = "true"
         upvote.innerText = 0
     }
     return clone
@@ -113,7 +87,7 @@ function drawCurrent(cur) {
     } else {
         document.getElementById("currentWrapper").style.display = "block"
     }
-    document.getElementById("thumbnail").setAttribute("src", cur.video.thumbnail)
+    document.getElementById("thumbnail").src = cur.video.thumbnail
     let progressBar = document.querySelector("input")
     let left = document.getElementById("left")
     let right = document.getElementById("right")
