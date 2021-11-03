@@ -16,6 +16,22 @@ let playerSocket = null
 let playerKey = generateKey()
 let current = { duration: -1 }
 
+router.get("/current", async (req, res) => {
+    res.json(current)
+})
+
+// check if user is admin
+router.use((req, res, next) => {
+    if (!req.user || !(req.user.role == "admin")) res.status(404).render("error")
+    else next()
+})
+
+// check if there is no other player connected
+router.use((req, res, next) => {
+    if (playerSocket) res.status(404).render("error")
+    else next()
+})
+
 router.get("/", async (req, res) => {
     if (!playerSocket) {
         playerKey = generateKey()
@@ -25,16 +41,12 @@ router.get("/", async (req, res) => {
     }
 })
 
-router.get("/current", async (req, res) => {
-    res.json(current)
-})
-
 router.get("/song", async (req, res) => {
     let mostPopular = await VoteElement.mostPopular()
     res.json(mostPopular)
     if (!mostPopular) return
     await mostPopular.delete()
-    io.emit("removeVoteElement", mostPopular.video.ytid)
+    global.io.emit("removeVoteElement", mostPopular.video.ytid)
 })
 
 global.io.on("connection", socket => {
@@ -48,7 +60,7 @@ global.io.on("connection", socket => {
                 logger.info(`player with id ${socket.id} disconnected`)
                 playerSocket = null
                 current = { duration: -1 }
-                io.emit("updateDuration", current)
+                global.io.emit("updateDuration", current)
             })
         } else {
             socket.disconnect()
@@ -59,7 +71,7 @@ global.io.on("connection", socket => {
 function onUpdate(arg) {
     current = arg
     /* if (current.video.ytid != arg.video.ytid || current.duration < arg.currentDuration) */
-    io.emit("updateDuration", arg)
+    global.io.emit("updateDuration", arg)
 }
 
 
