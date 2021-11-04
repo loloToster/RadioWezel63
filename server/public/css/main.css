@@ -8,6 +8,10 @@ body {
     flex-direction: column;
 }
 
+.flexSeparator {
+    flex-grow: 1;
+}
+
 #contentWrapper {
     flex-grow: 1;
 }
@@ -29,8 +33,8 @@ a {
 }
 
 #logo {
-    font-size: 6.5vh;
-    flex-grow: 1;
+    height: 7vh;
+    width: 9vh;
 }
 
 #login {
