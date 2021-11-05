@@ -30,6 +30,7 @@ async function searchWithScraping(query, maxResults) {
             items.push({
                 ytid: video.id.videoId,
                 title: video.title,
+                creator: video.creator,
                 thumbnail: video.snippet.thumbnails.url,
                 duration: hmsToSeconds(video.duration_raw)
             })
@@ -64,6 +65,7 @@ async function searchWithApi(query, key, maxResults) {
             items: [{
                 ytid: data.id,
                 title: data.snippet.title,
+                creator: data.snippet.channelTitle,
                 thumbnail: data.snippet.thumbnails.high.url,
                 duration: iso.toSeconds(iso.parse(data.contentDetails.duration))
             }]

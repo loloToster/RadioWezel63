@@ -38,9 +38,11 @@ songTemplate.removeAttribute("id")
 function createSongObject(video) {
     let clone = songTemplate.cloneNode(true)
     clone.querySelector(".songIcon").style.backgroundImage = `url('${video.thumbnail}')`
-    let a = clone.querySelector(".title a")
+    let a = clone.querySelector(".title")
     a.innerText = htmlDecode(video.title)
     a.href = DEF_YT_URL + video.ytid
+    let creator = clone.querySelector(".creator")
+    creator.innerText = video.creator
     let upvote = clone.querySelector(".upvote")
     if (loggedIn) {
         upvote.dataset.videoid = video.ytid
@@ -56,7 +58,6 @@ async function onVote(id) {
     id = encodeURIComponent(id)
     let res = await fetch("/vote/" + id)
     let data = await res.text()
-    console.log(data)
     let button = document.querySelector(`[data-videoid='${id}']`)
     button.dataset.voted = "true"
     button.innerText = data
@@ -65,13 +66,10 @@ async function onVote(id) {
 }
 
 socket.on("updateVotingQueue", voteElement => {
-    console.log(voteElement)
-    console.log(voteElement.video.ytid)
     document.getElementById("songContainer").appendChild(createSongObject(voteElement.video))
 })
 
 socket.on("updateVotes", (id, votes) => {
-    console.log(`${id}: ${votes}`)
     let button = document.querySelector(`[data-videoid='${id}']`)
     if (!button.dataset.voted) return
     button.innerText = votes
@@ -119,7 +117,6 @@ function drawCurrent(cur) {
 }
 
 socket.on("updateDuration", arg => {
-    console.log(arg)
     current = arg
     drawCurrent(arg)
 })

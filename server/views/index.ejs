@@ -35,8 +35,12 @@
                 <div style="display: none;">
                     <div id="songTemplate" class="song">
                         <div class="songIcon"></div>
-                        <div class="title">
-                            <a href=""></a>
+                        <div class="titleAndCreator">
+                            <div class="title">
+                                <a href=""></a>
+                            </div>
+                            <div class="creator">
+                            </div>
                         </div>
                         <div data-videoid="" class="upvote">
                             ▲
@@ -47,10 +51,13 @@
                     <div class="song">
                         <div class="songIcon" style="background-image: url('<%- voteElement.video.thumbnail %>');">
                         </div>
-                        <div class="title">
-                            <a href="<%= 'https://www.youtube.com/watch?v=' + voteElement.video.ytid %>">
+                        <div class="titleAndCreator">
+                            <a class="title" href="<%= 'https://www.youtube.com/watch?v=' + voteElement.video.ytid %>">
                                 <%- voteElement.video.title %>
                             </a>
+                            <div class="creator">
+                                <%- voteElement.video.creator %>
+                            </div>
                         </div>
                         <% if (user && !voteElement.votes.includes(user.googleId)) { %>
                             <div data-videoid="<%= voteElement.video.ytid %>" class="upvote">&#9650;</div>

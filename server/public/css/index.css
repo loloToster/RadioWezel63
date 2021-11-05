@@ -74,12 +74,26 @@ img {
     background-position: center;
 }
 
-.title {
-    font-size: 4vh;
+.titleAndCreator {
+    position: relative;
     overflow: scroll;
     white-space: nowrap;
     margin: 2vw;
     flex-grow: 1;
+}
+
+.title {
+    font-size: 2.5vh;
+}
+
+.creator {
+    font-size: 1.5vh;
+    color: grey;
+    position: sticky;
+    left: 0;
+    max-width: 50vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .upvote {
