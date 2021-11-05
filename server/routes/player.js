@@ -28,7 +28,7 @@ router.use((req, res, next) => {
 
 // check if there is no other player connected
 router.use((req, res, next) => {
-    if (playerSocket) res.status(404).render("error")
+    if (playerSocket && req.query.key != playerKey) res.status(404).render("error")
     else next()
 })
 
@@ -42,6 +42,7 @@ router.get("/", async (req, res) => {
 })
 
 router.get("/song", async (req, res) => {
+    console.log()
     let mostPopular = await VoteElement.mostPopular()
     res.json(mostPopular)
     if (!mostPopular) return

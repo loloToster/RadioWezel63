@@ -37,7 +37,7 @@ async function onPlayerStateChange(event) {
 }
 
 async function loadNextVideo() {
-    let res = await fetch("/player/song")
+    let res = await fetch("/player/song?key=" + playerKey)
     data = await res.json()
     currentVideo = data.video
     player.loadVideoById(data.video.ytid)
