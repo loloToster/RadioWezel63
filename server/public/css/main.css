@@ -1,8 +1,14 @@
+:root {
+    --bg-color: #2a2a2c;
+    --white: #d4d4d4;
+    --dark: #1e1e1e;
+}
+
 body {
     margin: 0;
     font-family: Arial;
-    background-color: #2a2a2c;
-    color: #d4d4d4;
+    background-color: var(--bg-color);
+    color: var(--white);
     display: flex;
     min-height: 100vh;
     flex-direction: column;
@@ -21,7 +27,7 @@ body {
 }
 
 a {
-    color: #d4d4d4;
+    color: var(--white);
     text-decoration: inherit;
 }
 
@@ -40,7 +46,7 @@ a {
 #login {
     height: 7vh;
     width: 27vw;
-    background-color: #1e1e1e;
+    background-color: var(--dark);
     border-radius: 100vw;
 }
 
@@ -76,7 +82,7 @@ a {
 #burger {
     width: 100%;
     height: 0.7vh;
-    background: #d4d4d4;
+    background: var(--white);
     border-radius: 1vh;
     transition: all .5s ease-in-out;
 }
@@ -86,7 +92,7 @@ a {
     position: absolute;
     width: 100%;
     height: 0.7vh;
-    background: #d4d4d4;
+    background: var(--white);
     border-radius: 1vh;
     transition: all .5s ease-in-out;
 }
@@ -125,7 +131,7 @@ a {
     right: 0;
     width: fit-content;
     max-width: 97vw;
-    background-color: #2a2a2c;
+    background-color: var(--bg-color);
     overflow: hidden;
     border-radius: 1vw;
     flex-direction: column;
@@ -147,7 +153,6 @@ a {
 }
 
 #gradientStrip {
-    background: rgb(2, 227, 51);
     background: linear-gradient(90deg, rgba(2, 227, 51, 1) 0%, rgba(0, 153, 250, 1) 100%);
     width: inherit;
     height: 1vh;

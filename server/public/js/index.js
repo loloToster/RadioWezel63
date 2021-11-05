@@ -102,7 +102,7 @@ function drawCurrent(cur) {
     left.innerText = `${zeroFill(minutes)}:${zeroFill(seconds)}`
     let percentage = (currentDuration / duration) * 100
     progressBar.value = percentage
-    progressBar.style.background = `linear-gradient(to right, #01be97 0%, #01be97 ${percentage}%, #d4d4d4 ${percentage}%, #d4d4d4 100%)`
+    progressBar.style.background = `linear-gradient(to right, var(--duration-color) 0%, var(--duration-color) ${percentage}%, var(--white) ${percentage}%, var(--white) 100%)`
 }
 
 var currentTimer = null
