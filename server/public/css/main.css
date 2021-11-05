@@ -158,6 +158,21 @@ a {
     height: 1vh;
 }
 
+.disconnectedMsg {
+    font-size: 3vh;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: grey;
+}
+
+.disconnectedMsg img {
+    width: 50vw;
+    height: 50vw;
+}
+
 #footer {
     box-sizing: border-box;
     width: auto;
