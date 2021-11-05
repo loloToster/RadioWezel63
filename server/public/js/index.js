@@ -12,12 +12,21 @@ socket.on("connect", () => {
     console.log("connected")
 })
 
-let addSong = document.getElementById("plus")
-if (addSong) {
-    addSong.addEventListener("click", () => {
-        addSong.classList.add("clicked")
+let submitionImg = document.querySelector("#addSongButton img")
+if (submitionImg) {
+    submitionImg.addEventListener("click", () => {
+        submitionImg.classList.add("clicked")
     })
 }
+
+let submitionBtn = document.getElementById("addSongButton")
+document.body.addEventListener("touchstart", () => {
+    submitionBtn.style.opacity = 0.2
+}, true)
+
+document.body.addEventListener("touchend", () => {
+    submitionBtn.style.opacity = 1
+}, true)
 
 Array.from(document.getElementsByClassName("upvote")).forEach(element => {
     if (!element.dataset.voted)
