@@ -27,7 +27,6 @@ function createVideoElement(video) {
         delete video.toLong
         clone.addEventListener("click", () => onVideoClick(video))
     }
-    console.log(clone)
     clone.querySelector(".thumbnail img").src = video.thumbnail
     clone.querySelector(".titleDiv div").innerText = htmlDecode(video.title)
     return clone
@@ -40,7 +39,6 @@ document.querySelector("#search #bar input")
     })
 
 async function onVideoClick(video) {
-    console.log(video)
     let res = await fetch("/submit/post", {
         method: "POST",
         headers: {

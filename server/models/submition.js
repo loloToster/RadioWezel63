@@ -6,6 +6,7 @@ const VoteElement = require("./voteElement")
 const submitionSchema = new Schema({
     ytid: String,
     title: String,
+    creator: String,
     thumbnail: String,
     duration: Number
 })

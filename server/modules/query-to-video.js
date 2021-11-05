@@ -24,7 +24,7 @@ async function searchWithScraping(query, maxResults) {
     if (videos.length && videos) {
         let items = []
         for (let i = 0; i < videos.length && items.length <= maxResults; i++) {
-            const video = videos[i];
+            const video = videos[i]
             let duration = video.duration_raw
             if (!duration) { continue }
             items.push({
@@ -89,7 +89,7 @@ async function searchWithApi(query, key, maxResults) {
         }
         let newItems = []
         for (let i = 0; i < data.length; i++) {
-            const item = data[i];
+            const item = data[i]
             let video = {}
             video.ytid = item.id.videoId
             let details
@@ -104,6 +104,7 @@ async function searchWithApi(query, key, maxResults) {
                 return { done: false, code: "error" }
             }
             video.title = item.snippet.title
+            video.creator = item.snippet.channelTitle
             video.thumbnail = item.snippet.thumbnails.high.url
             video.duration = iso.toSeconds(iso.parse(details.data.items[0].contentDetails.duration))
             newItems.push(video)

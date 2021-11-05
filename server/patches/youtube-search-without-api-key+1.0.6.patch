@@ -1,0 +1,12 @@
+diff --git a/node_modules/youtube-search-without-api-key/lib/lib/parser.service.js b/node_modules/youtube-search-without-api-key/lib/lib/parser.service.js
+index daea305..bd81d7a 100644
+--- a/node_modules/youtube-search-without-api-key/lib/lib/parser.service.js
++++ b/node_modules/youtube-search-without-api-key/lib/lib/parser.service.js
+@@ -23,6 +23,7 @@ var ParserService = /** @class */ (function () {
+                 },
+                 url: "https://www.youtube.com/watch?v=" + data.videoRenderer.videoId,
+                 title: title,
++                creator: data.videoRenderer.ownerText && data.videoRenderer.ownerText.runs[0] ? data.videoRenderer.ownerText.runs[0].text : "",
+                 description: data.videoRenderer.descriptionSnippet && data.videoRenderer.descriptionSnippet.runs[0] ? data.videoRenderer.descriptionSnippet.runs[0].text : "",
+                 duration_raw: data.videoRenderer.lengthText ? data.videoRenderer.lengthText.simpleText : null,
+                 snippet: {
