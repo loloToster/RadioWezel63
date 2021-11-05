@@ -21,18 +21,13 @@ function onYouTubeIframeAPIReady() {
         width: null,
         height: null,
         events: {
-            /* onReady: onPlayerReady, */
             onStateChange: onPlayerStateChange
         }
     })
 }
 
-/* async function onPlayerReady(event) {
-    player.loadVideoById(await getNextVideoId())
-} */
-
 async function onPlayerStateChange(event) {
-    if (event.data == 0)
+    if (event.data == YT.PlayerState.ENDED)
         await loadNextVideo()
 }
 
@@ -58,6 +53,7 @@ async function updateServer() {
     }
     await socket.emit("update", {
         duration: dur,
+        paused: player.getPlayerState() == YT.PlayerState.PAUSED,
         video: currentVideo
     })
 }

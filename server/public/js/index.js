@@ -5,7 +5,6 @@ function htmlDecode(input) {
     return doc.documentElement.textContent;
 }
 
-let current
 const socket = io()
 
 socket.on("connect", () => {
@@ -85,14 +84,16 @@ socket.on("removeVoteElement", (id) => {
 function zeroFill(number, width = 2) {
     width -= number.toString().length
     if (width > 0)
-        return new Array(width + (/\./.test(number) ? 2 : 1)).join('0') + number
+        return new Array(width + (/\./.test(number) ? 2 : 1)).join("0") + number
     return number + ""
 }
 
+let currentTimeout
+
 function drawCurrent(cur) {
-    console.log("updating")
+    clearTimeout(currentTimeout)
     if (cur.duration == -1) {
-        document.getElementById("currentWrapper").style.display = "none"
+        document.getElementById("thumbnail").src = "/images/sleep-note.png"
         return
     } else {
         document.getElementById("currentWrapper").style.display = "block"
@@ -112,29 +113,18 @@ function drawCurrent(cur) {
     let percentage = (currentDuration / duration) * 100
     progressBar.value = percentage
     progressBar.style.background = `linear-gradient(to right, var(--duration-color) 0%, var(--duration-color) ${percentage}%, var(--white) ${percentage}%, var(--white) 100%)`
+    if (cur.paused) return
+    cur.duration++
+    currentTimeout = setTimeout(drawCurrent, 1000, cur)
 }
 
-var currentTimer = null
-
 socket.on("updateDuration", arg => {
+    console.log(arg)
     current = arg
-    if (!arg.video) return
     drawCurrent(arg)
 })
 
-/* function updateCurrent() {
-    if (currentTimer) clearTimeout(currentTimer)
-    drawCurrent(current)
-    if (current.duration > current.video.duration) {
-        current.duration = -1
-        drawCurrent(current)
-        return
-    }
-    current.duration++
-    currentTimer = setTimeout(updateCurrent, 1000)
-}
-
-fetch("/player/current").then(res => res.json()).then(data => {
-    current = data
-    updateCurrent()
-}) */
+fetch("/player/current").then(async (data) => {
+    let cur = await data.json()
+    drawCurrent(cur)
+})

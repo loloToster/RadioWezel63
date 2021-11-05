@@ -70,9 +70,14 @@ global.io.on("connection", socket => {
 })
 
 function onUpdate(arg) {
+    if ((!current.video != !arg.video) || // if the video is no longer null
+        current.video?.ytid != arg.video?.ytid || // if the video is diffrent
+        current.duration > arg.duration || // if the video was rewound backwards
+        current.duration + 5 < arg.duration || // if the video was rewound forwards at least 5 sec
+        current.paused != arg.paused) { // if the video was paused or resumed
+        global.io.emit("updateDuration", arg)
+    }
     current = arg
-    /* if (current.video.ytid != arg.video.ytid || current.duration < arg.currentDuration) */
-    global.io.emit("updateDuration", arg)
 }
 
 

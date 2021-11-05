@@ -13,11 +13,12 @@
 * move submit and voting queues to DB ✔️
 * multiple YT_KEYS ✔️
 * add youtube-search-without-api-key ✔️
-* zembedowane yt na admin panelu ✔️
+* embeded yt on admin panel ✔️
 * videos that exceed max duration showing up in /submit ✔️
 * lyrics on admim panel ✔️
 * add auth to player connection ✔️
-* optimize current video handling
+* optimize current video handling ✔️
 * auto vote on added song
 * auto submit accept if user is admin
-* add developer and testers email handling
+* add developer and testers email handling ✔️
+* vote elements sorting
