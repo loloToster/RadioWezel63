@@ -1,8 +1,25 @@
 const DEF_YT_URL = "https://www.youtube.com/watch?v="
 
 function htmlDecode(input) {
-    var doc = new DOMParser().parseFromString(input, "text/html");
-    return doc.documentElement.textContent;
+    var doc = new DOMParser().parseFromString(input, "text/html")
+    return doc.documentElement.textContent
+}
+
+String.prototype.customTrim = function (chars = " \n\t") {
+    let newString = this
+    while (chars.includes(newString.charAt(0))) {
+        newString = newString.substring(1)
+        if (!newString) break
+    }
+    while (chars.includes(newString.charAt(newString.length - 1))) {
+        newString = newString.substring(0, newString.length - 1)
+        if (!newString) break
+    }
+    return newString
+}
+
+function formatTitle(title, creator) {
+    return title.replace(creator, "").customTrim(" \n\t-")
 }
 
 const socket = io()
@@ -123,5 +140,11 @@ socket.on("updateDuration", arg => {
 
 fetch("/player/current").then(async (data) => {
     let cur = await data.json()
+    let thumbnail = document.getElementById("thumbnail")
+    thumbnail.src = ""
+    thumbnail.classList.remove("loading")
     drawCurrent(cur)
 })
+
+let creators = document.getElementsByClassName("creator")
+Array.from(document.getElementsByClassName("title")).forEach((e, i) => e.innerText = formatTitle(e.innerText, creators[i].innerText))

@@ -17,6 +17,12 @@ img {
     margin-bottom: 5vw;
 }
 
+#thumbnail.loading {
+    width: 20%;
+    border-radius: 0;
+    margin: 10% 40%;
+}
+
 #progressBar {
     font-size: 2vh;
     margin-right: 1vw;
