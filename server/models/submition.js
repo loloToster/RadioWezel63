@@ -14,7 +14,7 @@ const submitionSchema = new Schema({
 const Submition = mongoose.model("submitions", submitionSchema)
 
 Submition.submitted = async video => {
-    return (await Submition.findOne({ ytid: video.ytid })) || (await VoteElement.findOne({ "video.ytid": video.ytid }))
+    return !!((await Submition.findOne({ ytid: video.ytid })) || (await VoteElement.findOne({ "video.ytid": video.ytid })))
 }
 
 module.exports = Submition

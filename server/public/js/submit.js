@@ -13,7 +13,7 @@ function createVideoElement(video) {
     if (video.submitted) {
         clone.style.backgroundColor = "#57cc47"
         let submitted = document.createElement("submitted")
-        toLong.classList.add("unclickable")
+        submitted.classList.add("unclickable")
         submitted.innerText = "Ta piosenka jest już dodana"
         clone.appendChild(submitted)
     } else if (video.toLong) {
@@ -69,7 +69,6 @@ function onSearch() {
     fetch("/submit/search/" + value)
         .then(res => res.json())
         .then(data => {
-            console.log(data)
             loading.style.display = "none"
             if (data.code == "success")
                 data.items.forEach(item => {
