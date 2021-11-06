@@ -22,7 +22,8 @@ songTemplate.removeAttribute("id")
 
 function createSongObject(video) {
     clone = songTemplate.cloneNode(true)
-    clone.querySelector(".songContent").innerText = htmlDecode(video.title)
+    clone.querySelector(".title").innerText = htmlDecode(video.title)
+    clone.querySelector(".creator").innerText = video.creator
     clone.dataset.videoid = video.ytid
     return clone
 }
@@ -39,13 +40,13 @@ function createManageObject(parent) {
 
     clone.querySelector("#deny").addEventListener("click", () => onButtonClick("deny", parent.dataset.videoid))
     clone.querySelector("#accept").addEventListener("click", () => onButtonClick("accept", parent.dataset.videoid))
-    clone.querySelector("#lyrics").addEventListener("click", () => getLyrics(parent.getElementsByClassName("songContent")[0].innerText))
+    clone.querySelector("#lyrics").addEventListener("click", () => getLyrics(parent.querySelector(".title").innerText))
 
     return clone
 }
 
 Array.from(document.getElementsByClassName("song")).forEach(element => {
-    element.addEventListener("click", event => onSongClick(element))
+    element.addEventListener("click", () => onSongClick(element))
 })
 
 var activeSong = null
@@ -53,7 +54,6 @@ var activeSong = null
 function onSongClick(element) {
     if (activeSong == element) return
     activeSong = element
-    console.log(element.dataset.videoid)
     let manage = document.getElementById("manage")
     if (manage) manage.remove()
     manage = createManageObject(element)

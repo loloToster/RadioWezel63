@@ -13,18 +13,27 @@
 
 <body>
     <div id="contentWrapper">
-        <%- include('partials/header.ejs') %>
+        <%- include("partials/header.ejs") %>
             <div id="songContainer">
                 <div style="display: none;">
                     <div id="songTemplate" data-videoid="" class="song">
                         <div class="songContent">
+                            <div class="title">
+                            </div>
+                            <div class="creator">
+                            </div>
                         </div>
                     </div>
                 </div>
                 <% submitQueue.forEach(video=> { %>
                     <div data-videoid="<%= video.ytid %>" class="song">
                         <div class="songContent">
-                            <%- video.title %>
+                            <div class="title">
+                                <%- video.title %>
+                            </div>
+                            <div class="creator">
+                                <%- video.creator %>
+                            </div>
                         </div>
                     </div>
                     <% }) %>
@@ -44,7 +53,7 @@
                 </div>
             </div>
     </div>
-    <%- include('partials/footer.ejs') %>
+    <%- include("partials/footer.ejs") %>
 </body>
 
 </html>
