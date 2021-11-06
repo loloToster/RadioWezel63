@@ -19,8 +19,9 @@ String.prototype.customTrim = function (chars = " \n\t") {
 }
 
 function formatTitle(title, creator) {
-    return title.replace(creator, "").customTrim(" \n\t-")
-}
+    let remix = title.toLowerCase().includes("remix")
+    return title.replace(creator, "").replace(/\(.*\)|\[.*\]/, "").customTrim(" \n\t-") + (remix ? " (Remix)" : "")
+}       // remove creator name | then remove any thing between parenthesis | then remove unnecessary chars | if there was 'remix' in title add '(Remix)'
 
 const socket = io()
 
@@ -56,7 +57,7 @@ function createSongObject(video) {
     let clone = songTemplate.cloneNode(true)
     clone.querySelector(".songIcon").style.backgroundImage = `url('${video.thumbnail}')`
     let a = clone.querySelector(".title")
-    a.innerText = htmlDecode(video.title)
+    a.innerText = formatTitle(htmlDecode(video.title), video.creator)
     a.href = DEF_YT_URL + video.ytid
     let creator = clone.querySelector(".creator")
     creator.innerText = video.creator

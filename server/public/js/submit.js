@@ -28,7 +28,8 @@ function createVideoElement(video) {
         clone.addEventListener("click", () => onVideoClick(video))
     }
     clone.querySelector(".thumbnail img").src = video.thumbnail
-    clone.querySelector(".titleDiv div").innerText = htmlDecode(video.title)
+    clone.querySelector(".title").innerText = htmlDecode(video.title)
+    clone.querySelector(".creator").innerText = video.creator
     return clone
 }
 
