@@ -3,11 +3,21 @@ const express = require("express"),
 
 const passport = require("passport")
 
-router.get("/login", passport.authenticate("google", {
-    /* hd: process.env.MAIL_DOMAIN, */
-    prompt: "select_account",
-    scope: ["profile", "email"]
-}))
+const KeyValue = require("../models/keyValue")
+
+async function customGoogleAuth(req, res, next) {
+    let AuthenticateOptionsGoogle = {
+        prompt: "select_account",
+        scope: ["profile", "email"]
+    }
+
+    if (!(await KeyValue.get("testing")))
+        AuthenticateOptionsGoogle.hd = process.env.MAIL_DOMAIN
+
+    passport.authenticate("google", AuthenticateOptionsGoogle)(req, res, next)
+}
+
+router.get("/login", customGoogleAuth)
 
 router.get("/redirect", passport.authenticate("google"), (req, res) => {
     res.redirect("/")
