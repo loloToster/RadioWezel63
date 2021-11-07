@@ -19,12 +19,11 @@ router.get("/", (req, res) => {
 })
 
 async function handleSubmition(video) {
-    let response = {}
-    await new Submition(video).save()
-    global.io.to("admin").emit("addSubmit", video)
-    response.code = "success"
-    response.video = video
-    return response
+    if (!(await Submition.submitted(video))) {
+        await new Submition(video).save()
+        global.io.to("admin").emit("addSubmit", video)
+    }
+    return video
 }
 
 const queryToVideos = require("./../modules/query-to-video")
@@ -37,7 +36,7 @@ router.get("/search/:query", async (req, res) => {
         for (let i = 0; i < videos.items.length; i++) {
             let submitted = await Submition.submitted(videos.items[i])
             let toLong = videos.items[i].duration > MAX_DURATION
-            if (!submitted && !toLong) possibleSubmits.push(videos.items[i])
+            if (!submitted && !toLong) possibleSubmits.push(JSON.stringify(videos.items[i]))
             videos.items[i].submitted = submitted
             videos.items[i].toLong = toLong
         }
@@ -47,13 +46,12 @@ router.get("/search/:query", async (req, res) => {
 })
 
 router.post("/post", async (req, res) => {
-    const inPossibleSubmits = req.user.possibleSubmits.some(obj => obj.ytid === req.body.ytid && obj.title === req.body.title && obj.thumbnail === req.body.thumbnail && obj.duration === req.body.duration)
-    if (inPossibleSubmits) {
+    if (User.canSubmit(req.body, req.user)) {
         await User.updateOne({ googleId: req.user.googleId }, { possibleSubmits: [] })
         global.logger.info(`${req.user.googleId} submitted: ${req.body.title} (${req.body.ytid})`)
         res.json(await handleSubmition(req.body))
     } else {
-        res.status(500).send()
+        res.status(405).send()
     }
 })
 

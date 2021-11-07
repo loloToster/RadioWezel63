@@ -48,8 +48,10 @@ async function onVideoClick(video) {
         body: JSON.stringify(video)
     })
     let data = await res.json()
-    if (data.code == "success")
-        window.location.href = "/"
+    document.getElementById("successThumbnail").style.backgroundImage = `url(${data.thumbnail})`
+    document.getElementById("submitionSuccess").style.display = "flex"
+    document.querySelector("#submitionSuccess #tick").classList.add("tickAnimation")
+    setTimeout(() => window.location.href = "/", 730)
 }
 
 let searching = false
@@ -65,9 +67,7 @@ function onSearch() {
     noResults.style.display = "none"
     let loading = document.getElementById("loading")
     loading.style.display = "block"
-    value = encodeURIComponent(value)
-    console.log("Searching: " + value)
-    fetch("/submit/search/" + value)
+    fetch("/submit/search/" + encodeURIComponent(value))
         .then(res => res.json())
         .then(data => {
             loading.style.display = "none"
@@ -81,7 +81,7 @@ function onSearch() {
             input.value = ""
             searching = false
         })
-        .catch(err => {
+        .catch(() => {
             searching = false
         })
 }

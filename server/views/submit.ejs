@@ -10,8 +10,14 @@
 </head>
 
 <body>
+    <div id="submitionSuccess">
+        <div id="successThumbnail">
+            <img id="tick" src="/images/accept.png">
+            <div class="darkener"></div>
+        </div>
+    </div>
     <div id="contentWrapper">
-        <%- include('partials/header.ejs') %>
+        <%- include("partials/header.ejs") %>
             <div id="search">
                 <div id="bar">
                     <input type="text" autofocus="" placeholder="Wpisz szukaną piosenkę">
@@ -36,7 +42,7 @@
                 </div>
             </div>
     </div>
-    <%- include('partials/footer.ejs') %>
+    <%- include("partials/footer.ejs") %>
 </body>
 
 </html>

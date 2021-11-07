@@ -25,4 +25,8 @@ User.vote = async (videoId, userId) => {
     return element.votes.length
 }
 
+User.canSubmit = (video, user) => {
+    return user.possibleSubmits.some(s => s == JSON.stringify(video))
+}
+
 module.exports = User
