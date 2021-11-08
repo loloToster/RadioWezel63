@@ -1,51 +1,53 @@
-<div id="header">
-    <a href="/">
-        <img id="logo" src="/images/logo.png">
-    </a>
-    <div class="flexSeparator"></div>
-    <div id="menu">
-        <% if (user) { %>
-            <div id="dropdown">
-                <div id="dropdownController">
-                    <div id="burger"></div>
-                </div>
-                <div id="dropdownItems">
-                    <div id="profile">
-                        <div>
-                            <%=user.name%>
-                        </div>
+<div id="headerWrapper">
+    <div id="header">
+        <a href="/">
+            <img id="logo" src="/images/logo.png">
+        </a>
+        <div class="flexSeparator"></div>
+        <div id="menu">
+            <% if (user) { %>
+                <div id="dropdown">
+                    <div id="dropdownController">
+                        <div id="burger"></div>
                     </div>
-                    <% if ( user.role=="admin" ) { %>
-                        <div><a href="/admin">Admin panel</a></div>
-                        <div><a href="/player">Odtwarzacz</a></div>
-                        <% } %>
-                            <div>Ustawienia</div>
-                            <div><a id="logout" href="/auth/logout">Wyloguj</a></div>
+                    <div id="dropdownItems">
+                        <div id="profile">
+                            <div>
+                                <%=user.name%>
+                            </div>
+                        </div>
+                        <% if ( user.role=="admin" ) { %>
+                            <div><a href="/admin">Admin panel</a></div>
+                            <div><a href="/player">Odtwarzacz</a></div>
+                            <% } %>
+                                <div>Ustawienia</div>
+                                <div><a id="logout" href="/auth/logout">Wyloguj</a></div>
+                    </div>
                 </div>
-            </div>
-            <script>
-                document.getElementById("dropdownController").addEventListener("click", () => {
-                    document.getElementById("dropdownItems").classList.toggle("show")
-                    document.getElementById("dropdownController").classList.toggle("show")
-                })
-                window.onclick = event => {
-                    if (!(event.target.id == "burger" || event.target.id == "dropdownController")) {
-                        let dropdown = document.getElementById("dropdownItems")
-                        if (dropdown.classList.contains("show")) {
-                            dropdown.classList.remove("show")
-                            document.getElementById("dropdownController").classList.remove("show")
+                <script>
+                    document.getElementById("dropdownController").addEventListener("click", () => {
+                        document.getElementById("dropdownItems").classList.toggle("show")
+                        document.getElementById("dropdownController").classList.toggle("show")
+                    })
+                    window.onclick = event => {
+                        if (!(event.target.id == "burger" || event.target.id == "dropdownController")) {
+                            let dropdown = document.getElementById("dropdownItems")
+                            if (dropdown.classList.contains("show")) {
+                                dropdown.classList.remove("show")
+                                document.getElementById("dropdownController").classList.remove("show")
+                            }
                         }
                     }
-                }
-            </script>
-            <% } else {%>
-                <a href="/auth/login">
-                    <div id="login"><img src="/images/google.png">
-                        <div>
-                            login</div>
-                    </div>
-                </a>
-                <% }%>
+                </script>
+                <% } else {%>
+                    <a href="/auth/login">
+                        <div id="login"><img src="/images/google.png">
+                            <div>
+                                login</div>
+                        </div>
+                    </a>
+                    <% }%>
+        </div>
     </div>
+    <div id="gradientStrip"></div>
 </div>
-<div id="gradientStrip"></div>
