@@ -11,8 +11,8 @@ const express = require("express"),
 global.io = io
 global.logger = logger
 
-const passport = require("passport"),
-    passportSetup = require("./config/passport-setup")
+const passport = require("passport")
+require("./config/passport-setup")
 
 const mongoose = require("mongoose")
 
@@ -44,18 +44,12 @@ app.use("/admin", require("./routes/admin"))
 app.use("/submit", require("./routes/submit"))
 app.use("/player", require("./routes/player"))
 
-
-var startTime = new Date()// ! delete
-app.get("/time", (req, res) => {
-    res.send(startTime.toISOString())
-})
-
 app.use((req, res) => {
-    res.status(404).render('error')
+    res.status(404).render("error")
 })
 
 io.on("connection", socket => {
-    console.log(socket.id + " connected")
+    // console.log(socket.id + " connected")
 })
 
 const keep_awake = require("./modules/keep-heroku-awake")
