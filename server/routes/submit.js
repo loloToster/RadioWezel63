@@ -5,7 +5,8 @@ const YT_KEYS = process.env.YT_KEYS.split(" ")
 const MAX_DURATION = 300
 
 const User = require("./../models/user"),
-    Submition = require("./../models/submition")
+    Submition = require("./../models/submition"),
+    VoteElement = require("./../models/voteElement")
 
 function checkIfLoggedIn(req, res, next) {
     if (!req.user) res.status(500).send()
@@ -18,10 +19,16 @@ router.get("/", (req, res) => {
     res.render("submit")
 })
 
-async function handleSubmition(video) {
+async function handleSubmition(video, user) {
     if (!(await Submition.submitted(video))) {
-        await new Submition(video).save()
-        global.io.to("admin").emit("addSubmit", video)
+        if (user.role == "admin") {
+            global.logger.info(`${user.googleId} self-accepted: ${video.title} (${video.ytid})`)
+            global.io.sockets.emit("updateVotingQueue", (await VoteElement.add(video)).video)
+        } else {
+            global.logger.info(`${user.googleId} submitted: ${video.title} (${video.ytid})`)
+            await new Submition(video).save()
+            global.io.to("admin").emit("addSubmit", video)
+        }
     }
     return video
 }
@@ -48,8 +55,7 @@ router.get("/search/:query", async (req, res) => {
 router.post("/post", async (req, res) => {
     if (User.canSubmit(req.body, req.user)) {
         await User.updateOne({ googleId: req.user.googleId }, { possibleSubmits: [] })
-        global.logger.info(`${req.user.googleId} submitted: ${req.body.title} (${req.body.ytid})`)
-        res.json(await handleSubmition(req.body))
+        res.json(await handleSubmition(req.body, req.user))
     } else {
         res.status(405).send()
     }

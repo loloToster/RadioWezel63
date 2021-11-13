@@ -20,7 +20,7 @@ String.prototype.customTrim = function (chars = " \n\t") {
 
 function formatTitle(title, creator) {
     let remix = title.toLowerCase().includes("remix")
-    return title.replace(creator, "").replace(/\(.*\)|\[.*\]/, "").customTrim(" \n\t-") + (remix ? " (Remix)" : "")
+    return title.replace(creator, "").replace(/\(.*\)|\[.*\]/, "").customTrim(" \n\t-,_") + (remix ? " (Remix)" : "")
 }       // remove creator name | then remove any thing between parenthesis | then remove unnecessary chars | if there was 'remix' in title add '(Remix)'
 
 const socket = io()
@@ -83,8 +83,8 @@ async function onVote(id) {
     button.parentNode.replaceChild(clone, button)
 }
 
-socket.on("updateVotingQueue", voteElement => {
-    document.getElementById("songContainer").appendChild(createSongObject(voteElement.video))
+socket.on("updateVotingQueue", video => {
+    document.getElementById("songContainer").appendChild(createSongObject(video))
 })
 
 socket.on("updateVotes", (id, votes) => {

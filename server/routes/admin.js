@@ -1,8 +1,7 @@
 const express = require("express"),
     router = express.Router()
 
-const User = require("./../models/user"),
-    Submition = require("./../models/submition"),
+const Submition = require("./../models/submition"),
     VoteElement = require("./../models/voteElement")
 
 const lyricsClient = require("lyrics-finder")
@@ -23,7 +22,7 @@ router.put("/verdict", async (req, res) => {
     switch (req.body.option) {
         case "accept":
             global.logger.info(`${req.user.name}#${req.user.googleId} accepted: ${video.title} (${video.ytid})`)
-            global.io.sockets.emit("updateVotingQueue", await VoteElement.add(video))
+            global.io.sockets.emit("updateVotingQueue", (await VoteElement.add(video)).video)
             break
 
         case "deny":
@@ -54,7 +53,6 @@ router.get("/lyrics/:title", async (req, res) => {
 
 router.get("/reset", async (req, res) => {
     global.logger.info(`${req.user.name}#${req.user.googleId} reseted data`)
-    await User.updateMany({}, { votes: [] })
     await Submition.deleteMany({})
     await VoteElement.deleteMany({})
     res.json({ code: "success" })

@@ -4,5 +4,5 @@
 # ToDo:
 
 * auto vote on added song
-* auto submit accept if user is admin
+* auto submit accept if user is admin ✔️
 * vote elements sorting
