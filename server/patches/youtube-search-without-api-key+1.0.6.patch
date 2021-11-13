@@ -10,3 +10,27 @@ index daea305..bd81d7a 100644
                  description: data.videoRenderer.descriptionSnippet && data.videoRenderer.descriptionSnippet.runs[0] ? data.videoRenderer.descriptionSnippet.runs[0].text : "",
                  duration_raw: data.videoRenderer.lengthText ? data.videoRenderer.lengthText.simpleText : null,
                  snippet: {
+diff --git a/node_modules/youtube-search-without-api-key/lib/lib/search.js b/node_modules/youtube-search-without-api-key/lib/lib/search.js
+index d09f688..8f633dc 100644
+--- a/node_modules/youtube-search-without-api-key/lib/lib/search.js
++++ b/node_modules/youtube-search-without-api-key/lib/lib/search.js
+@@ -9,8 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
+     });
+ };
+ var __generator = (this && this.__generator) || function (thisArg, body) {
+-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
++    var _ = { label: 0, sent: function () { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
++    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function () { return this; }), g;
+     function verb(n) { return function (v) { return step([n, v]); }; }
+     function step(op) {
+         if (f) throw new TypeError("Generator is already executing.");
+@@ -50,7 +50,7 @@ function searchVideo(searchQuery) {
+                     details = [];
+                     fetched = false;
+                     options = { type: "video", limit: 0 };
+-                    return [4 /*yield*/, got_1.default.get(encodeURI(YOUTUBE_URL + "/results?q=" + encodeURI(searchQuery.trim()) + "&hl=en"))];
++                    return [4 /*yield*/, got_1.default.get(YOUTUBE_URL + "/results?search_query=" + encodeURIComponent(searchQuery.trim()))];
+                 case 1:
+                     searchRes = _a.sent();
+                     return [4 /*yield*/, searchRes.body];
