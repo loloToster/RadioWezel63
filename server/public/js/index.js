@@ -110,12 +110,16 @@ function drawCurrent(cur) {
     clearTimeout(currentTimeout)
     if (cur.duration == -1) {
         document.getElementById("thumbnail").src = "/images/sleep-note.png"
+        document.getElementById("curTitle").innerText = "Nic nie jest odtwarzane przez aplikacje"
+        document.getElementById("curCreator").innerText = "-----"
         return
     } else {
         document.getElementById("currentWrapper").style.display = "block"
     }
     document.getElementById("thumbnail").src = cur.video.thumbnail
-    let progressBar = document.querySelector("input")
+    document.getElementById("curTitle").innerText = formatTitle(cur.video.title, cur.video.creator)
+    document.getElementById("curCreator").innerText = cur.video.creator
+    let progressBar = document.querySelector(".bar input")
     let left = document.getElementById("left")
     let right = document.getElementById("right")
     let duration = cur.video.duration
@@ -128,7 +132,7 @@ function drawCurrent(cur) {
     left.innerText = `${zeroFill(minutes)}:${zeroFill(seconds)}`
     let percentage = (currentDuration / duration) * 100
     progressBar.value = percentage
-    progressBar.style.background = `linear-gradient(to right, var(--duration-color) 0%, var(--duration-color) ${percentage}%, var(--white) ${percentage}%, var(--white) 100%)`
+    progressBar.style.setProperty("--percentage", percentage)
     if (cur.paused) return
     cur.duration++
     currentTimeout = setTimeout(drawCurrent, 1000, cur)

@@ -20,7 +20,13 @@
         <%- include("partials/header.ejs") %>
             <div id="currentWrapper">
                 <div id="currentSong">
-                    <img id="thumbnail" class="loading" src="/images/loading.gif">
+                    <div class="info">
+                        <img id="thumbnail" class="loading" src="/images/loading.gif">
+                        <div class="curTitleAndCreator">
+                            <div id="curTitle">Wczytywanie...</div>
+                            <div id="curCreator">-----</div>
+                        </div>
+                    </div>
                     <div id="progressBar">
                         <div id="left" class="progressNumber">00:00</div>
                         <div class="bar">
@@ -29,7 +35,7 @@
                         <div id="right" class="progressNumber">00:00</div>
                     </div>
                 </div>
-                <img id="waves" style="position: relative; top: -3px;" src="/images/waves.png">
+                <img class="waves" src="/images/waves.png">
             </div>
             <div id="songContainer">
                 <div style="display: none;">
