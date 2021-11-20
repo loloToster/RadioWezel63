@@ -74,13 +74,14 @@ function createSongObject(video) {
 
 async function onVote(id) {
     id = encodeURIComponent(id)
-    let res = await fetch("/vote/" + id)
-    let data = await res.text()
     let button = document.querySelector(`[data-videoid='${id}']`)
     button.dataset.voted = "true"
-    button.innerText = data
     let clone = button.cloneNode(true)
     button.parentNode.replaceChild(clone, button)
+    let res = await fetch("/vote/" + id)
+    let data = await res.text()
+    button = document.querySelector(`[data-videoid='${id}']`)
+    button.innerText = data
 }
 
 socket.on("updateVotingQueue", video => {

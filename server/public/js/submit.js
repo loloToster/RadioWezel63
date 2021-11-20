@@ -34,12 +34,11 @@ function createVideoElement(video) {
 }
 
 document.getElementById("icon").addEventListener("click", onSearch)
-document.querySelector("#search #bar input")
-    .addEventListener("keypress", event => {
-        if (event.key == "Enter") onSearch()
-    })
+document.querySelector("#search #bar input").addEventListener("keypress",
+    event => event.key == "Enter" ? onSearch() : null)
 
 async function onVideoClick(video) {
+    document.getElementById("submitionSuccess").style.display = "flex"
     let res = await fetch("/submit/post", {
         method: "POST",
         headers: {
@@ -48,8 +47,10 @@ async function onVideoClick(video) {
         body: JSON.stringify(video)
     })
     let data = await res.json()
-    document.getElementById("successThumbnail").style.backgroundImage = `url(${data.thumbnail})`
-    document.getElementById("submitionSuccess").style.display = "flex"
+    document.getElementById("loading-response").style.display = "none"
+    let sucThumbnail = document.getElementById("successThumbnail")
+    sucThumbnail.style.display = "flex"
+    sucThumbnail.style.backgroundImage = `url(${data.thumbnail})`
     document.querySelector("#submitionSuccess #tick").classList.add("tickAnimation")
     setTimeout(() => window.location.href = "/", 730)
 }
@@ -65,7 +66,7 @@ function onSearch() {
     resultContainer.innerHTML = ""
     let noResults = document.getElementById("noResults")
     noResults.style.display = "none"
-    let loading = document.getElementById("loading")
+    let loading = document.getElementById("loading-results")
     loading.style.display = "block"
     fetch("/submit/search/" + encodeURIComponent(value))
         .then(res => res.json())
@@ -80,8 +81,7 @@ function onSearch() {
             }
             input.value = ""
             searching = false
-        })
-        .catch(() => {
+        }).catch(() => {
             searching = false
         })
 }
