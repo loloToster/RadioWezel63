@@ -54,7 +54,7 @@ io.on("connection", socket => {
 
 const keep_awake = require("./modules/keep-heroku-awake")
 
-mongoose.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
+mongoose.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
 mongoose.connection.once("open", async () => {
     logger.info("Connected to db")
     const PORT = process.env.PORT || 80

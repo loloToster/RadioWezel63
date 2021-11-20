@@ -16,13 +16,10 @@ const userSchema = new Schema({
 const User = mongoose.model("user", userSchema)
 
 User.vote = async (videoId, userId) => {
-    console.log(videoId, userId)
-    let element = await VoteElement.findOne({ "video.ytid": videoId })
-    if (!element || element.votes.includes(userId))
-        return 0
-    element.votes.push(userId)
-    await element.save()
-    return element.votes.length
+    try {
+        let element = await VoteElement.findOneAndUpdate({ "video.ytid": videoId }, { $addToSet: { votes: userId } })
+        return element.votes.length + 1
+    } catch { return 0 }
 }
 
 User.canSubmit = (video, user) => {

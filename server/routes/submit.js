@@ -26,7 +26,7 @@ async function handleSubmition(video, user) {
             global.io.sockets.emit("updateVotingQueue", (await VoteElement.add(video)).video)
         } else {
             global.logger.info(`${user.googleId} submitted: ${video.title} (${video.ytid})`)
-            await new Submition(video).save()
+            await Submition.add(video)
             global.io.to("admin").emit("addSubmit", video)
         }
     }
