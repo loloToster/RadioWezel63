@@ -46,11 +46,12 @@ document.body.addEventListener("touchend", () => {
 }, true)
 
 Array.from(document.getElementsByClassName("upvote")).forEach(element => {
-    if (!element.dataset.voted)
-        element.addEventListener("click", () => onVote(element.dataset.videoid))
+    let voteFunc = element.dataset.voted ? onUnvote : onVote
+    element.addEventListener("click", () => voteFunc(element.dataset.videoid))
 })
 
-const songTemplate = document.getElementById("songTemplate")
+const songTemplate = document.getElementById("songTemplate"),
+    voteTemplate = songTemplate.getElementsByClassName("upvote")[0]
 songTemplate.removeAttribute("id")
 
 function createSongObject(video) {
@@ -73,15 +74,30 @@ function createSongObject(video) {
 }
 
 async function onVote(id) {
-    id = encodeURIComponent(id)
     let button = document.querySelector(`[data-videoid='${id}']`)
     button.dataset.voted = "true"
     let clone = button.cloneNode(true)
     button.parentNode.replaceChild(clone, button)
-    let res = await fetch("/vote/" + id)
+    id = encodeURIComponent(id)
+    let res = await fetch("/vote/" + id, { method: "PUT" })
     let data = await res.text()
-    button = document.querySelector(`[data-videoid='${id}']`)
-    button.innerText = data
+    clone.innerText = data
+    clone.addEventListener("click", () => onUnvote(id))
+}
+
+async function onUnvote(id) {
+    let button = document.querySelector(`[data-videoid='${id}']`)
+    let clone = voteTemplate.cloneNode(true)
+    clone.dataset.videoid = id
+    delete button.dataset.voted
+    button.parentNode.replaceChild(clone, button)
+    id = encodeURIComponent(id)
+    let res = await fetch("/vote/" + id, { method: "DELETE" })
+    let data = await res.text()
+    let voteNum = document.querySelector(`[data-videoid='${id}'] .voteNum`)
+    voteNum.innerText = data
+    console.log("unvoting:", id, "/", data)
+    clone.addEventListener("click", () => onVote(id))
 }
 
 socket.on("updateVotingQueue", video => {

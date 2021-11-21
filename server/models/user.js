@@ -22,6 +22,13 @@ User.vote = async (videoId, userId) => {
     } catch { return 0 }
 }
 
+User.unvote = async (videoId, userId) => {
+    try {
+        let element = await VoteElement.findOneAndUpdate({ "video.ytid": videoId }, { $pull: { votes: userId } })
+        return element.votes.length - 1
+    } catch { return -1 }
+}
+
 User.canSubmit = (video, user) => {
     return user.possibleSubmits.some(s => s == JSON.stringify(video))
 }
