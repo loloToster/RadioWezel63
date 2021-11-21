@@ -8,7 +8,6 @@
 
 #currentSong .info {
     width: 90vw;
-    margin-bottom: 3vw;
     display: flex;
     align-items: center;
     overflow: hidden;
@@ -50,6 +49,7 @@
 #progressBar {
     font-size: 2vh;
     display: flex;
+    margin-top: 3vw;
 }
 
 .bar {
@@ -97,13 +97,13 @@
 .song {
     display: flex;
     align-items: center;
+    margin: 0 1.5vw;
 }
 
 .songIcon {
     height: 9vw;
     min-width: 11vw;
     background-color: #232323;
-    margin-left: 2vw;
     border-radius: 1vw;
     background-size: cover;
     background-position: center;
@@ -133,23 +133,34 @@
 
 .upvote {
     font-size: 5vh;
-    margin: 1vw;
     text-align: center;
     min-width: 11vw;
-    max-width: 11vw;
     overflow: hidden;
+    line-height: .75;
+    padding: 1vh 0;
 }
 
-.upvote:not([data-voted="true"]) {
+.voteArrow {
+    font-size: 3vh;
+}
+
+.voteNum {
+    font-weight: bolder;
+    font-size: 1.5vh;
+    padding-top: .5vh;
+}
+
+.voteArrow {
     animation: notVoted .3s infinite alternate;
 }
 
 @keyframes notVoted {
-    0% {
-        transform: translateY(0);
+    from {
+        transform: translateY(5%);
     }
-    100% {
-        transform: translateY(-5%);
+
+    to {
+        transform: translateY(-10%);
     }
 }
 
@@ -184,6 +195,7 @@
     0% {
         transform: rotate(0);
     }
+
     100% {
         transform: rotate(360deg);
     }

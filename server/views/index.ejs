@@ -49,7 +49,10 @@
                             </div>
                         </div>
                         <div data-videoid="" class="upvote">
-                            ▲
+                            <div class="voteArrow">&#9650;</div>
+                            <div class="voteNum">
+                                0
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -58,7 +61,7 @@
                         <div class="songIcon" style="background-image: url('<%- voteElement.video.thumbnail %>');">
                         </div>
                         <div class="titleAndCreator">
-                            <a class="title" href="<%= 'https://www.youtube.com/watch?v=' + voteElement.video.ytid %>">
+                            <a class="title" href="https://www.youtube.com/watch?v=<%=voteElement.video.ytid %>">
                                 <%- voteElement.video.title %>
                             </a>
                             <div class="creator">
@@ -66,7 +69,12 @@
                             </div>
                         </div>
                         <% if (user && !voteElement.votes.includes(user.googleId)) { %>
-                            <div data-videoid="<%= voteElement.video.ytid %>" class="upvote">&#9650;</div>
+                            <div data-videoid="<%= voteElement.video.ytid %>" class="upvote">
+                                <div class="voteArrow">&#9650;</div>
+                                <div class="voteNum">
+                                    <%- voteElement.votes.length %>
+                                </div>
+                            </div>
                             <% } else { %>
                                 <div data-videoid="<%= voteElement.video.ytid %>" data-voted="true" class="upvote">
                                     <%- voteElement.votes.length %>

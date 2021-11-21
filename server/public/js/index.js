@@ -90,8 +90,11 @@ socket.on("updateVotingQueue", video => {
 
 socket.on("updateVotes", (id, votes) => {
     let button = document.querySelector(`[data-videoid='${id}']`)
-    if (!button.dataset.voted) return
-    button.innerText = votes
+    if (button.dataset.voted)
+        button.innerText = votes
+    else {
+        button.getElementsByClassName("voteNum")[0].innerText = votes
+    }
 })
 
 socket.on("removeVoteElement", (id) => {
@@ -152,5 +155,9 @@ fetch("/player/current").then(async (data) => {
     drawCurrent(cur)
 })
 
+// format all titles on load
 let creators = document.getElementsByClassName("creator")
-Array.from(document.getElementsByClassName("title")).forEach((e, i) => e.innerText = formatTitle(e.innerText, creators[i].innerText))
+Array.from(document.getElementsByClassName("title"))
+    .forEach(
+        (e, i) => e.innerText = formatTitle(e.innerText, creators[i].innerText)
+    )
