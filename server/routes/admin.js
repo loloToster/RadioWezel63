@@ -7,7 +7,7 @@ const Submition = require("./../models/submition"),
 const lyricsClient = require("lyrics-finder")
 
 router.use((req, res, next) => {
-    if (!req.user || !(req.user.role == "admin")) res.status(500).send()
+    if (!req.user || !(req.user.role == "admin")) res.status(404).render("error")
     else next()
 })
 

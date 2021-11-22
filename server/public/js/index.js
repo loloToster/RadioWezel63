@@ -20,7 +20,7 @@ String.prototype.customTrim = function (chars = " \n\t") {
 
 function formatTitle(title, creator) {
     let remix = title.toLowerCase().includes("remix")
-    return title.replace(creator, "").replace(/\(.*\)|\[.*\]/, "").customTrim(" \n\t-,_") + (remix ? " (Remix)" : "")
+    return title.replace(creator, "").replace(/\(.*\)|\[.*\]/, "").customTrim(" \n\t-,_|") + (remix ? " (Remix)" : "")
 }       // remove creator name | then remove any thing between parenthesis | then remove unnecessary chars | if there was 'remix' in title add '(Remix)'
 
 const socket = io()
@@ -29,26 +29,27 @@ socket.on("connect", () => {
     console.log("connected")
 })
 
-let submitionImg = document.querySelector("#addSongButton img")
-if (submitionImg) {
+if (loggedIn) {
+    let submitionImg = document.querySelector("#addSongButton img")
     submitionImg.addEventListener("click", () => {
         submitionImg.classList.add("clicked")
     })
+
+    let submitionBtn = document.getElementById("addSongButton")
+    document.body.addEventListener("touchstart", () => {
+        submitionBtn.style.opacity = 0.2
+    }, true)
+
+    document.body.addEventListener("touchend", () => {
+        submitionBtn.style.opacity = 1
+    }, true)
+
+    Array.from(document.getElementsByClassName("upvote"))
+        .forEach(element => {
+            let voteFunc = element.dataset.voted ? onUnvote : onVote
+            element.addEventListener("click", () => voteFunc(element.dataset.videoid))
+        })
 }
-
-let submitionBtn = document.getElementById("addSongButton")
-document.body.addEventListener("touchstart", () => {
-    submitionBtn.style.opacity = 0.2
-}, true)
-
-document.body.addEventListener("touchend", () => {
-    submitionBtn.style.opacity = 1
-}, true)
-
-Array.from(document.getElementsByClassName("upvote")).forEach(element => {
-    let voteFunc = element.dataset.voted ? onUnvote : onVote
-    element.addEventListener("click", () => voteFunc(element.dataset.videoid))
-})
 
 const songTemplate = document.getElementById("songTemplate"),
     voteTemplate = songTemplate.getElementsByClassName("upvote")[0]

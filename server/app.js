@@ -48,11 +48,7 @@ app.use((req, res) => {
     res.status(404).render("error")
 })
 
-io.on("connection", socket => {
-    // console.log(socket.id + " connected")
-})
-
-const keep_awake = require("./modules/keep-heroku-awake")
+const keepAwake = require("./modules/keep-heroku-awake")
 
 mongoose.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
 mongoose.connection.once("open", async () => {
@@ -60,6 +56,6 @@ mongoose.connection.once("open", async () => {
     const PORT = process.env.PORT || 80
     server.listen(PORT, () => {
         logger.info("Server running on port: " + PORT)
-        keep_awake.start()
+        keepAwake.start()
     })
 })
