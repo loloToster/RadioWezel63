@@ -1,5 +1,5 @@
 .song {
-    width: auto;
+    width: 96vw;
     padding: 2vw;
 }
 
@@ -21,7 +21,7 @@
 }
 
 #manage {
-    margin: 1vh;
+    margin: 2vw;
 }
 
 #iframeWrapper {
@@ -42,31 +42,31 @@ iframe {
 }
 
 @keyframes iframe-loading {
-    0% {
+    from {
         background-color: #fff2;
     }
-    100% {
+
+    to {
         background-color: #eeee;
     }
 }
 
 #buttons {
     display: flex;
-    overflow: scroll;
+    justify-content: space-between;
+    width: 100%;
     margin-bottom: 1vh;
 }
 
 .button {
-    min-width: 10vh;
-    max-width: 10vh;
-    height: 10vh;
     border-radius: 3vh;
-    margin-right: 1vh;
+    width: 21vw;
+    height: 21vw;
 }
 
-img {
-    max-height: 100%;
-    max-width: 100%;
+.button img {
+    width: 100%;
+    height: 100%;
 }
 
 #deny {
@@ -85,6 +85,31 @@ img {
     background-color: #f6c90e;
 }
 
+.loadingLyrics {
+    width: 10vw;
+    height: 10vw;
+    background-image: url("/images/loading.gif");
+    background-size: cover;
+    margin: 0 calc(50% - 5vw);
+}
+
 #lyricsText {
-    font-size: 2vh;
+    font-size: 1.5vh;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#lyricsText tr {
+    border: none;
+}
+
+#lyricsText .number {
+    text-align: end;
+    border-right: solid .5vmin #252525;
+    padding-right: 2vw;
+    color: #777;
+}
+
+#lyricsText .text {
+    padding-left: 2vw;
 }

@@ -40,22 +40,27 @@ function createManageObject(parent) {
 
     clone.querySelector("#deny").addEventListener("click", () => onButtonClick("deny", parent.dataset.videoid))
     clone.querySelector("#accept").addEventListener("click", () => onButtonClick("accept", parent.dataset.videoid))
-    clone.querySelector("#lyrics").addEventListener("click", () => getLyrics(parent.querySelector(".title").innerText))
+    clone.querySelector("#lyrics").addEventListener("click", () => getLyrics(parent.querySelector(".title").innerText, parent.dataset.videoid))
 
     return clone
 }
 
-Array.from(document.getElementsByClassName("song")).forEach(element => {
-    element.addEventListener("click", () => onSongClick(element))
-})
+Array.from(document.getElementsByClassName("song"))
+    .forEach(element =>
+        element.querySelector(".songContent")
+            .addEventListener("click", () => onSongClick(element))
+    )
 
-var activeSong = null
+let currentId = null
 
 function onSongClick(element) {
-    if (activeSong == element) return
-    activeSong = element
     let manage = document.getElementById("manage")
-    if (manage) manage.remove()
+    manage ? manage.remove() : null
+    if (element.dataset.videoid == currentId) {
+        currentId = null
+        return
+    }
+    currentId = element.dataset.videoid
     manage = createManageObject(element)
     element.appendChild(manage)
 }
@@ -70,14 +75,24 @@ function onButtonClick(option, id) {
     })
 }
 
-async function getLyrics(title) {
-    console.log(title)
+async function getLyrics(title, id) {
+    let table = document.getElementById("lyricsText")
+    if (!table) return
+    table.innerHTML = "<div class='loadingLyrics'></div>"
     title = encodeURIComponent(title)
     let res = await fetch("/admin/lyrics/" + title)
     let data = await res.text()
-    let div = document.getElementById("lyricsText")
-    if (!div) return
-    div.innerText = data
+    if (id != currentId) return
+    table.innerHTML = ""
+    data.split("\n").forEach((line, i) => {
+        let row = table.insertRow()
+        let lineNum = row.insertCell()
+        lineNum.classList.add("number")
+        lineNum.innerText = i + 1
+        let lineText = row.insertCell()
+        lineText.classList.add("text")
+        lineText.innerText = line
+    })
 }
 
 
