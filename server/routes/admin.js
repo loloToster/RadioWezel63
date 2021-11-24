@@ -36,12 +36,13 @@ router.put("/verdict", async (req, res) => {
 })
 
 function clearTitle(title) {
-    let list = ["official", "official video", "official lyric video", "official music video"]
+    const list = ["official", "official video", "official lyric video", "official music video"]
     title = title.toLowerCase()
-    title = title.replace(/\(.*\)|\[.*\]/, "")
+    title = title.replace(/\(.*\)|\[.*\]/g, "")
     list.forEach(element => {
         title = title.replace(element, "")
     })
+    title = title.trim()
     return title
 }
 
