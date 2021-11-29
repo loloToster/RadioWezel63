@@ -53,7 +53,7 @@ router.get("/search/:query", async (req, res) => {
 })
 
 router.post("/post", async (req, res) => {
-    if (User.canSubmit(req.body, req.user)) {
+    if (req.user.canSubmit(req.body)) {
         await User.updateOne({ googleId: req.user.googleId }, { possibleSubmits: [] })
         res.json(await handleSubmition(req.body, req.user))
     } else {

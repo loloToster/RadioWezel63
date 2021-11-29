@@ -24,7 +24,7 @@ router.get("/", async (req, res) => {
 
 router.put("/vote/:id", checkIfLoggedIn, async (req, res) => {
     let id = decodeURIComponent(req.params.id)
-    let votes = await User.vote(id, req.user.googleId)
+    let votes = await req.user.vote(id)
     if (!votes) return res.status(500).send()
     res.status(200).send(votes.toString())
     global.io.emit("updateVotes", id, votes)
@@ -32,7 +32,7 @@ router.put("/vote/:id", checkIfLoggedIn, async (req, res) => {
 
 router.delete("/vote/:id", checkIfLoggedIn, async (req, res) => {
     let id = decodeURIComponent(req.params.id)
-    let votes = await User.unvote(id, req.user.googleId)
+    let votes = await req.user.unvote(id)
     if (votes < 0) return res.status(500).send()
     res.status(200).send(votes.toString())
     global.io.emit("updateVotes", id, votes)

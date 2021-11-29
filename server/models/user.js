@@ -13,24 +13,24 @@ const userSchema = new Schema({
     possibleSubmits: { type: Array, default: [] }
 })
 
-const User = mongoose.model("user", userSchema)
-
-User.vote = async (videoId, userId) => {
+userSchema.method("vote", async function (videoId) {
     try {
-        let element = await VoteElement.findOneAndUpdate({ "video.ytid": videoId }, { $addToSet: { votes: userId } })
+        let element = await VoteElement.findOneAndUpdate({ "video.ytid": videoId }, { $addToSet: { votes: this.googleId } })
         return element.votes.length + 1
     } catch { return 0 }
-}
+})
 
-User.unvote = async (videoId, userId) => {
+userSchema.method("unvote", async function (videoId) {
     try {
-        let element = await VoteElement.findOneAndUpdate({ "video.ytid": videoId }, { $pull: { votes: userId } })
+        let element = await VoteElement.findOneAndUpdate({ "video.ytid": videoId }, { $pull: { votes: this.googleId } })
         return element.votes.length - 1
     } catch { return -1 }
-}
+})
 
-User.canSubmit = (video, user) => {
-    return user.possibleSubmits.some(s => s == JSON.stringify(video))
-}
+userSchema.method("canSubmit", async function (video) {
+    return this.possibleSubmits.some(s => s == JSON.stringify(video))
+})
+
+const User = mongoose.model("user", userSchema)
 
 module.exports = User
