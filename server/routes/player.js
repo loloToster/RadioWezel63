@@ -29,17 +29,13 @@ router.use((req, res, next) => {
 
 // check if there is no other player connected
 router.use((req, res, next) => {
-    if (playerSocket && req.query.key != playerKey) res.status(404).render("error")
+    if (playerSocket && req.query.key != playerKey) res.status(405).render("player-used")
     else next()
 })
 
 router.get("/", async (req, res) => {
-    if (!playerSocket) {
-        playerKey = generateKey()
-        res.render("player", { playerKey: playerKey, submitQueue: await Submition.find({}) })
-    } else {
-        res.status(404).render("error")
-    }
+    playerKey = generateKey()
+    res.render("player", { playerKey: playerKey, submitQueue: await Submition.find({}) })
 })
 
 router.get("/song", async (req, res) => {
