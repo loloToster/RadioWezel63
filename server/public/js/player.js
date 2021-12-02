@@ -120,9 +120,11 @@ durElements.input.addEventListener("input", () => {
     drawDuration(durElements.input.value, durElements.input.max)
 })
 
+let rewound = false
 let seekEvent = () => {
     inputingDuration = false
     player.seekTo(durElements.input.value)
+    rewound = true
 }
 
 durElements.input.addEventListener("touchend", seekEvent)
@@ -140,8 +142,10 @@ async function loop() {
     await socket.emit("update", {
         duration: dur,
         paused: player.getPlayerState() == YT.PlayerState.PAUSED,
-        video: currentVideo
+        video: currentVideo,
+        rewound: rewound
     })
+    rewound = false
 }
 
 setInterval(loop, 1000)
