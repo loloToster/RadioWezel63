@@ -20,9 +20,26 @@
 <body>
     <div id="contentWrapper">
         <%- include("partials/header.ejs") %>
-            <div id="player"></div>
-            <div id="controls">
-                <button>start</button>
+            <div style="width: 0; height: 0; overflow: hidden;">
+                <div id="player-iframe"></div>
+            </div>
+            <div id="player">
+                <div class="head">
+                    <img id="hidePlayer" class="active" src="/images/menu-arrow.png">
+                </div>
+                <div class="row row-1">
+                    <img id="pause-play" src="/images/play.png">
+                    <img id="next" src="/images/right.png">
+                    <div>
+                        <div id="title">Naciśnij: <img src="/images/right.png"></div>
+                        <div id="artist">aby zacząć odtwarzanie</div>
+                    </div>
+                </div>
+                <div class="row row-2">
+                    <div id="l-dur">0:00</div>
+                    <input id="duration" type="range" min="0">
+                    <div id="r-dur">0:00</div>
+                </div>
             </div>
     </div>
     <%- include("partials/footer.ejs") %>

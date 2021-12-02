@@ -42,7 +42,6 @@ router.get("/", async (req, res) => {
 })
 
 router.get("/song", async (req, res) => {
-    console.log()
     let mostPopular = await VoteElement.mostPopular()
     res.json(mostPopular)
     if (!mostPopular) return

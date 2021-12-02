@@ -1,12 +1,100 @@
-iframe {
-    width: 100%;
-    aspect-ratio: 16 / 9;
+#player {
+    width: 100vw;
+    height: 100vw;
+    padding: 5vw;
+    --image: url("/images/default-music.png");
+    background-image: linear-gradient(to top, rgba(45, 45, 45, 0.9), rgba(45, 45, 45, 0.9) 30%, rgba(0, 0, 0, 0) 60%), var(--image);
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
 }
 
-button {
-    margin-top: 10vh;
-    margin-left: 25vw;
-    width: 50vw;
-    height: 10vh;
-    font-size: 5vh;
+.head {
+    flex-grow: 1;
+    position: relative;
+}
+
+#hidePlayer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 10vw;
+    height: 10vw;
+}
+
+#hidePlayer.active {
+    transform: rotate(180deg);
+}
+
+.row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+.row-1 {
+    padding-bottom: 2vh;
+}
+
+.row-1>* {
+    margin-right: 2vw;
+}
+
+#pause-play {
+    width: 15vw;
+    height: 15vw;
+}
+
+#next {
+    width: 8vw;
+    height: 8vw;
+}
+
+#title {
+    font-size: 4vh;
+    font-weight: bold;
+    max-width: 60vw;
+    overflow: scroll;
+    white-space: nowrap;
+}
+
+#title img {
+    width: 3vh;
+}
+
+#artist {
+    font-size: 2vh;
+    color: grey;
+    max-width: 60vw;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.row-2 {
+    font-size: 1.5vh;
+    --color: #fff;
+    color: var(--color);
+}
+
+#duration {
+    flex-grow: 1;
+    margin: 0 2vw;
+    --percentage: 50;
+    -webkit-appearance: none;
+    height: .5vh;
+    outline: none;
+    border-radius: 100vh;
+    background: linear-gradient(to right, var(--color) 0%, var(--color) calc(var(--percentage) * 1%), #535353 calc(var(--percentage) * 1%), #535353 100%);
+}
+
+#duration::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 1vmax;
+    height: 1vmax;
+    border-radius: 50%;
+    background: white;
 }

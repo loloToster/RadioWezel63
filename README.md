@@ -4,8 +4,9 @@
 
 # ToDo:
 
-* auto vote on added song
 * auto submit accept if user is admin ✔️
-* vote elements sorting
+* vote elements sorting ✔️
 * lyrics analyzer
-* cache checked songs
+* admin panel on player tab
+* auto vote on added song
+* move to yt music
