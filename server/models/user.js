@@ -31,6 +31,10 @@ userSchema.method("canSubmit", async function (video) {
     return this.possibleSubmits.some(s => s == JSON.stringify(video))
 })
 
+userSchema.method("setPossibleSubmits", async function (possibleSubmits) {
+    await this.updateOne({ possibleSubmits: possibleSubmits })
+})
+
 const User = mongoose.model("user", userSchema)
 
 module.exports = User

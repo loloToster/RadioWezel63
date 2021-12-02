@@ -4,9 +4,9 @@ const express = require("express"),
 const YT_KEYS = process.env.YT_KEYS.split(" ")
 const MAX_DURATION = 300
 
-const User = require("./../models/user"),
-    Submition = require("./../models/submition"),
-    VoteElement = require("./../models/voteElement")
+const Submition = require("./../models/submition"),
+    VoteElement = require("./../models/voteElement"),
+    KeyValue = require("./../models/keyValue")
 
 function checkIfLoggedIn(req, res, next) {
     if (!req.user) res.status(500).send()
@@ -21,7 +21,7 @@ router.get("/", (req, res) => {
 
 async function handleSubmition(video, user) {
     if (!(await Submition.submitted(video))) {
-        if (user.role == "admin") {
+        if (user.role == "admin" && await KeyValue.get("self-accept-activated")) {
             global.logger.info(`${user.googleId} self-accepted: ${video.title} (${video.ytid})`)
             global.io.sockets.emit("updateVotingQueue", (await VoteElement.add(video)).video)
         } else {
@@ -47,14 +47,14 @@ router.get("/search/:query", async (req, res) => {
             videos.items[i].submitted = submitted
             videos.items[i].toLong = toLong
         }
-        await User.updateOne({ googleId: req.user.googleId }, { possibleSubmits: possibleSubmits })
+        await req.user.setPossibleSubmits(possibleSubmits)
         res.json(videos)
     } else { res.json({ code: "noVideoFound" }) }
 })
 
 router.post("/post", async (req, res) => {
     if (req.user.canSubmit(req.body)) {
-        await User.updateOne({ googleId: req.user.googleId }, { possibleSubmits: [] })
+        await req.user.setPossibleSubmits([])
         res.json(await handleSubmition(req.body, req.user))
     } else {
         res.status(405).send()
