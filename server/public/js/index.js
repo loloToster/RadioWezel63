@@ -129,7 +129,7 @@ let currentTimeout
 
 function drawCurrent(cur) {
     clearTimeout(currentTimeout)
-    if (cur.duration == -1) {
+    if (cur.duration == -1 || !cur.video) {
         document.getElementById("thumbnail").src = "/images/sleep-note.png"
         document.getElementById("curTitle").innerText = "Nic nie jest odtwarzane przez aplikacje"
         document.getElementById("curCreator").innerText = "-----"
