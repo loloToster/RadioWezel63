@@ -9,37 +9,21 @@
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
+    box-shadow: 0 .1vh 1vh 0 var(--dark);
 }
 
-.head {
-    flex-grow: 1;
-    position: relative;
-}
-
-#hidePlayer {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 10vw;
-    height: 10vw;
-}
-
-#hidePlayer.active {
-    transform: rotate(180deg);
-}
-
-.row {
+#player .row {
     width: 100%;
     display: flex;
     align-items: center;
     font-weight: 500;
 }
 
-.row-1 {
+#player .row-1 {
     padding-bottom: 2vh;
 }
 
-.row-1>* {
+#player .row-1>* {
     margin-right: 2vw;
 }
 
@@ -74,7 +58,7 @@
     text-overflow: ellipsis;
 }
 
-.row-2 {
+#player .row-2 {
     font-size: 1.5vh;
     --color: #fff;
     color: var(--color);

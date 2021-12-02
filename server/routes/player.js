@@ -1,7 +1,8 @@
 const express = require("express"),
     router = express.Router()
 
-const VoteElement = require("../models/voteElement")
+const Submition = require("./../models/submition"),
+    VoteElement = require("./../models/voteElement")
 
 //https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
 function generateKey(length = 5) {
@@ -35,7 +36,7 @@ router.use((req, res, next) => {
 router.get("/", async (req, res) => {
     if (!playerSocket) {
         playerKey = generateKey()
-        res.render("player", { playerKey: playerKey })
+        res.render("player", { playerKey: playerKey, submitQueue: await Submition.find({}) })
     } else {
         res.status(404).render("error")
     }

@@ -7,10 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/player.css">
+    <link rel="stylesheet" href="/css/admin.css">
     <script src="/js/back_btn_reload.js"></script>
     <script defer src="/socket.io/socket.io.js"></script>
     <script defer src="https://www.youtube.com/iframe_api"></script>
     <script defer src="/js/player.js"></script>
+    <script defer src="/js/admin.js"></script>
     <script>
         let playerKey = "<%= playerKey %>"
     </script>
@@ -24,9 +26,7 @@
                 <div id="player-iframe"></div>
             </div>
             <div id="player">
-                <div class="head">
-                    <img id="hidePlayer" class="active" src="/images/menu-arrow.png">
-                </div>
+                <div style="flex-grow: 1;"></div>
                 <div class="row row-1">
                     <img id="pause-play" src="/images/play.png">
                     <img id="next" src="/images/right.png">
@@ -41,6 +41,10 @@
                     <div id="r-dur">0:00</div>
                 </div>
             </div>
+            <div style="padding: 3vw; font-weight: bold; font-size: 4vh;">
+                Admin panel:
+            </div>
+            <%- include("partials/admin-panel.ejs") %>
     </div>
     <%- include("partials/footer.ejs") %>
 </body>
