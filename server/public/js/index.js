@@ -178,3 +178,5 @@ Array.from(document.getElementsByClassName("title"))
     .forEach(
         (e, i) => e.innerText = formatTitle(e.innerText, creators[i].innerText)
     )
+
+reconnection(socket)

@@ -30,7 +30,7 @@
     }
 
     const manageTemplate = document.getElementById("manageTemplate")
-    manageTemplate.removeAttribute("id")
+    manageTemplate.remove()
 
     function createManageObject(parent) {
         let clone = manageTemplate.cloneNode(true)
@@ -107,4 +107,6 @@
         let object = document.querySelector(`#adminPanel [data-videoid="${id}"]`)
         if (object) object.remove()
     })
+
+    reconnection(socket)
 })()
