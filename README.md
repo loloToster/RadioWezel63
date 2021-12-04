@@ -1,6 +1,4 @@
 # Bugs:
-* if two persons search the song at the same time this song can be submitted twice ✔️ ✔️
-* possible to vote on the same element twice ✔️
 
 # ToDo:
 

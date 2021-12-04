@@ -15,9 +15,10 @@ function generateKey(length = 5) {
 
 let playerSocket = null
 let playerKey = generateKey()
-let current = { duration: -1 }
+let current = {}
 
 router.get("/current", async (req, res) => {
+    current.playerConnected = Boolean(playerSocket)
     res.json(current)
 })
 
@@ -56,8 +57,7 @@ global.io.on("connection", socket => {
             socket.on("disconnect", () => {
                 logger.info(`player with id ${socket.id} disconnected`)
                 playerSocket = null
-                current = { duration: -1 }
-                global.io.emit("updateDuration", current)
+                global.io.emit("updateDuration", { playerConnected: false })
             })
         } else {
             socket.disconnect()
@@ -66,6 +66,7 @@ global.io.on("connection", socket => {
 })
 
 function onUpdate(arg) {
+    arg.playerConnected = true
     if (((!current.video != !arg.video) || // if the video is no longer null
         current.video?.ytid != arg.video?.ytid || // if the video is diffrent
         (arg.rewound) || // if the video was rewound

@@ -129,13 +129,11 @@ let currentTimeout
 
 function drawCurrent(cur) {
     clearTimeout(currentTimeout)
-    if (cur.duration == -1 || !cur.video) {
+    if (!cur.video || !cur.playerConnected) {
         document.getElementById("thumbnail").src = "/images/sleep-note.png"
         document.getElementById("curTitle").innerText = "Nic nie jest odtwarzane przez aplikacje"
         document.getElementById("curCreator").innerText = "-----"
         return
-    } else {
-        document.getElementById("currentWrapper").style.display = "block"
     }
     document.getElementById("thumbnail").src = cur.video.thumbnail
     document.getElementById("curTitle").innerText = formatTitle(cur.video.title, cur.video.creator)

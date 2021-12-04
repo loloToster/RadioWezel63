@@ -1,4 +1,4 @@
-(() => { // wrapped in function to not intercept with player scope
+{ // wrapped in parentheses to not intercept with player scope
     const DEF_YT_URL = "https://www.youtube.com/watch?v=",
         DEF_EMBED_YT = "https://www.youtube.com/embed/"
 
@@ -108,5 +108,6 @@
         if (object) object.remove()
     })
 
-    reconnection(socket)
-})()
+    if (typeof reconnection !== "undefined")
+        reconnection(socket)
+}

@@ -31,20 +31,16 @@ function formatTitle(title, creator) {
     return title.replace(creator, "").replace(/\(.*\)|\[.*\]/, "").customTrim(" \n\t-,_|") + (remix ? " (Remix)" : "")
 }       // remove creator name | then remove any thing between parenthesis | then remove unnecessary chars | if there was 'remix' in title add '(Remix)'
 
-let player
+function zeroFill(number, width = 2) {
+    width -= number.toString().length
+    if (width > 0)
+        return new Array(width + (/\./.test(number) ? 2 : 1)).join("0") + number
+    return number + ""
+}
+
 let currentVideo = null
 
 let playerElement = document.getElementById("player")
-
-function onYouTubeIframeAPIReady() {
-    player = new YT.Player("player-iframe", {
-        width: null,
-        height: null,
-        events: {
-            onStateChange: onPlayerStateChange
-        }
-    })
-}
 
 let pauseBtn = document.getElementById("pause-play")
 let skipBtn = document.getElementById("next")
@@ -54,47 +50,6 @@ let durElements = {
     left: document.getElementById("l-dur"),
     input: document.getElementById("duration"),
     right: document.getElementById("r-dur")
-}
-
-async function loadNextVideo() {
-    let res = await fetch("/player/song?key=" + playerKey)
-    data = await res.json()
-    currentVideo = data.video
-    player.loadVideoById(data.video.ytid)
-    pauseBtn.src = "/images/pause.png"
-    title.innerText = formatTitle(currentVideo.title, currentVideo.creator)
-    artist.innerText = currentVideo.creator
-    playerElement.style.setProperty("--image", `url(${currentVideo.thumbnail})`)
-}
-
-async function onPlayerStateChange(event) {
-    if (event.data == YT.PlayerState.ENDED)
-        await loadNextVideo()
-}
-
-skipBtn.addEventListener("click", async () => {
-    await loadNextVideo()
-})
-
-pauseBtn.addEventListener("click", async () => {
-    let state = player.getPlayerState()
-    if (state != YT.PlayerState.PAUSED && state != YT.PlayerState.PLAYING)
-        return
-    let paused = state == YT.PlayerState.PAUSED
-    if (paused) {
-        player.playVideo()
-        pauseBtn.src = "/images/pause.png"
-    } else {
-        player.pauseVideo()
-        pauseBtn.src = "/images/play.png"
-    }
-})
-
-function zeroFill(number, width = 2) {
-    width -= number.toString().length
-    if (width > 0)
-        return new Array(width + (/\./.test(number) ? 2 : 1)).join("0") + number
-    return number + ""
 }
 
 function drawDuration(position, duration) {
@@ -112,40 +67,101 @@ function drawDuration(position, duration) {
     durElements.right.innerText = `${minutes}:${zeroFill(seconds)}`
 }
 
-let inputingDuration = false
-durElements.input.addEventListener("touchstart", () => inputingDuration = true)
-durElements.input.addEventListener("mousedown", () => inputingDuration = true)
-
-durElements.input.addEventListener("input", () => {
-    drawDuration(durElements.input.value, durElements.input.max)
-})
-
-let rewound = false
-let seekEvent = () => {
-    inputingDuration = false
-    player.seekTo(durElements.input.value)
-    rewound = true
+function updatePlayerAppearance(vid, duration = 0) {
+    title.innerText = formatTitle(vid.title, vid.creator)
+    artist.innerText = vid.creator
+    playerElement.style.setProperty("--image", `url(${vid.thumbnail})`)
+    drawDuration(duration, vid.duration)
 }
 
-durElements.input.addEventListener("touchend", seekEvent)
-durElements.input.addEventListener("mouseup", seekEvent)
-
-async function loop() {
-    let dur
-    try { // todo: get ridoff trycatch
-        dur = Math.round(player.getCurrentTime())
-    } catch (error) {
-        dur = -1
-    }
-    if (dur != -1 && currentVideo && !inputingDuration)
-        drawDuration(dur, currentVideo.duration)
-    await socket.emit("update", {
-        duration: dur,
-        paused: player.getPlayerState() == YT.PlayerState.PAUSED,
-        video: currentVideo,
-        rewound: rewound
+async function onYouTubeIframeAPIReady() {
+    let player = new YT.Player("player-iframe", {
+        width: null,
+        height: null,
+        events: {
+            onStateChange: onPlayerStateChange,
+            onReady: onPlayerReady
+        }
     })
-    rewound = false
-}
 
-setInterval(loop, 1000)
+    async function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.ENDED)
+            await loadNextVideo()
+    }
+
+    async function onPlayerReady(event) {
+        let res = await fetch("/player/current")
+        let data = await res.json()
+        if (data.video) {
+            currentVideo = data.video
+            updatePlayerAppearance(currentVideo, data.duration)
+            event.target.loadVideoById(currentVideo.ytid, data.duration, "small")
+        }
+
+        setInterval(loop, 1000)
+    }
+
+    async function loadNextVideo() {
+        let res = await fetch("/player/song?key=" + playerKey)
+        let data = await res.json()
+        currentVideo = data.video
+        player.loadVideoById(currentVideo.ytid, 0, "small")
+        pauseBtn.classList.remove("paused")
+        updatePlayerAppearance(currentVideo)
+    }
+
+    skipBtn.addEventListener("click", async () => {
+        await loadNextVideo()
+    })
+
+    pauseBtn.addEventListener("click", async () => {
+        let state = player.getPlayerState()
+        if (state != YT.PlayerState.PAUSED && state != YT.PlayerState.PLAYING && state != -1)
+            return
+        let paused = state == YT.PlayerState.PAUSED || state == -1
+        if (paused) {
+            player.playVideo()
+            pauseBtn.classList.remove("paused")
+        } else {
+            player.pauseVideo()
+            pauseBtn.classList.add("paused")
+        }
+    })
+
+    let inputingDuration = false
+    durElements.input.addEventListener("touchstart", () => inputingDuration = true)
+    durElements.input.addEventListener("mousedown", () => inputingDuration = true)
+
+    durElements.input.addEventListener("input", () => {
+        drawDuration(durElements.input.value, durElements.input.max)
+    })
+
+    let rewound = false
+    let seekEvent = () => {
+        inputingDuration = false
+        player.seekTo(durElements.input.value)
+        rewound = true
+    }
+
+    durElements.input.addEventListener("touchend", seekEvent)
+    durElements.input.addEventListener("mouseup", seekEvent)
+
+    async function loop() {
+        let dur
+        try { // todo: get ridoff trycatch
+            dur = Math.round(player.getCurrentTime())
+        } catch {
+            return
+        }
+        if (currentVideo && !inputingDuration)
+            drawDuration(dur, currentVideo.duration)
+        let state = player.getPlayerState()
+        await socket.emit("update", {
+            duration: dur,
+            paused: state == YT.PlayerState.PAUSED || state == -1,
+            video: currentVideo,
+            rewound: rewound
+        })
+        rewound = false
+    }
+}
