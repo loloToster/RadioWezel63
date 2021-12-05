@@ -1,6 +1,7 @@
 const { google } = require("googleapis")
 const scrapSearch = require("youtube-search-without-api-key")
 const iso = require("iso8601-duration")
+const ytMusic = require("node-youtube-music")
 
 function hmsToSeconds(str) {
     let p = str.split(':'),
@@ -16,6 +17,24 @@ function hmsToSeconds(str) {
 function youtubeUrlToId(url) {
     let match = url.match(/^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/)
     return (match && match[7].length == 11) ? match[7] : false
+}
+
+async function searchOnYTMusic(query, maxResults) {
+    let songs = await ytMusic.searchMusics(query)
+    let items = []
+    if (!songs.length) return { done: false }
+    for (let i = 0; i < songs.length && items.length <= maxResults; i++) {
+        const song = songs[i]
+        let thumbnail = song.thumbnailUrl.replace(/=w\d+-h/, "=w350-h").replace(/-h\d+-/, "-h350-")
+        items.push({
+            ytid: song.youtubeId,
+            title: song.title,
+            creator: song.artists.map(a => a.name).join(", "),
+            thumbnail: thumbnail,
+            duration: song.duration.totalSeconds
+        })
+    }
+    return { done: true, items: items }
 }
 
 async function searchWithScraping(query, maxResults) {
@@ -115,10 +134,18 @@ async function searchWithApi(query, key, maxResults) {
     }
 }
 
-async function queryToVideos(query, keys, maxResults = 10) {
-    console.log("Searching with Scraping")
-    let result = await searchWithScraping(query, maxResults)
+async function queryToVideos(query, keys, maxResults = 10, depth = 3) {
+    let curDepth = 1
+    console.log("Searching on yt-music")
+    let result = await searchOnYTMusic(query, maxResults)
     if (result.done) return { code: "success", items: result.items }
+    if (curDepth == depth) return { code: "error" }
+
+    curDepth++
+    console.log("Searching with Scraping")
+    result = await searchWithScraping(query, maxResults)
+    if (result.done) return { code: "success", items: result.items }
+    if (curDepth == depth) return { code: "error" }
 
     console.log("Searching with API")
     for (let i = 0; i < keys.length; i++) {

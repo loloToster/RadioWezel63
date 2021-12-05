@@ -7,4 +7,4 @@
 * lyrics analyzer
 * admin panel on player tab ✔️
 * auto vote on added song
-* move to yt music
+* add yt music search ✔️

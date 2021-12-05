@@ -102,7 +102,7 @@
 
 .songIcon {
     height: 9vw;
-    min-width: 11vw;
+    width: 9vw;
     background-color: #232323;
     border-radius: 1vw;
     background-size: cover;

@@ -37,7 +37,8 @@ const queryToVideos = require("./../modules/query-to-video")
 
 router.get("/search/:query", async (req, res) => {
     let query = decodeURIComponent(req.params.query)
-    let videos = await queryToVideos(query, YT_KEYS)
+    let allowFallbackToYTSearch = await KeyValue.get("allow-fallback-to-youtube-search")
+    let videos = await queryToVideos(query, YT_KEYS, 10, allowFallbackToYTSearch ? 3 : 1)
     if (videos.code == "success") {
         let possibleSubmits = []
         for (let i = 0; i < videos.items.length; i++) {

@@ -78,7 +78,7 @@ tolong {
 
 .thumbnail {
     float: left;
-    width: calc(40% - 4vw);
+    max-width: calc(35% - 4vw);
 }
 
 .thumbnail img {
@@ -120,7 +120,7 @@ tolong {
 #successThumbnail {
     position: relative;
     width: 60vw;
-    height: 35vw;
+    height: 60vw;
     border-radius: 2vh;
     overflow: hidden;
     background-color: #212121;
@@ -154,14 +154,17 @@ tolong {
         width: var(--def-size);
         height: var(--def-size);
     }
+
     20% {
         width: 15vw;
         height: 15vw;
     }
+
     80% {
         width: 30vw;
         height: 30vw;
     }
+
     100% {
         width: var(--def-size);
         height: var(--def-size);
