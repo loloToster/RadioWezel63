@@ -31,7 +31,8 @@ async function searchOnYTMusic(query, maxResults) {
             title: song.title,
             creator: song.artists.map(a => a.name).join(", "),
             thumbnail: thumbnail,
-            duration: song.duration.totalSeconds
+            duration: song.duration.totalSeconds,
+            explicit: song.isExplicit
         })
     }
     return { done: true, items: items }

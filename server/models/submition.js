@@ -8,7 +8,8 @@ const submitionSchema = new Schema({
     title: String,
     creator: String,
     thumbnail: String,
-    duration: Number
+    duration: Number,
+    explicit: { type: Boolean, default: false }
 })
 
 const Submition = mongoose.model("submitions", submitionSchema)

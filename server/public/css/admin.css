@@ -20,6 +20,10 @@
     color: grey;
 }
 
+#adminPanel .explicit .creator::before {
+    content: "🅴";
+}
+
 #manage {
     margin: 2vw;
 }

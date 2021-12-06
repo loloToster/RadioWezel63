@@ -23,8 +23,9 @@
 
     function createSongObject(video) {
         clone = songTemplate.cloneNode(true)
+        video.explicit ? clone.querySelector(".songContent").classList.add("explicit") : null
         clone.querySelector(".title").innerText = htmlDecode(video.title)
-        clone.querySelector(".creator").innerText = video.creator
+        clone.querySelector(".creator").innerText = " " + video.creator
         clone.dataset.videoid = video.ytid
         return clone
     }

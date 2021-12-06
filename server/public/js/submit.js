@@ -29,7 +29,7 @@ function createVideoElement(video) {
     }
     clone.querySelector(".thumbnail img").src = video.thumbnail
     clone.querySelector(".title").innerText = htmlDecode(video.title)
-    clone.querySelector(".creator").innerText = video.creator
+    clone.querySelector(".creator").innerText = (video.explicit ? "🅴 " : "") + video.creator
     return clone
 }
 
