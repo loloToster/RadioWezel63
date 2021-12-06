@@ -42,7 +42,7 @@
 
         clone.querySelector("#deny").addEventListener("click", () => onButtonClick("deny", parent.dataset.videoid))
         clone.querySelector("#accept").addEventListener("click", () => onButtonClick("accept", parent.dataset.videoid))
-        clone.querySelector("#lyrics").addEventListener("click", () => getLyrics(parent.querySelector(".title").innerText, parent.dataset.videoid))
+        clone.querySelector("#lyrics").addEventListener("click", () => getLyrics(parent))
 
         return clone
     }
@@ -77,14 +77,19 @@
         })
     }
 
-    async function getLyrics(title, id) {
+    async function getLyrics(element) {
         let table = document.getElementById("lyricsText")
         if (!table) return
         table.innerHTML = "<div class='loadingLyrics'></div>"
-        title = encodeURIComponent(title)
-        let res = await fetch("/admin/lyrics/" + title)
+        let title = element.querySelector(".title").innerText
+        let creator = element.querySelector(".creator").innerText
+
+        let searchQuery = element.classList.contains("yt-music") ? title + " " + creator : title
+        console.log(searchQuery)
+        let res = await fetch("/admin/lyrics/" + encodeURIComponent(searchQuery))
         let data = await res.text()
-        if (id != currentId) return
+
+        if (element.dataset.videoid != currentId) return
         table.innerHTML = ""
         data.split("\n").forEach((line, i) => {
             let row = table.insertRow()

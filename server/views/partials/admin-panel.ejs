@@ -27,7 +27,7 @@
         </div>
     </div>
     <% submitQueue.forEach(video=> { %>
-        <div data-videoid="<%= video.ytid %>" class="song">
+        <div data-videoid="<%= video.ytid %>" class="song <%= video.source %>">
             <div class="songContent<%= video.explicit ? " explicit" : "" %>">
                 <div class="title">
                     <%- video.title %>

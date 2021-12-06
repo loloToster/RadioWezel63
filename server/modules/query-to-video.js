@@ -32,7 +32,8 @@ async function searchOnYTMusic(query, maxResults) {
             creator: song.artists.map(a => a.name).join(", "),
             thumbnail: thumbnail,
             duration: song.duration.totalSeconds,
-            explicit: song.isExplicit
+            explicit: song.isExplicit,
+            source: "yt-music"
         })
     }
     return { done: true, items: items }
@@ -52,7 +53,8 @@ async function searchWithScraping(query, maxResults) {
                 title: video.title,
                 creator: video.creator,
                 thumbnail: video.snippet.thumbnails.url,
-                duration: hmsToSeconds(video.duration_raw)
+                duration: hmsToSeconds(video.duration_raw),
+                source: "yt-scraping"
             })
         }
         return { done: true, items: items }
@@ -87,7 +89,8 @@ async function searchWithApi(query, key, maxResults) {
                 title: data.snippet.title,
                 creator: data.snippet.channelTitle,
                 thumbnail: data.snippet.thumbnails.high.url,
-                duration: iso.toSeconds(iso.parse(data.contentDetails.duration))
+                duration: iso.toSeconds(iso.parse(data.contentDetails.duration)),
+                source: "yt-api"
             }]
         }
     } else {
@@ -129,6 +132,7 @@ async function searchWithApi(query, key, maxResults) {
             video.creator = item.snippet.channelTitle
             video.thumbnail = item.snippet.thumbnails.high.url
             video.duration = iso.toSeconds(iso.parse(details.data.items[0].contentDetails.duration))
+            video.source = "yt-api"
             newItems.push(video)
         }
         return { done: true, code: "success", items: newItems }

@@ -9,13 +9,15 @@ const submitionSchema = new Schema({
     creator: String,
     thumbnail: String,
     duration: Number,
-    explicit: { type: Boolean, default: false }
+    explicit: { type: Boolean, default: false },
+    source: String
 })
 
 const Submition = mongoose.model("submitions", submitionSchema)
 
 Submition.submitted = async video => {
-    return !!((await Submition.findOne({ ytid: video.ytid })) || (await VoteElement.findOne({ "video.ytid": video.ytid })))
+    return Boolean((await Submition.findOne({ ytid: video.ytid }))
+        || (await VoteElement.findOne({ "video.ytid": video.ytid })))
 }
 
 Submition.add = async video => {
