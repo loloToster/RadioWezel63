@@ -3,13 +3,19 @@
     height: 100vw;
     padding: 5vw;
     --image: url("/images/default-music.png");
-    background-image: linear-gradient(to top, rgba(45, 45, 45, 0.9), rgba(45, 45, 45, 0.9) 30%, rgba(0, 0, 0, 0) 60%), var(--image);
-    background-size: cover;
-    background-position: center;
+    --loading: url();
+    background-image: var(--loading), linear-gradient(to top, rgba(45, 45, 45, 0.9), rgba(45, 45, 45, 0.9) 30%, rgba(0, 0, 0, 0) 60%), var(--image);
+    background-size: 11vw, cover, cover;
+    background-position: bottom, center, center;
+    background-repeat: repeat-x, no-repeat, no-repeat;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
     box-shadow: 0 .1vh 1vh 0 var(--dark);
+}
+
+#player.loading {
+    --loading: url("/images/loading.gif");
 }
 
 #player .row {

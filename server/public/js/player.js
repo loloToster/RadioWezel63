@@ -27,9 +27,12 @@ String.prototype.customTrim = function (chars = " \n\t") {
 }
 
 function formatTitle(title, creator) {
-    let remix = title.toLowerCase().includes("remix")
-    return title.replace(creator, "").replace(/\(.*\)|\[.*\]/, "").customTrim(" \n\t-,_|") + (remix ? " (Remix)" : "")
-}       // remove creator name | then remove any thing between parenthesis | then remove unnecessary chars | if there was 'remix' in title add '(Remix)'
+    let hadRemix = title.toLowerCase().includes("remix")
+    title = title.replace(creator, "") // remove creator name
+        .replace(/\(.*\)|\[.*\]/, "") //remove any thing between parenthesis
+        .customTrim(" \n\t-,_|") //remove unnecessary chars from ends
+    return title + (hadRemix && !title.includes("remix") ? " (Remix)" : "") //if there was 'remix' in title and now there isn't add '(Remix)'
+}
 
 function zeroFill(number, width = 2) {
     width -= number.toString().length
@@ -52,7 +55,9 @@ let durElements = {
     right: document.getElementById("r-dur")
 }
 
-function drawDuration(position, duration) {
+let durationTimeout
+function drawDuration(position, duration, paused) {
+    clearTimeout(durationTimeout)
     durElements.input.value = position
     durElements.input.max = duration
 
@@ -65,16 +70,20 @@ function drawDuration(position, duration) {
     minutes = Math.floor(duration / 60)
     seconds = duration % 60
     durElements.right.innerText = `${minutes}:${zeroFill(seconds)}`
+
+    if (!paused)
+        durationTimeout = setTimeout(drawDuration, 1000, position + 1, duration, false)
 }
 
-function updatePlayerAppearance(vid, duration = 0) {
+function updatePlayerAppearance(vid) {
     titleElm.innerText = formatTitle(vid.title, vid.creator)
     artistElm.innerText = vid.creator
     playerElement.style.setProperty("--image", `url(${vid.thumbnail})`)
-    drawDuration(duration, vid.duration)
 }
 
 async function onYouTubeIframeAPIReady() {
+    YT.PlayerState.UNSTARTED = -1
+
     let player = new YT.Player("player-iframe", {
         width: null,
         height: null,
@@ -84,9 +93,50 @@ async function onYouTubeIframeAPIReady() {
         }
     })
 
+    let inputingDuration = false
+    let lastState = null
     async function onPlayerStateChange(event) {
-        if (event.data == YT.PlayerState.ENDED)
-            await loadNextVideo()
+        lastState = event.data
+        let paused = true
+        switch (event.data) {
+            case YT.PlayerState.UNSTARTED: { // -1
+                playerElement.classList.remove("loading")
+                break
+            }
+
+            case YT.PlayerState.ENDED: { // 0
+                playerElement.classList.remove("loading")
+                await loadNextVideo()
+                break
+            }
+
+            case YT.PlayerState.PLAYING: { // 1
+                playerElement.classList.remove("loading")
+                paused = false
+                pauseBtn.classList.remove("paused")
+                break
+            }
+
+            case YT.PlayerState.PAUSED: { // 2
+                playerElement.classList.remove("loading")
+                pauseBtn.classList.add("paused")
+                break
+            }
+
+            case YT.PlayerState.BUFFERING: { // 3
+                playerElement.classList.add("loading")
+                break
+            }
+
+            case YT.PlayerState.CUED: { // 5
+                break
+            }
+
+            default:
+                break
+        }
+        if (!inputingDuration)
+            drawDuration(Math.round(player.getCurrentTime()), currentVideo.duration, paused)
     }
 
     async function onPlayerReady(event) {
@@ -94,7 +144,7 @@ async function onYouTubeIframeAPIReady() {
         let data = await res.json()
         if (data.video) {
             currentVideo = data.video
-            updatePlayerAppearance(currentVideo, data.duration)
+            updatePlayerAppearance(currentVideo)
             event.target.loadVideoById(currentVideo.ytid, data.duration, "small")
         }
 
@@ -108,38 +158,35 @@ async function onYouTubeIframeAPIReady() {
             titleElm.innerText = "Nie ma piosenek"
             artistElm.innerHTML = "naciśnij <img class='miniNext' src='/images/right.png'> jak się jakaś pojawi"
             playerElement.style.setProperty("--image", "url(/images/default-music.png)")
-            return
+            return // TODO: clear current video from iframe
         }
         currentVideo = data.video
         player.loadVideoById(currentVideo.ytid, 0, "small")
-        pauseBtn.classList.remove("paused")
         updatePlayerAppearance(currentVideo)
     }
+
+    pauseBtn.addEventListener("click", async () => {
+        if (lastState != YT.PlayerState.PAUSED
+            && lastState != YT.PlayerState.PLAYING
+            && lastState != YT.PlayerState.UNSTARTED)
+            return
+        let paused = lastState != YT.PlayerState.PLAYING
+        if (paused) {
+            player.playVideo()
+        } else {
+            player.pauseVideo()
+        }
+    })
 
     skipBtn.addEventListener("click", async () => {
         await loadNextVideo()
     })
 
-    pauseBtn.addEventListener("click", async () => {
-        let state = player.getPlayerState()
-        if (state != YT.PlayerState.PAUSED && state != YT.PlayerState.PLAYING && state != -1)
-            return
-        let paused = state == YT.PlayerState.PAUSED || state == -1
-        if (paused) {
-            player.playVideo()
-            pauseBtn.classList.remove("paused")
-        } else {
-            player.pauseVideo()
-            pauseBtn.classList.add("paused")
-        }
-    })
-
-    let inputingDuration = false
     durElements.input.addEventListener("touchstart", () => inputingDuration = true)
     durElements.input.addEventListener("mousedown", () => inputingDuration = true)
 
     durElements.input.addEventListener("input", () => {
-        drawDuration(durElements.input.value, durElements.input.max)
+        drawDuration(durElements.input.value, durElements.input.max, true)
     })
 
     let rewound = false
@@ -159,12 +206,9 @@ async function onYouTubeIframeAPIReady() {
         } catch {
             return
         }
-        if (currentVideo && !inputingDuration)
-            drawDuration(dur, currentVideo.duration)
-        let state = player.getPlayerState()
         await socket.emit("update", {
             duration: dur,
-            paused: state == YT.PlayerState.PAUSED || state == -1,
+            paused: lastState != YT.PlayerState.PLAYING,
             video: currentVideo,
             rewound: rewound
         })

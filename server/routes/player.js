@@ -24,8 +24,9 @@ router.get("/current", async (req, res) => {
 
 // check if user is admin
 router.use((req, res, next) => {
-    if (!req.user || !(req.user.role == "admin")) res.status(404).render("error")
-    else next()
+    // req.user = { name: "test", role: "admin" } // ! for testing
+    if (req.user && req.user.role == "admin") next()
+    else res.status(404).render("error")
 })
 
 // check if there is no other player connected
@@ -36,13 +37,16 @@ router.use((req, res, next) => {
 
 router.get("/", async (req, res) => {
     playerKey = generateKey()
-    res.render("player", { playerKey: playerKey, submitQueue: await Submition.find({}) })
+    res.render("player", { playerKey: playerKey, submitQueue: await Submition.find({}), user: req.user })
 })
 
 router.get("/song", async (req, res) => {
     let mostPopular = await VoteElement.mostPopular()
     res.json(mostPopular)
-    if (!mostPopular) return
+    if (!mostPopular) {
+        current = {}
+        return
+    }
     await mostPopular.delete()
     global.io.emit("removeVoteElement", mostPopular.video.ytid)
 })
