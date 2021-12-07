@@ -44,8 +44,8 @@ let playerElement = document.getElementById("player")
 
 let pauseBtn = document.getElementById("pause-play")
 let skipBtn = document.getElementById("next")
-let title = document.getElementById("title")
-let artist = document.getElementById("artist")
+let titleElm = document.getElementById("title")
+let artistElm = document.getElementById("artist")
 let durElements = {
     left: document.getElementById("l-dur"),
     input: document.getElementById("duration"),
@@ -68,8 +68,8 @@ function drawDuration(position, duration) {
 }
 
 function updatePlayerAppearance(vid, duration = 0) {
-    title.innerText = formatTitle(vid.title, vid.creator)
-    artist.innerText = vid.creator
+    titleElm.innerText = formatTitle(vid.title, vid.creator)
+    artistElm.innerText = vid.creator
     playerElement.style.setProperty("--image", `url(${vid.thumbnail})`)
     drawDuration(duration, vid.duration)
 }
@@ -104,6 +104,12 @@ async function onYouTubeIframeAPIReady() {
     async function loadNextVideo() {
         let res = await fetch("/player/song?key=" + playerKey)
         let data = await res.json()
+        if (!data) {
+            titleElm.innerText = "Nie ma piosenek"
+            artistElm.innerHTML = "naciśnij <img class='miniNext' src='/images/right.png'> jak się jakaś pojawi"
+            playerElement.style.setProperty("--image", "url(/images/default-music.png)")
+            return
+        }
         currentVideo = data.video
         player.loadVideoById(currentVideo.ytid, 0, "small")
         pauseBtn.classList.remove("paused")
