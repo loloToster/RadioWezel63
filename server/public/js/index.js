@@ -181,9 +181,10 @@ fetch("/player/current").then(async (data) => {
 })
 
 // handle icon hold (delete mode)
+let currentWrapper = document.getElementById("contentWrapper")
 function onIconHold() {
     if (isAdmin)
-        songContainer.classList.add("deleteMode")
+        currentWrapper.classList.add("deleteMode")
 }
 
 function onDeleteClick(element) {
@@ -193,7 +194,7 @@ function onDeleteClick(element) {
 
 document.getElementById("leaveDeleteMode")
     .addEventListener("click", () => {
-        songContainer.classList.remove("deleteMode")
+        currentWrapper.classList.remove("deleteMode")
     })
 
 
@@ -214,7 +215,7 @@ Array.from(document.getElementsByClassName("song"))
         songIcon.addEventListener("mousedown", mouseDownHoldHelper)
         songIcon.addEventListener("touchstart", mouseDownHoldHelper)
         songIcon.addEventListener("click", () => {
-            if (songContainer.classList.contains("deleteMode"))
+            if (currentWrapper.classList.contains("deleteMode"))
                 onDeleteClick(e)
         })
     })
