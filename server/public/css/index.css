@@ -103,10 +103,41 @@
 .songIcon {
     height: 9vw;
     width: 9vw;
+    --image: url();
+    --delete-icon: url();
+    background-image: var(--delete-icon), var(--image);
     background-color: #232323;
     border-radius: 1vw;
     background-size: cover;
     background-position: center;
+}
+
+#leaveDeleteMode {
+    display: none;
+    text-decoration: underline;
+    color: crimson;
+    font-weight: bold;
+    font-size: 2vh;
+    margin: 3vw;
+}
+
+#songContainer.deleteMode #leaveDeleteMode {
+    display: block;
+}
+
+#songContainer.deleteMode .songIcon {
+    --delete-icon: url("/images/trash.png");
+    animation: shake 0.1s infinite alternate linear;
+}
+
+@keyframes shake {
+    from {
+        transform: translateX(2%);
+    }
+
+    to {
+        transform: translateX(-2%);
+    }
 }
 
 .titleAndCreator {

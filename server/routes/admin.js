@@ -52,6 +52,15 @@ router.get("/lyrics/:title", async (req, res) => {
     res.send(await lyricsClient(title) || "Nie znalazłem takiej piosenki")
 })
 
+router.delete("/voteelement/:id", async (req, res) => {
+    res.send()
+    let id = decodeURIComponent(req.params.id)
+    global.logger.info(`${req.user.name}#${req.user.googleId} deleted: ${id}`)
+    let dbRes = await VoteElement.deleteOne({ "video.ytid": id })
+    if (!dbRes.deletedCount) return
+    global.io.emit("removeVoteElement", id)
+})
+
 router.get("/reset", async (req, res) => {
     global.logger.info(`${req.user.name}#${req.user.googleId} reseted data`)
     await Submition.deleteMany({})

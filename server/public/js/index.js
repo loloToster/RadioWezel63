@@ -57,7 +57,8 @@ songTemplate.removeAttribute("id")
 
 function createSongObject(video) {
     let clone = songTemplate.cloneNode(true)
-    clone.querySelector(".songIcon").style.backgroundImage = `url('${video.thumbnail}')`
+    let songIcon = clone.querySelector(".songIcon")
+    songIcon.style.setProperty("--image", `url('${video.thumbnail}')`)
     let a = clone.querySelector(".title")
     a.innerText = formatTitle(htmlDecode(video.title), video.creator)
     a.href = DEF_YT_URL + video.ytid
@@ -71,6 +72,15 @@ function createSongObject(video) {
         upvote.dataset.voted = "true"
         upvote.innerText = 0
     }
+
+    // hold helpers
+    songIcon.addEventListener("mousedown", mouseDownHoldHelper)
+    songIcon.addEventListener("touchstart", mouseDownHoldHelper)
+    songIcon.addEventListener("click", () => {
+        if (songContainer.classList.contains("deleteMode"))
+            onDeleteClick(clone)
+    })
+
     return clone
 }
 
@@ -97,12 +107,12 @@ async function onUnvote(id) {
     let data = await res.text()
     let voteNum = document.querySelector(`[data-videoid='${id}'] .voteNum`)
     voteNum.innerText = data
-    console.log("unvoting:", id, "/", data)
     clone.addEventListener("click", () => onVote(id))
 }
 
+let songContainer = document.getElementById("songContainer")
 socket.on("updateVotingQueue", video => {
-    document.getElementById("songContainer").appendChild(createSongObject(video))
+    songContainer.appendChild(createSongObject(video))
 })
 
 socket.on("updateVotes", (id, votes) => {
@@ -169,6 +179,48 @@ fetch("/player/current").then(async (data) => {
     thumbnail.classList.remove("loading")
     drawCurrent(cur)
 })
+
+// handle icon hold (delete mode)
+function onIconHold() {
+    if (isAdmin)
+        songContainer.classList.add("deleteMode")
+}
+
+function onDeleteClick(element) {
+    let id = element.querySelector(".upvote").dataset.videoid
+    fetch("/admin/voteelement/" + encodeURIComponent(id), { method: "DELETE" })
+}
+
+document.getElementById("leaveDeleteMode")
+    .addEventListener("click", () => {
+        songContainer.classList.remove("deleteMode")
+    })
+
+
+let holdTimer
+
+function mouseDownHoldHelper() {
+    mouseUpHoldHelper()
+    holdTimer = setTimeout(onIconHold, 1500)
+}
+
+function mouseUpHoldHelper() {
+    if (holdTimer) clearTimeout(holdTimer)
+}
+
+Array.from(document.getElementsByClassName("song"))
+    .forEach((e) => {
+        let songIcon = e.querySelector(".songIcon")
+        songIcon.addEventListener("mousedown", mouseDownHoldHelper)
+        songIcon.addEventListener("touchstart", mouseDownHoldHelper)
+        songIcon.addEventListener("click", () => {
+            if (songContainer.classList.contains("deleteMode"))
+                onDeleteClick(e)
+        })
+    })
+
+document.body.addEventListener("touchend", mouseUpHoldHelper)
+document.body.addEventListener("mouseup", mouseUpHoldHelper)
 
 // format all titles on load
 let creators = document.getElementsByClassName("creator")

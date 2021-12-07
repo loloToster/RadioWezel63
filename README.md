@@ -8,3 +8,4 @@
 * admin panel on player tab ✔️
 * auto vote on added song
 * add yt music search ✔️
+* ability to delete songs from main page ✔️
