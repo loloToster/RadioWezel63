@@ -98,27 +98,24 @@ async function onYouTubeIframeAPIReady() {
     async function onPlayerStateChange(event) {
         lastState = event.data
         let paused = true
+        playerElement.classList.remove("loading")
         switch (event.data) {
             case YT.PlayerState.UNSTARTED: { // -1
-                playerElement.classList.remove("loading")
                 break
             }
 
             case YT.PlayerState.ENDED: { // 0
-                playerElement.classList.remove("loading")
                 await loadNextVideo()
                 break
             }
 
             case YT.PlayerState.PLAYING: { // 1
-                playerElement.classList.remove("loading")
                 paused = false
                 pauseBtn.classList.remove("paused")
                 break
             }
 
             case YT.PlayerState.PAUSED: { // 2
-                playerElement.classList.remove("loading")
                 pauseBtn.classList.add("paused")
                 break
             }
@@ -135,8 +132,11 @@ async function onYouTubeIframeAPIReady() {
             default:
                 break
         }
+        let dur = player.getCurrentTime()
+        if (!dur) dur = 0
+        dur = Math.round(dur)
         if (!inputingDuration)
-            drawDuration(Math.round(player.getCurrentTime()), currentVideo.duration, paused)
+            drawDuration(dur, currentVideo?.duration || 60, paused)
     }
 
     async function onPlayerReady(event) {
@@ -158,7 +158,9 @@ async function onYouTubeIframeAPIReady() {
             titleElm.innerText = "Nie ma piosenek"
             artistElm.innerHTML = "naciśnij <img class='miniNext' src='/images/right.png'> jak się jakaś pojawi"
             playerElement.style.setProperty("--image", "url(/images/default-music.png)")
-            return // TODO: clear current video from iframe
+            currentVideo = null
+            player.loadVideoById("")
+            return
         }
         currentVideo = data.video
         player.loadVideoById(currentVideo.ytid, 0, "small")
@@ -199,13 +201,10 @@ async function onYouTubeIframeAPIReady() {
     durElements.input.addEventListener("touchend", seekEvent)
     durElements.input.addEventListener("mouseup", seekEvent)
 
-    async function loop() {
-        let dur
-        try { // todo: get ridoff trycatch
-            dur = Math.round(player.getCurrentTime())
-        } catch {
-            return
-        }
+    async function loop() { // todo: move loop code to onPlayerStateChange
+        let dur = player.getCurrentTime()
+        if (!dur) dur = 0
+        dur = Math.round(dur)
         await socket.emit("update", {
             duration: dur,
             paused: lastState != YT.PlayerState.PLAYING,

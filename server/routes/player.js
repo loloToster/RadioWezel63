@@ -56,10 +56,8 @@ global.io.on("connection", socket => {
     if (auth.role == "player" && auth.key == playerKey) {
         if (!playerSocket) {
             playerSocket = socket.id
-            logger.info(`player with id ${socket.id} connected with key: ${auth.key}`)
             socket.on("update", onUpdate)
             socket.on("disconnect", () => {
-                logger.info(`player with id ${socket.id} disconnected`)
                 playerSocket = null
                 global.io.emit("updateDuration", { playerConnected: false })
             })
@@ -71,11 +69,9 @@ global.io.on("connection", socket => {
 
 function onUpdate(arg) {
     arg.playerConnected = true
-    if (((!current.video != !arg.video) || // if the video is no longer null
-        current.video?.ytid != arg.video?.ytid || // if the video is diffrent
-        (arg.rewound) || // if the video was rewound
-        current.paused != arg.paused) // if the video was paused or resumed
-        && arg.video) { // if there is video
+    if (arg.rewound || // if the video was rewound
+        current.paused != arg.paused || // if the video was paused or resumed
+        JSON.stringify(current.video) != JSON.stringify(arg.video)) { // if the video is diffrent
         global.io.emit("updateDuration", arg)
     }
     current = arg
