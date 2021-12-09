@@ -11,7 +11,6 @@ function reconnection(sckt) {
     sckt.on("disconnect", () => {
         console.log("disconnected")
         document.body.innerHTML = ""
-        console.log(disconnectMsg)
         document.body.appendChild(disconnectMsg)
         reconnect()
     })

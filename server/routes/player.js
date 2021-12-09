@@ -37,7 +37,12 @@ router.use((req, res, next) => {
 
 router.get("/", async (req, res) => {
     playerKey = generateKey()
-    res.render("player", { playerKey: playerKey, submitQueue: await Submition.find({}), user: req.user })
+    res.render("admin", { player: true, submitQueue: await Submition.find({}), user: req.user })
+})
+
+router.get("/frame", async (req, res) => {
+    playerKey = generateKey()
+    res.render("player-frame", { playerKey: playerKey })
 })
 
 router.get("/song", async (req, res) => {

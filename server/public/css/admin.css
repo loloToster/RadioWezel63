@@ -1,3 +1,9 @@
+.playerFrame {
+    width: 100vw;
+    height: 100vw;
+    box-shadow: 0 .1vh 1vh 0 var(--dark);
+}
+
 #adminPanel .song {
     width: 96vw;
     padding: 2vw;

@@ -1,3 +1,5 @@
+/* everything is based on vw because iframe is meant to be a square */
+
 #player {
     width: 100vw;
     height: 100vw;
@@ -11,7 +13,6 @@
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    box-shadow: 0 .1vh 1vh 0 var(--dark);
 }
 
 #player.loading {
@@ -26,7 +27,7 @@
 }
 
 #player .row-1 {
-    padding-bottom: 2vh;
+    padding-bottom: 4vw;
 }
 
 #player .row-1>* {
@@ -66,7 +67,7 @@
 }
 
 #title {
-    font-size: 4vh;
+    font-size: 7.5vw;
     font-weight: bold;
     max-width: 60vw;
     overflow: scroll;
@@ -74,11 +75,11 @@
 }
 
 #title img {
-    width: 3vh;
+    width: 6vw;
 }
 
 #artist {
-    font-size: 2vh;
+    font-size: 4vw;
     color: grey;
     max-width: 60vw;
     overflow: hidden;
@@ -87,12 +88,12 @@
 }
 
 .miniNext {
-    height: 1.8vh;
-    width: 1.8vh;
+    height: 3.5vw;
+    width: 3.5vw;
 }
 
 #player .row-2 {
-    font-size: 1.5vh;
+    font-size: 3vw;
     --color: #fff;
     color: var(--color);
 }
@@ -102,16 +103,16 @@
     margin: 0 2vw;
     --percentage: 50;
     -webkit-appearance: none;
-    height: .5vh;
+    height: 1vw;
     outline: none;
-    border-radius: 100vh;
+    border-radius: 100vw;
     background: linear-gradient(to right, var(--color) 0%, var(--color) calc(var(--percentage) * 1%), #535353 calc(var(--percentage) * 1%), #535353 100%);
 }
 
 #duration::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 1vmax;
-    height: 1vmax;
+    width: 2vw;
+    height: 2vw;
     border-radius: 50%;
     background: white;
 }
