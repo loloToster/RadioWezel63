@@ -40,7 +40,6 @@ passport.use(
                 email: profile._json.email,
                 thumbnail: profile._json.picture
             }).save()
-            global.logger.info("New user: " + profile.displayName)
             done(null, newUser)
         }
     })

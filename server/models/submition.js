@@ -1,9 +1,8 @@
 const mongoose = require("mongoose")
-const Schema = mongoose.Schema
 
 const VoteElement = require("./voteElement")
 
-const submitionSchema = new Schema({
+const submitionSchema = new mongoose.Schema({
     ytid: { type: String, unique: true, required: true, dropDups: true },
     title: String,
     creator: String,

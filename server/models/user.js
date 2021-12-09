@@ -1,9 +1,8 @@
 const mongoose = require("mongoose")
-const Schema = mongoose.Schema
 
 const VoteElement = require("./voteElement")
 
-const userSchema = new Schema({
+const userSchema = new mongoose.Schema({
     name: String,
     googleId: String,
     email: String,

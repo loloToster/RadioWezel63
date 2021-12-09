@@ -1,9 +1,8 @@
 const mongoose = require("mongoose")
-const Schema = mongoose.Schema
 
-const keyValueSchema = new Schema({
+const keyValueSchema = new mongoose.Schema({
     key: String,
-    value: Schema.Types.Mixed
+    value: mongoose.Schema.Types.Mixed
 })
 
 const KeyValue = mongoose.model("keyvalue", keyValueSchema)

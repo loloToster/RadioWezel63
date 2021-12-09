@@ -1,7 +1,6 @@
 const mongoose = require("mongoose")
-const Schema = mongoose.Schema
 
-const voteElementSchema = new Schema({
+const voteElementSchema = new mongoose.Schema({
     votes: { type: Array, default: [] },
     video: Object,
 })
@@ -10,7 +9,14 @@ const VoteElement = mongoose.model("voteelements", voteElementSchema)
 
 VoteElement.add = async video => {
     let element = {
-        votes: [], video: video
+        votes: [],
+        video: {
+            ytid: video.ytid,
+            title: video.title,
+            thumbnail: video.thumbnail,
+            creator: video.creator,
+            duration: video.duration
+        }
     }
     await new VoteElement(element).save()
     return element
