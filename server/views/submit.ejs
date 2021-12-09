@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="/css/submit.css">
     <script src="/js/back_btn_reload.js"></script>
     <script defer src="/js/submit.js"></script>
+    <script>
+        // remain viewport when mobile keyboard pops out
+        let viewport = document.querySelector("meta[name=viewport]")
+        viewport.setAttribute("content", viewport.content + ", height=" + window.innerHeight)
+    </script>
     <title>Propozycja</title>
 </head>
 
@@ -19,30 +24,27 @@
         </div>
     </div>
     <div id="contentWrapper">
-        <%- include("partials/header.ejs") %>
-            <div id="search">
-                <div id="bar">
-                    <input type="text" autofocus="" placeholder="Wpisz szukaną piosenkę">
-                </div>
-                <div id="icon">
-                    <img src="/images/search.png">
-                </div>
-            </div>
-            <div id="loading-results" class="info"><img src="/images/loading.gif"></div>
-            <div id="noResults" class="info"><img src="/images/noresults.png"></div>
-            <div id="resultContainer">
-                <div style="display: none;">
-                    <div id="videoTemplate" class="video">
-                        <div class="thumbnail">
-                            <img src="">
-                        </div>
-                        <div class="titleAndCreator">
-                            <div class="title"></div>
-                            <div class="creator"></div>
-                        </div>
+        <div id="searchBar">
+            <a href="/"><img src="/images/back.png"></a>
+            <input id="searchInput" type="text" placeholder="Wpisz szukaną piosenkę" spellcheck="false">
+            <img id="searchIcon" src="/images/search.png">
+        </div>
+        <div id="gradientStrip"></div>
+        <div id="loading-results" class="info"><img src="/images/loading.gif"></div>
+        <div id="noResults" class="info"><img src="/images/noresults.png"></div>
+        <div id="resultContainer">
+            <div style="display: none;">
+                <div id="videoTemplate" class="video">
+                    <div class="thumbnail">
+                        <img src="">
+                    </div>
+                    <div class="titleAndCreator">
+                        <div class="title"></div>
+                        <div class="creator"></div>
                     </div>
                 </div>
             </div>
+        </div>
     </div>
     <%- include("partials/footer.ejs") %>
 </body>

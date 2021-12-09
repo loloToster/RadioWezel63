@@ -9,12 +9,11 @@ module.exports = (io, logger) => {
         VoteElement = require("./../models/voteElement"),
         KeyValue = require("./../models/keyValue")
 
-    function checkIfLoggedIn(req, res, next) {
-        if (!req.user) res.status(500).send()
-        else next()
-    }
-
-    router.use(checkIfLoggedIn)
+    // check if logged in
+    router.use((req, res, next) => {
+        if (req.user) next()
+        else res.status(500).send()
+    })
 
     router.get("/", (req, res) => {
         res.render("submit")

@@ -33,9 +33,10 @@ function createVideoElement(video) {
     return clone
 }
 
-document.getElementById("icon").addEventListener("click", onSearch)
-document.querySelector("#search #bar input").addEventListener("keypress",
-    event => event.key == "Enter" ? onSearch() : null)
+let searchInput = document.getElementById("searchInput")
+
+document.getElementById("searchIcon").addEventListener("click", onSearch)
+searchInput.addEventListener("keypress", event => event.key == "Enter" ? onSearch() : null)
 
 async function onVideoClick(video) {
     document.getElementById("submitionSuccess").style.display = "flex"
@@ -58,8 +59,7 @@ async function onVideoClick(video) {
 let searching = false
 
 function onSearch() {
-    let input = document.querySelector("#search #bar input")
-    let value = input.value
+    let value = searchInput.value
     if (!value || searching) return
     searching = true
     let resultContainer = document.getElementById("resultContainer")
@@ -79,7 +79,7 @@ function onSearch() {
             else {
                 noResults.style.display = "block"
             }
-            input.value = ""
+            searchInput.value = ""
             searching = false
         }).catch(() => {
             searching = false
