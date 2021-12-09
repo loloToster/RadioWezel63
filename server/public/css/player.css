@@ -1,5 +1,48 @@
 /* everything is based on vw because iframe is meant to be a square */
 
+.debugSwitch {
+    position: absolute;
+    top: 5vw;
+    right: 5vw;
+    width: 7vw;
+    height: 7vw;
+    background-color: rgba(45, 45, 45, 0.7);
+    padding: 2vw;
+    border-radius: 50%;
+}
+
+#debugWindow {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.debug #debugWindow {
+    width: 100vw;
+    height: 100vw;
+}
+
+#debugWindow>* {
+    width: 100vw;
+    height: 50vw;
+}
+
+#logger {
+    overflow: scroll;
+    padding: 1vw;
+    box-sizing: border-box;
+}
+
+#logger .log {
+    font-size: 3.5vw;
+    padding: .5vw;
+    border-bottom: solid grey .1vw;
+}
+
+#logger .log:last-child {
+    border-bottom: none;
+}
+
 #player {
     width: 100vw;
     height: 100vw;
@@ -13,6 +56,10 @@
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
+}
+
+.debug #player {
+    display: none;
 }
 
 #player.loading {

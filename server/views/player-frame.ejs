@@ -16,8 +16,10 @@
 </head>
 
 <body>
-    <div style="width: 0; height: 0; overflow: hidden;">
+    <img class="debugSwitch" src="/images/debug.png" onclick="document.body.classList.toggle('debug')">
+    <div id="debugWindow">
         <div id="player-iframe"></div>
+        <div id="logger"></div>
     </div>
     <div id="player">
         <div style="flex-grow: 1;"></div>

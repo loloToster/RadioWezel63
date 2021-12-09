@@ -1,3 +1,19 @@
+let logger = document.getElementById("logger")
+const maxLogs = 200
+
+function log(msg) {
+    console.log(msg)
+    let allLogs = logger.getElementsByClassName("log")
+    if (allLogs.length >= maxLogs) {
+        allLogs[0].remove()
+    }
+    let e = document.createElement("div")
+    e.classList.add("log")
+    e.innerText = msg
+    logger.appendChild(e)
+    logger.scrollTop = logger.scrollHeight
+}
+
 const socket = io({
     auth: {
         role: "player",
@@ -6,11 +22,11 @@ const socket = io({
 })
 
 socket.on("connect", () => {
-    console.log("connected")
+    log("connected")
 })
 
 socket.on("disconnect", () => { // todo: handle disconnection
-    console.log("disconnected")
+    log("disconnected")
 })
 
 String.prototype.customTrim = function (chars = " \n\t") {
@@ -87,9 +103,11 @@ async function onYouTubeIframeAPIReady() {
     let player = new YT.Player("player-iframe", {
         width: null,
         height: null,
+        playerVars: { autoplay: 0 },
         events: {
             onStateChange: onPlayerStateChange,
-            onReady: onPlayerReady
+            onReady: onPlayerReady,
+            onError: e => log("yt error: " + e.data)
         }
     })
 
@@ -97,6 +115,7 @@ async function onYouTubeIframeAPIReady() {
     let lastState = null
     async function onPlayerStateChange(event) {
         lastState = event.data
+        log("new state: " + lastState)
         let paused = true
         playerElement.classList.remove("loading")
         switch (event.data) {
@@ -140,21 +159,24 @@ async function onYouTubeIframeAPIReady() {
     }
 
     async function onPlayerReady(event) {
+        log("loading current video")
         let res = await fetch("/player/current")
         let data = await res.json()
+        log("loaded current video - " + data?.video?.title)
         if (data.video) {
             currentVideo = data.video
             updatePlayerAppearance(currentVideo)
             event.target.loadVideoById(currentVideo.ytid, data.duration, "small")
         }
-
         setInterval(loop, 1000)
     }
 
     async function loadNextVideo() {
+        log("loading new video")
         let res = await fetch("/player/song?key=" + playerKey)
         let data = await res.json()
         if (!data) {
+            log("no new video")
             titleElm.innerText = "Nie ma piosenek"
             artistElm.innerHTML = "naciśnij <img class='miniNext' src='/images/right.png'> jak się jakaś pojawi"
             playerElement.style.setProperty("--image", "url(/images/default-music.png)")
@@ -162,6 +184,7 @@ async function onYouTubeIframeAPIReady() {
             player.loadVideoById("")
             return
         }
+        log("got new video - " + data.video.title)
         currentVideo = data.video
         player.loadVideoById(currentVideo.ytid, 0, "small")
         updatePlayerAppearance(currentVideo)
