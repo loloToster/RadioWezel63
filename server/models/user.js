@@ -2,12 +2,14 @@ const mongoose = require("mongoose")
 
 const VoteElement = require("./voteElement")
 
+const roles = require("./../modules/roles")
+
 const userSchema = new mongoose.Schema({
     name: String,
     googleId: String,
     email: String,
     thumbnail: String,
-    role: { type: String, default: "user" },
+    role: { type: mongoose.Schema.Types.Mixed, default: 0 },
     notes: { type: Number, default: 30 },
     possibleSubmits: { type: Array, default: [] }
 })
@@ -32,6 +34,26 @@ userSchema.method("canSubmit", async function (video) {
 
 userSchema.method("setPossibleSubmits", async function (possibleSubmits) {
     await this.updateOne({ possibleSubmits: possibleSubmits })
+})
+
+userSchema.post("init", function () {
+    this.role = roles.getRoleByLevel(this.role)
+})
+
+userSchema.method("canPromote", function (user) {
+    if (this.googleId === user.googleId) return false
+    let nextRole = roles.getNextRole(user.role)
+    if (!nextRole) return false
+    if (this.role.level === Infinity) return true
+    return nextRole.level < this.role.level
+})
+
+userSchema.method("canDepromote", function (user) {
+    if (this.googleId === user.googleId) return false
+    let prevRole = roles.getPrevRole(user.role)
+    if (!prevRole) return false
+    if (this.role.level === Infinity) return true
+    return user.role.level < this.role.level
 })
 
 const User = mongoose.model("user", userSchema)

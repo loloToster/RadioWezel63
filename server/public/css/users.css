@@ -1,0 +1,131 @@
+#searchBar {
+    --brightness: 0.8;
+    width: 96vw;
+    height: 12vw;
+    margin: 2vw;
+    border-radius: 100vh;
+    background-color: gray;
+    display: flex;
+}
+
+#searchBar input {
+    flex-grow: 1;
+    border: none;
+    padding: 0;
+    background-color: transparent;
+    font-size: 4vw;
+    padding-left: 4vw;
+    color: white;
+}
+
+#searchBar input:focus {
+    outline: none;
+}
+
+#searchBar input::placeholder {
+    color: white;
+    filter: brightness(var(--brightness));
+}
+
+#searchBar img {
+    width: 12vw;
+    height: 12vw;
+    filter: brightness(var(--brightness));
+}
+
+.checkboxes {
+    width: 94vw;
+    margin: 3vw;
+    margin-bottom: 0;
+}
+
+.checkboxWrapper {
+    float: left;
+    width: calc(100% / 3);
+    display: flex;
+    align-items: center;
+    margin-bottom: 3vw;
+}
+
+.searchCheckbox {
+    margin: 0;
+    margin-right: 2vw;
+    height: 2vh;
+    width: 2vh;
+    font-size: 2vh;
+}
+
+#searchResults {
+    font-size: 2.2vh;
+    color: #ccc;
+    display: flex;
+    align-items: center;
+    margin: 0 2vw;
+    font-weight: bold;
+}
+
+#searchResults span {
+    flex-grow: 1;
+    height: .2vh;
+    background-color: #ccc;
+    margin-left: 2vw;
+}
+
+.user {
+    padding: 2vw;
+}
+
+.username {
+    font-size: 3vh;
+}
+
+.role {
+    font-size: 2vh;
+    color: grey;
+}
+
+.additionalData {
+    margin-top: .5vh;
+    font-size: 2.3vh;
+    display: none;
+}
+
+.active .additionalData {
+    display: block;
+}
+
+.dbId::before {
+    content: "ID: ";
+}
+
+.email::before {
+    content: "Email: ";
+}
+
+.manage {
+    display: none;
+    gap: 2vw;
+    margin-top: 1vh;
+}
+
+.active .manage {
+    display: flex;
+}
+
+.manage button {
+    flex-grow: 1;
+    height: 6vh;
+    border: none;
+    padding: 0;
+    color: white;
+    font-size: 2vh;
+    border-radius: 100vh;
+}
+
+.promoteBtn {
+    background-color: #35b424;
+}
+
+.depromoteBtn {
+    background-color: #c02739;
+}

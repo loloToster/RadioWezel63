@@ -9,7 +9,7 @@ passport.serializeUser((user, done) => {
 })
 
 passport.deserializeUser(async (id, done) => {
-    user = await User.findOne({ googleId: id })
+    let user = await User.findOne({ googleId: id })
     done(null, user)
 })
 

@@ -13,15 +13,18 @@
                     <div id="dropdownItems">
                         <div id="profile">
                             <div>
-                                <%=user.name%>
+                                <%=user.role.badge + " " + user.name%>
                             </div>
                         </div>
-                        <% if ( user.role=="admin" ) { %>
+                        <% if ( user.role.level>0 ) { %>
                             <div><a href="/admin">Admin panel</a></div>
-                            <div><a href="/player">Odtwarzacz</a></div>
-                            <% } %>
-                                <div>Ustawienia</div>
-                                <div><a id="logout" href="/auth/logout">Wyloguj</a></div>
+                            <% if ( user.role.level>1 ) { %>
+                                <div><a href="/player">Odtwarzacz</a></div>
+                                <div><a href="/admin/users">Użytkownicy</a></div>
+                                <% } %>
+                                    <% } %>
+                                        <div>Ustawienia</div>
+                                        <div><a id="logout" href="/auth/logout">Wyloguj</a></div>
                     </div>
                 </div>
                 <script>

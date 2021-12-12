@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/users.css">
+    <script defer src="/js/users.js"></script>
+    <title>Użytkownicy</title>
+</head>
+
+<body>
+    <div id="contentWrapper">
+        <%- include("partials/header.ejs") %>
+            <div id="searchBar">
+                <input <%-query ? `value="${query}" `:'' %> type="text" id="searchInput"
+                placeholder="Wyszukaj użytkownika">
+                <img src="/images/search.png">
+            </div>
+            <div class="checkboxes">
+                <% searchMethods.forEach((method,i)=> { %>
+                    <div class="checkboxWrapper">
+                        <input type="radio" name="searchBy" class="searchCheckbox" data-method="<%= method %>"
+                            id="searchCheckbox-<%= i %>" <%=(i==0 && !by) || by==method ? 'checked' : '' %> >
+                        <label for="searchCheckbox-<%= i %>">
+                            <%= method %>
+                        </label>
+                    </div>
+                    <% }) %>
+                        <div style="clear: both;"></div>
+            </div>
+            <div id="searchResults">Wyniki wyszukiwania:
+                <span></span>
+            </div>
+            <div id="userContainer">
+                <% users.forEach((u,i)=> { %>
+                    <div class="user<%= i==0 ? ' active' : '' %> ">
+                        <div class="username">
+                            <%= u.name %>
+                        </div>
+                        <div class="role">
+                            <%= u.role.badge + " " + u.role.name %>
+                        </div>
+                        <div class="dbId additionalData">
+                            <%= u.googleId %>
+                        </div>
+                        <div class="email additionalData">
+                            <%= u.email %>
+                        </div>
+                        <div class="manage">
+                            <% if (user.canPromote(u)) { %>
+                                <button class="promoteBtn">Awansuj</button>
+                                <% } %>
+                                    <% if (user.canDepromote(u)) { %>
+                                        <button class="depromoteBtn">Deawansuj</button>
+                                        <% } %>
+                        </div>
+                    </div>
+                    <% }) %>
+            </div>
+    </div>
+    <%- include("partials/footer.ejs") %>
+</body>
+
+</html>

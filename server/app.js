@@ -35,7 +35,7 @@ app.use("/", require("./routes/root")(io))
 app.use("/auth", require("./routes/auth"))
 app.use("/admin", require("./routes/admin")(io, logger))
 app.use("/submit", require("./routes/submit")(io, logger))
-app.use("/player", require("./routes/player")(io))
+app.use("/player", require("./routes/player")(io, logger))
 
 app.use((req, res) => {
     res.status(404).render("error")

@@ -12,7 +12,7 @@ module.exports = (io, logger) => {
     // check if logged in
     router.use((req, res, next) => {
         if (req.user) next()
-        else res.status(500).send()
+        else res.status(404).render("error")
     })
 
     router.get("/", (req, res) => {
@@ -21,7 +21,7 @@ module.exports = (io, logger) => {
 
     async function handleSubmition(video, user) {
         if (!(await Submition.submitted(video))) {
-            if (user.role == "admin" && await KeyValue.get("self-accept-activated")) {
+            if (user.role.level > 1 && await KeyValue.get("self-accept-activated")) {
                 logger.info(`${user.googleId} self-accepted: ${video.title} (${video.ytid})`)
                 io.sockets.emit("updateVotingQueue", (await VoteElement.add(video)).video)
             } else {

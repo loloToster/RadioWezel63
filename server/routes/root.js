@@ -5,7 +5,7 @@ module.exports = io => {
     const VoteElement = require("./../models/voteElement")
 
     function checkIfLoggedIn(req, res, next) {
-        if (!req.user) res.status(500).send()
+        if (!req.user) res.status(403).send()
         else next()
     }
 

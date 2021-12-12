@@ -1,4 +1,4 @@
-module.exports = io => {
+module.exports = (io, logger) => {
     const express = require("express"),
         router = express.Router()
 
@@ -25,8 +25,7 @@ module.exports = io => {
 
     // check if user is admin
     router.use((req, res, next) => {
-        // req.user = { name: "test", role: "admin" } // ! for testing
-        if (req.user && req.user.role == "admin") next()
+        if (req.user && req.user.role.level > 1) next()
         else res.status(404).render("error")
     })
 
@@ -48,6 +47,7 @@ module.exports = io => {
 
     router.get("/song", async (req, res) => {
         let mostPopular = await VoteElement.mostPopular()
+        logger.info(`${req.user.name}#${req.user.googleId} requested next song: ${mostPopular.video.title}`)
         res.json(mostPopular)
         if (!mostPopular) {
             current = {}
