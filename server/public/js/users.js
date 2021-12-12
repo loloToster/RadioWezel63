@@ -6,38 +6,54 @@ function removeAllEventListeners(el) {
 
 async function onBtnClick(decision, element) {
     const userId = encodeURIComponent(element.querySelector(".dbId").innerText.trim())
-    console.log(decision, userId)
-    removeAllEventListeners(element)
+    let manage = element.querySelector(".manage")
+    let roleElement = element.querySelector(".role")
+    roleElement.innerText = "⌛ Wczytuję..."
+
+    manage = removeAllEventListeners(manage)
+
     let res = await fetch(`/admin/users/${decision}/${userId}`, { method: "PUT" })
     if (res.status != 200) {
-        console.log("err")
-        window.location.reload()
+        removeAllEventListeners(document.getElementById("userContainer"))
+        document.getElementById("error").classList.add("active")
+        setTimeout(() => window.location.reload(), 2000)
         return
     }
-    console.log(await res.json())
-    window.location.reload()
+
+    let promoteBtn = element.querySelector(".promoteBtn")
+    let depromoteBtn = element.querySelector(".depromoteBtn")
+
+    const { newRole, promotable, depromotable } = await res.json()
+    roleElement.innerText = newRole.badge + " " + newRole.name
+
+    promotable ? manage.classList.add("promote") : manage.classList.remove("promote")
+    depromotable ? manage.classList.add("depromote") : manage.classList.remove("depromote")
+
+    promoteBtn.addEventListener("click",
+        () => onBtnClick("promote", element))
+
+    depromoteBtn.addEventListener("click",
+        () => onBtnClick("depromote", element))
 }
 
 function handleUserElements() {
     let users = document.getElementsByClassName("user")
     if (!users) return
-    let lastUser = users[0]
     for (const user of users) {
         let promoteBtn = user.querySelector(".promoteBtn")
         let depromoteBtn = user.querySelector(".depromoteBtn")
 
-        if (promoteBtn)
-            promoteBtn.addEventListener("click",
-                () => onBtnClick("promote", user))
+        promoteBtn.addEventListener("click",
+            () => onBtnClick("promote", user))
 
-        if (depromoteBtn)
-            depromoteBtn.addEventListener("click",
-                () => onBtnClick("depromote", user))
+        depromoteBtn.addEventListener("click",
+            () => onBtnClick("depromote", user))
 
         user.addEventListener("click", () => {
-            lastUser.classList.remove("active")
+            for (const activeEl of document.querySelectorAll(".user.active")) {
+                activeEl.classList.remove("active")
+            }
             user.classList.add("active")
-            lastUser = user
         })
     }
 }

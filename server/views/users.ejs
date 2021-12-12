@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/users.css">
     <script defer src="/js/users.js"></script>
+    <script>
+        // remain viewport when mobile keyboard pops out
+        let viewport = document.querySelector("meta[name=viewport]")
+        viewport.setAttribute("content", viewport.content + ", height=" + window.innerHeight)
+    </script>
     <title>Użytkownicy</title>
 </head>
 
@@ -23,7 +28,7 @@
                 <% searchMethods.forEach((method,i)=> { %>
                     <div class="checkboxWrapper">
                         <input type="radio" name="searchBy" class="searchCheckbox" data-method="<%= method %>"
-                            id="searchCheckbox-<%= i %>" <%=(i==0 && !by) || by==method ? 'checked' : '' %> >
+                            id="searchCheckbox-<%= i %>" <%=(i==0 && !by) || by==method ? 'checked' : '' %>>
                         <label for="searchCheckbox-<%= i %>">
                             <%= method %>
                         </label>
@@ -36,7 +41,7 @@
             </div>
             <div id="userContainer">
                 <% users.forEach((u,i)=> { %>
-                    <div class="user<%= i==0 ? ' active' : '' %> ">
+                    <div class="user<%= i==0 ? ' active' : '' %>">
                         <div class="username">
                             <%= u.name %>
                         </div>
@@ -49,17 +54,17 @@
                         <div class="email additionalData">
                             <%= u.email %>
                         </div>
-                        <div class="manage">
-                            <% if (user.canPromote(u)) { %>
-                                <button class="promoteBtn">Awansuj</button>
-                                <% } %>
-                                    <% if (user.canDepromote(u)) { %>
-                                        <button class="depromoteBtn">Deawansuj</button>
-                                        <% } %>
+                        <div
+                            class="manage<%= user.canPromote(u) ? ' promote' : '' %><%= user.canDepromote(u) ? ' depromote' : '' %>">
+                            <button class="promoteBtn">Awansuj</button>
+                            <button class="depromoteBtn">Deawansuj</button>
                         </div>
                     </div>
                     <% }) %>
             </div>
+    </div>
+    <div id="error">
+        Coś poszło nie tak 🤔 odświeżam strone...
     </div>
     <%- include("partials/footer.ejs") %>
 </body>

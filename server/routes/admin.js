@@ -64,66 +64,76 @@ module.exports = (io, logger) => {
         io.emit("removeVoteElement", id)
     })
 
-    // check if user is admin for the rest of routes
-    router.use((req, res, next) => {
-        if (req.user && req.user.role.level > 1) next()
-        else res.status(404).render("error")
-    })
+    {
+        const usersRouter = express.Router()
 
-    const roles = require("./../modules/roles")
+        // check if user is admin
+        usersRouter.use((req, res, next) => {
+            if (req.user && req.user.role.level > 1) next()
+            else res.status(404).render("error")
+        })
 
-    const fieldRenames = {
-        "name": "name",
-        "email": "email",
-        "id": "googleId"
-    }
+        const roles = require("./../modules/roles")
 
-    const searchMethods = Object.keys(fieldRenames)
-
-    router.get("/users", async (req, res) => {
-        let searchBy = req.query.by,
-            searchQuery = req.query.query
-
-        let field = null
-        if (searchBy && searchQuery) {
-            searchBy = decodeURIComponent(searchBy)
-            searchQuery = decodeURIComponent(searchQuery)
-            field = fieldRenames[searchBy]
+        const fieldRenames = {
+            "name": "name",
+            "email": "email",
+            "id": "googleId"
         }
 
-        let filter = {}
-        if (field)
-            filter[field] = { "$regex": searchQuery, "$options": "i" }
+        const searchMethods = Object.keys(fieldRenames)
 
-        let users = await User.find(filter).limit(10)
-        res.render("users", {
-            searchMethods: searchMethods,
-            users: users,
-            user: req.user,
-            by: searchBy,
-            query: searchQuery
+        usersRouter.get("/", async (req, res) => {
+            let searchBy = req.query.by,
+                searchQuery = req.query.query
+
+            let field = null
+            if (searchBy && searchQuery) {
+                searchBy = decodeURIComponent(searchBy)
+                searchQuery = decodeURIComponent(searchQuery)
+                field = fieldRenames[searchBy]
+            }
+
+            let filter = {}
+            if (field)
+                filter[field] = { "$regex": searchQuery, "$options": "i" }
+
+            let users = await User.find(filter).limit(10)
+            res.render("users", {
+                searchMethods: searchMethods,
+                users: users,
+                user: req.user,
+                by: searchBy,
+                query: searchQuery
+            })
         })
-    })
 
-    router.put("/users/promote/:id", async (req, res) => {
-        let id = decodeURIComponent(req.params.id)
-        let targetUser = await User.findOne({ googleId: id })
-        if (!req.user.canPromote(targetUser)) return res.status(403).send()
-        let newRole = roles.getNextRole(targetUser.role)
-        logger.info(`${req.user.name}#${req.user.googleId} promoted data ${targetUser.name}#${targetUser.googleId} to ${newRole.name}`)
-        await User.updateOne({ googleId: id }, { $set: { role: newRole.level } })
-        res.send(newRole)
-    })
+        usersRouter.put("/:decision/:id", async (req, res) => { // todo: prevent accidental double promote by diffrent admins
+            const decision = req.params.decision
+            if (decision != "promote" && decision != "depromote")
+                return res.status(403).send()
+            let id = decodeURIComponent(req.params.id)
+            let targetUser = await User.findOne({ googleId: id })
+            let newRole
+            if (decision == "promote") {
+                if (!req.user.canPromote(targetUser)) return res.status(403).send()
+                newRole = roles.getNextRole(targetUser.role)
+                logger.info(`${req.user.name}#${req.user.googleId} promoted data ${targetUser.name}#${targetUser.googleId} to ${newRole.name}`)
+            } else {
+                if (!req.user.canDepromote(targetUser)) return res.status(403).send()
+                newRole = roles.getPrevRole(targetUser.role)
+                logger.info(`${req.user.name}#${req.user.googleId} depromoted data ${targetUser.name}#${targetUser.googleId} to ${newRole.name}`)
+            }
+            targetUser = await User.findOneAndUpdate({ googleId: id }, { $set: { role: newRole.level } }, { new: true })
+            res.send({
+                newRole: newRole,
+                promotable: req.user.canPromote(targetUser),
+                depromotable: req.user.canDepromote(targetUser)
+            })
+        })
 
-    router.put("/users/depromote/:id", async (req, res) => {
-        let id = decodeURIComponent(req.params.id)
-        let targetUser = await User.findOne({ googleId: id })
-        if (!req.user.canDepromote(targetUser)) return res.status(403).send()
-        let newRole = roles.getPrevRole(targetUser.role)
-        logger.info(`${req.user.name}#${req.user.googleId} depromoted data ${targetUser.name}#${targetUser.googleId} to ${newRole.name}`)
-        await User.updateOne({ googleId: id }, { $set: { role: newRole.level } })
-        res.send(newRole)
-    })
+        router.use("/users", usersRouter)
+    }
 
     router.get("/reset", async (req, res) => {
         if (req.user.level !== Infinity) return res.status(404).render("error")

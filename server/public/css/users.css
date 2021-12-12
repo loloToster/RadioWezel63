@@ -124,8 +124,56 @@
 
 .promoteBtn {
     background-color: #35b424;
+    display: none;
 }
 
 .depromoteBtn {
     background-color: #c02739;
+    display: none;
+}
+
+.manage.promote .promoteBtn {
+    display: block;
+}
+
+.manage.depromote .depromoteBtn {
+    display: block;
+}
+
+#error {
+    position: fixed;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1vh;
+    width: 96vw;
+    height: 0;
+    overflow: hidden;
+    margin: 1vh 2vw;
+    bottom: 0;
+    background-color: #dc143cbb;
+    font-weight: bold;
+    font-size: 2vh;
+}
+
+#error.active {
+    display: flex;
+    animation: errAni cubic-bezier(0.42, 0, 0.51, 1.56) .6s forwards;
+}
+
+@keyframes errAni {
+    from {
+        height: 0;
+        bottom: 0;
+    }
+
+    50% {
+        height: 9vh;
+        bottom: 4vh;
+    }
+
+    to {
+        height: 9vh;
+        bottom: 0;
+    }
 }
