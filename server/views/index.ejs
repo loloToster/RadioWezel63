@@ -12,7 +12,7 @@
     <script defer src="/js/index.js"></script>
     <script>
         const loggedIn = <%= Boolean(user) %>;
-        const isAdmin = <%= user?.role == "admin" %>;
+        const isAdmin = <%= user?.role?.level > 1 %>;
     </script>
     <title>RadioWęzeł</title>
 </head>
