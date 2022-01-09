@@ -40,7 +40,6 @@
 .info {
     width: auto;
     padding-top: 5vh;
-    display: none;
 }
 
 .info img {
@@ -60,15 +59,15 @@
     position: relative;
 }
 
-.video>div {
+.video .elMargin {
     margin: 2vw;
 }
 
-submitted {
+.submitted {
     background-color: #57cc47bb;
 }
 
-tolong {
+.toLong {
     background-color: #c02739bb;
 }
 

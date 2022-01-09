@@ -28,7 +28,7 @@ userSchema.method("unvote", async function (videoId) {
     } catch { return -1 }
 })
 
-userSchema.method("canSubmit", async function (video) {
+userSchema.method("canSubmit", function (video) {
     return this.possibleSubmits.some(s => s == JSON.stringify(video))
 })
 

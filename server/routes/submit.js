@@ -2,7 +2,7 @@ module.exports = (io, logger) => {
     const express = require("express"),
         router = express.Router()
 
-    const YT_KEYS = process.env.YT_KEYS.split(" ")
+    const YT_KEYS = process.env.YT_KEYS?.split(" ") ?? []
     const MAX_DURATION = 300
 
     const Submition = require("./../models/submition"),
@@ -15,8 +15,40 @@ module.exports = (io, logger) => {
         else res.status(404).render("error")
     })
 
-    router.get("/", (req, res) => {
-        res.render("submit")
+    const queryToVideos = require("./../modules/query-to-video")
+
+    router.get("/", async (req, res) => {
+        let query = req.query.q
+
+        let searchResults = []
+
+        if (query) {
+            query = decodeURIComponent(query)
+            let allowFallbackToYTSearch = await KeyValue.get("allow-fallback-to-youtube-search")
+            videos = await queryToVideos(query, YT_KEYS, 10, allowFallbackToYTSearch ? 3 : 1)
+            if (videos.code == "success") {
+                let possibleSubmits = []
+                for (let i = 0; i < videos.items.length; i++) {
+                    let submitted = await Submition.submitted(videos.items[i])
+                    let toLong = videos.items[i].duration > MAX_DURATION
+
+                    videos.items[i].submitted = submitted
+                    videos.items[i].toLong = toLong
+
+                    if (!submitted && !toLong)
+                        possibleSubmits.push(
+                            JSON.stringify(videos.items[i])
+                        )
+                }
+                await req.user.setPossibleSubmits(possibleSubmits)
+                searchResults = videos.items
+            }
+        }
+
+        res.render("submit", {
+            results: searchResults,
+            searching: Boolean(query)
+        })
     })
 
     async function handleSubmition(video, user) {
@@ -32,26 +64,6 @@ module.exports = (io, logger) => {
         }
         return video
     }
-
-    const queryToVideos = require("./../modules/query-to-video")
-
-    router.get("/search/:query", async (req, res) => {
-        let query = decodeURIComponent(req.params.query)
-        let allowFallbackToYTSearch = await KeyValue.get("allow-fallback-to-youtube-search")
-        let videos = await queryToVideos(query, YT_KEYS, 10, allowFallbackToYTSearch ? 3 : 1)
-        if (videos.code == "success") {
-            let possibleSubmits = []
-            for (let i = 0; i < videos.items.length; i++) {
-                let submitted = await Submition.submitted(videos.items[i])
-                let toLong = videos.items[i].duration > MAX_DURATION
-                if (!submitted && !toLong) possibleSubmits.push(JSON.stringify(videos.items[i]))
-                videos.items[i].submitted = submitted
-                videos.items[i].toLong = toLong
-            }
-            await req.user.setPossibleSubmits(possibleSubmits)
-            res.json(videos)
-        } else { res.json({ code: "noVideoFound" }) }
-    })
 
     router.post("/post", async (req, res) => {
         if (req.user.canSubmit(req.body)) {

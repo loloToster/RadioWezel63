@@ -30,21 +30,32 @@
             <img id="searchIcon" src="/images/search.png">
         </div>
         <div id="gradientStrip"></div>
-        <div id="loading-results" class="info"><img src="/images/loading.gif"></div>
-        <div id="noResults" class="info"><img src="/images/noresults.png"></div>
-        <div id="resultContainer">
-            <div style="display: none;">
-                <div id="videoTemplate" class="video">
-                    <div class="thumbnail">
-                        <img src="">
-                    </div>
-                    <div class="titleAndCreator">
-                        <div class="title"></div>
-                        <div class="creator"></div>
-                    </div>
+        <div id="loading-results" style="display: none;" class="info"><img src="/images/loading.gif"></div>
+        <% if (!results.length && searching) { %>
+            <div class="info"><img src="/images/noresults.png"></div>
+            <% } %>
+                <div id="resultContainer">
+                    <% results.forEach(result=> { %>
+                        <div class="video" data-hash='<%- JSON.stringify(result) %>'>
+                            <div class="thumbnail elMargin">
+                                <img src="<%= result.thumbnail %> ">
+                            </div>
+                            <div class="titleAndCreator elMargin">
+                                <div class="title">
+                                    <%= result.title %>
+                                </div>
+                                <div class="creator">
+                                    <%= (result.explicit ? "🅴 " : " " ) + result.creator %>
+                                </div>
+                            </div>
+                            <% if (result.submitted) { %>
+                                <div class="submitted unclickable">Ta piosenka jest już dodana</div>
+                                <% } else if (result.toLong) { %>
+                                    <div class="toLong unclickable">Ta piosenka jest za długa</div>
+                                    <%} %>
+                        </div>
+                        <% }) %>
                 </div>
-            </div>
-        </div>
     </div>
     <%- include("partials/footer.ejs") %>
 </body>
