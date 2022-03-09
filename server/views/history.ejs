@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/history.css">
+    <script defer src="/js/history.js"></script>
+    <title>Historia</title>
+</head>
+
+<body>
+    <div id="contentWrapper">
+        <%- include("partials/header.ejs") %>
+            <% history.map(x=> {
+                let vE = x.voteElement
+                vE.id = x._id.toString()
+                return vE
+                }).forEach(voteElement=> { %>
+                <div class="song">
+                    <div style="--image: url('<%- voteElement.video.thumbnail %>')" class="songIcon">
+                    </div>
+                    <div class="titleAndInfo">
+                        <a class="title" href="https://www.youtube.com/watch?v=<%=voteElement.video.ytid %>">
+                            <%- voteElement.video.title %>
+                        </a>
+                        <div class="info">
+                            <div class="creator">
+                                <%- voteElement.video.creator %>
+                            </div>
+                            <div class="bullet">•</div>
+                            <div>
+                                <%= voteElement.votes.length %> głosów
+                            </div>
+                        </div>
+                    </div>
+                    <input id="<%= voteElement.id %>" type="checkbox">
+                </div>
+                <% }) %>
+    </div>
+    <div id="reviveBtn"><span>Przywróć zaznaczone</span> <img src="/images/revive.png"></div>
+    <%- include("partials/footer.ejs") %>
+</body>
+
+</html>

@@ -3,7 +3,8 @@ module.exports = (io, logger) => {
         router = express.Router()
 
     const Submition = require("./../models/submition"),
-        VoteElement = require("./../models/voteElement")
+        VoteElement = require("./../models/voteElement"),
+        HistoryElement = require("./../models/history")
 
     //https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
     function generateKey(length = 5) {
@@ -55,6 +56,7 @@ module.exports = (io, logger) => {
         }
         await mostPopular.delete()
         io.emit("removeVoteElement", mostPopular.video.ytid)
+        await HistoryElement.add({ votes: mostPopular.votes, video: mostPopular.video })
     })
 
     io.on("connection", socket => {

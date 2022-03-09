@@ -2,9 +2,11 @@ module.exports = (io, logger) => {
     const express = require("express"),
         router = express.Router()
 
-    const Submition = require("./../models/submition"),
+    const { Types: { ObjectId } } = require("mongoose"),
+        Submition = require("./../models/submition"),
         VoteElement = require("./../models/voteElement"),
-        User = require("./../models/user")
+        User = require("./../models/user"),
+        HistoryElement = require("./../models/history")
 
     const lyricsClient = require("lyrics-finder")
 
@@ -59,19 +61,20 @@ module.exports = (io, logger) => {
         res.send()
         let id = decodeURIComponent(req.params.id)
         logger.info(`${req.user.name}#${req.user.googleId} deleted: ${id}`)
-        let dbRes = await VoteElement.deleteOne({ "video.ytid": id })
-        if (!dbRes.deletedCount) return
+        let voteElement = await VoteElement.findOneAndDelete({ "video.ytid": id })
         io.emit("removeVoteElement", id)
+        await HistoryElement.add({ votes: voteElement.votes, video: voteElement.video })
     })
+
+    function isAdmin(req, res, next) {
+        if (req.user && req.user.role.level > 1) next()
+        else res.status(404).render("error")
+    }
 
     {
         const usersRouter = express.Router()
 
-        // check if user is admin
-        usersRouter.use((req, res, next) => {
-            if (req.user && req.user.role.level > 1) next()
-            else res.status(404).render("error")
-        })
+        usersRouter.use(isAdmin)
 
         const roles = require("./../modules/roles")
 
@@ -135,11 +138,37 @@ module.exports = (io, logger) => {
         router.use("/users", usersRouter)
     }
 
+    {
+        const historyRouter = express.Router()
+
+        historyRouter.use(isAdmin)
+
+        historyRouter.get("/", async (req, res) => {
+            const history = await HistoryElement.find({})
+            res.render("history", { user: req.user, history })
+        })
+
+        historyRouter.put("/revive", async (req, res) => {
+            let historyElements = await HistoryElement.find(
+                { _id: { $in: req.body.map(id => ObjectId(id)) } }
+            )
+
+            for (const element of historyElements) {
+                element.revive()
+            }
+
+            res.send()
+        })
+
+        router.use("/history", historyRouter)
+    }
+
     router.get("/reset", async (req, res) => {
         if (req.user.level !== Infinity) return res.status(404).render("error")
         logger.info(`${req.user.name}#${req.user.googleId} reseted data`)
         await Submition.deleteMany({})
         await VoteElement.deleteMany({})
+        await HistoryElement.deleteMany({})
         res.redirect("/")
     })
 

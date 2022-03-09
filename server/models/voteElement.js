@@ -7,9 +7,9 @@ const voteElementSchema = new mongoose.Schema({
 
 const VoteElement = mongoose.model("voteelements", voteElementSchema)
 
-VoteElement.add = async video => {
+VoteElement.add = async (video, votes = []) => {
     let element = {
-        votes: [],
+        votes,
         video: {
             ytid: video.ytid,
             title: video.title,
