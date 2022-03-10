@@ -31,18 +31,20 @@ socket.on("connect", () => {
 
 if (loggedIn) {
     let submitionImg = document.querySelector("#addSongButton img")
-    submitionImg.addEventListener("click", () => {
-        submitionImg.classList.add("clicked")
-    })
+    if (submitionImg) {
+        submitionImg.addEventListener("click", () => {
+            submitionImg.classList.add("clicked")
+        })
 
-    let submitionBtn = document.getElementById("addSongButton")
-    document.body.addEventListener("touchstart", () => {
-        submitionBtn.style.opacity = 0.2
-    }, true)
+        let submitionBtn = document.getElementById("addSongButton")
+        document.body.addEventListener("touchstart", () => {
+            submitionBtn.style.opacity = 0.2
+        }, true)
 
-    document.body.addEventListener("touchend", () => {
-        submitionBtn.style.opacity = 1
-    }, true)
+        document.body.addEventListener("touchend", () => {
+            submitionBtn.style.opacity = 1
+        }, true)
+    }
 
     Array.from(document.getElementsByClassName("upvote"))
         .forEach(element => {

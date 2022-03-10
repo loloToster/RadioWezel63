@@ -2,7 +2,8 @@ module.exports = io => {
     const express = require("express"),
         router = express.Router()
 
-    const VoteElement = require("./../models/voteElement")
+    const VoteElement = require("./../models/voteElement"),
+        KeyValue = require("./../models/keyValue")
 
     function checkIfLoggedIn(req, res, next) {
         if (!req.user) res.status(403).send()
@@ -17,7 +18,8 @@ module.exports = io => {
         ])
         res.render("index", {
             votingQueue: currentVoteElements,
-            user: req.user
+            user: req.user,
+            blockSubmitting: await KeyValue.get("block-submitting")
         })
     })
 

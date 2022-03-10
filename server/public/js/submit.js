@@ -13,6 +13,12 @@ async function onVideoClick(hash) {
         },
         body: hash
     })
+
+    if (res.status == 403) {
+        window.location.href = "/"
+        return
+    }
+
     let data = await res.json()
     document.getElementById("loading-response").style.display = "none"
     let sucThumbnail = document.getElementById("successThumbnail")

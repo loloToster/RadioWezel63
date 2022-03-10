@@ -86,7 +86,7 @@
                     </div>
                     <% }) %>
             </div>
-            <% if (user) { %>
+            <% if (user && !blockSubmitting) { %>
                 <a href="/submit">
                     <div id="addSongButton">
                         <img src="/images/plus.png">

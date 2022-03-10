@@ -15,6 +15,12 @@ module.exports = (io, logger) => {
         else res.status(404).render("error")
     })
 
+    // check if submitting is blocked
+    router.use(async (req, res, next) => {
+        if (await KeyValue.get("block-submitting")) res.status(403).render("error") // TODO: custom page
+        else next()
+    })
+
     const queryToVideos = require("./../modules/query-to-video")
 
     router.get("/", async (req, res) => {

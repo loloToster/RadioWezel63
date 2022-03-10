@@ -54,4 +54,9 @@
         </div>
     </div>
     <div id="gradientStrip"></div>
+    <% if (typeof blockSubmitting !="undefined" && blockSubmitting) { %>
+        <div class="blockedSubmitionsMsg">
+            Administrator zablokował możliwość dodawania piosenek 😔 ale nadal możesz zagłosować na te poniżej! ⬇️
+        </div>
+        <% } %>
 </div>
