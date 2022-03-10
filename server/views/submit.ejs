@@ -36,7 +36,7 @@
             <% } %>
                 <div id="resultContainer">
                     <% results.forEach(result=> { %>
-                        <div class="video" data-hash='<%- JSON.stringify(result) %>'>
+                        <div class="video" data-hash="<%= JSON.stringify(result) %>">
                             <div class="thumbnail elMargin">
                                 <img src="<%= result.thumbnail %> ">
                             </div>
