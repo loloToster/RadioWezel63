@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/admin_settings.css">
+    <script defer src="/js/admin_settings.js"></script>
+    <title>Ustawienia</title>
+</head>
+
+<body>
+    <div id="contentWrapper">
+        <%- include("partials/header.ejs") %>
+            <% settings.map(setting=> { %>
+                <div class="setting">
+                    <span class="settingName">
+                        <%= setting.key %>
+                    </span>
+                    <input id="<%= setting.key %>" type="checkbox" <%=setting.value ? 'checked' : '' %>>
+                </div>
+                <% }) %>
+                    <div id="saveBtn">Zapisz zmiany</div>
+    </div>
+    <%- include("partials/footer.ejs") %>
+</body>
+
+</html>

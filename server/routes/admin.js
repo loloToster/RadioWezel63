@@ -6,7 +6,8 @@ module.exports = (io, logger) => {
         Submition = require("./../models/submition"),
         VoteElement = require("./../models/voteElement"),
         User = require("./../models/user"),
-        HistoryElement = require("./../models/history")
+        HistoryElement = require("./../models/history"),
+        KeyValue = require("./../models/keyValue")
 
     const lyricsClient = require("lyrics-finder")
 
@@ -121,11 +122,11 @@ module.exports = (io, logger) => {
             if (decision == "promote") {
                 if (!req.user.canPromote(targetUser)) return res.status(403).send()
                 newRole = roles.getNextRole(targetUser.role)
-                logger.info(`${req.user.name}#${req.user.googleId} promoted data ${targetUser.name}#${targetUser.googleId} to ${newRole.name}`)
+                logger.info(`${req.user.name}#${req.user.googleId} promoted ${targetUser.name}#${targetUser.googleId} to ${newRole.name}`)
             } else {
                 if (!req.user.canDepromote(targetUser)) return res.status(403).send()
                 newRole = roles.getPrevRole(targetUser.role)
-                logger.info(`${req.user.name}#${req.user.googleId} depromoted data ${targetUser.name}#${targetUser.googleId} to ${newRole.name}`)
+                logger.info(`${req.user.name}#${req.user.googleId} depromoted ${targetUser.name}#${targetUser.googleId} to ${newRole.name}`)
             }
             targetUser = await User.findOneAndUpdate({ googleId: id }, { $set: { role: newRole.level } }, { new: true })
             res.send({
@@ -161,6 +162,33 @@ module.exports = (io, logger) => {
         })
 
         router.use("/history", historyRouter)
+    }
+
+    {
+        const settingsRouter = express.Router()
+
+        settingsRouter.use(isAdmin)
+
+        settingsRouter.get("/", async (req, res) => {
+            const booleanSettings = await KeyValue.find({ value: { $type: "bool" } })
+            res.render("admin-settings", { user: req.user, settings: booleanSettings })
+        })
+
+        settingsRouter.put("/save", async (req, res) => {
+            for (const key in req.body) {
+                const value = req.body[key]
+
+                try {
+                    await KeyValue.set(key, value)
+                } catch {
+                    logger.error(`could not change: ${key} to: ${value}`)
+                }
+            }
+
+            res.send()
+        })
+
+        router.use("/settings", settingsRouter)
     }
 
     router.get("/reset", async (req, res) => {

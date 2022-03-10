@@ -1,0 +1,27 @@
+#contentWrapper {
+    font-size: 2.5vh;
+}
+
+.setting {
+    box-sizing: border-box;
+    padding: 1vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+input[type=checkbox] {
+    height: 7vw;
+    width: 7vw;
+    filter: grayscale(100%);
+}
+
+#saveBtn {
+    box-sizing: border-box;
+    margin: 2vh 2.5vw 0 2.5vw;
+    width: 95vw;
+    background-color: dodgerblue;
+    padding: 3vw;
+    text-align: center;
+    border-radius: 100vh;
+}
