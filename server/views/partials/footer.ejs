@@ -1,3 +1,27 @@
 <div id="footer">
-    Made by Toster
+    <div id="qrContainer">
+        <img id="qrImg" src="/images/qr.png">
+    </div>
+    <span>Made by <a href="https://github.com/loloToster" target="_blank">loloToster</a></span>
+    <div class="btns">
+        <img id="qrBtn" src="/images/qr-icon.png">
+        <a href="https://github.com/loloToster/RadioWezel63" target="_blank"><img src="/images/github.png"></a>
+    </div>
+    <script>
+        const qrBtn = document.getElementById("qrBtn")
+        const qrContainer = document.getElementById("qrContainer")
+        const qrImg = document.getElementById("qrImg")
+
+        qrBtn.addEventListener("click", () =>
+            qrContainer.classList.add("show")
+        )
+
+        qrImg.addEventListener("click", e =>
+            e.stopPropagation()
+        )
+
+        qrContainer.addEventListener("click", () =>
+            qrContainer.classList.remove("show")
+        )
+    </script>
 </div>

@@ -150,10 +150,6 @@ a {
     white-space: nowrap;
 }
 
-.show {
-    display: flex !important;
-}
-
 #logout {
     color: #c02739;
 }
@@ -182,12 +178,48 @@ a {
 #footer {
     box-sizing: border-box;
     width: auto;
-    height: 5vh;
+    height: 7vh;
     padding: 2vh;
     display: flex;
     align-items: center;
-    justify-content: end;
+    justify-content: space-between;
     background-color: #262626;
     color: #4e4e52;
-    font-size: 1.3vh;
+    font-size: 1.5vh;
+}
+
+#qrContainer {
+    position: fixed;
+    background-color: #212121aa;
+    width: 100vw;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 2;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+#qrImg {
+    width: 70vmin;
+    height: 70vmin;
+    border-radius: 1vmin;
+}
+
+#footer a {
+    color: #6a6a6d;
+    text-decoration: underline;
+}
+
+#footer .btns img {
+    filter: brightness(45%);
+    height: 3.5vh;
+    width: 3.5vh;
+    margin-left: 2vw;
+}
+
+/* used in burger and qr code */
+.show {
+    display: flex !important;
 }

@@ -204,13 +204,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 12vh;
-    height: 12vh;
+    width: 10vh;
+    height: 10vh;
     background-color: #4ef037;
     position: fixed;
     float: left;
-    left: 5vw;
-    bottom: 5vw;
+    left: 6vw;
+    bottom: 6vw;
     border-radius: 50%;
 }
 
