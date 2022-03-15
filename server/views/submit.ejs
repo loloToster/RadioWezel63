@@ -31,14 +31,17 @@
         </div>
         <div id="gradientStrip"></div>
         <div id="loading-results" style="display: none;" class="info"><img src="/images/loading.gif"></div>
-        <% if (!results.length && searching) { %>
+        <% if (!results.length && query) { %>
             <div class="info"><img src="/images/noresults.png"></div>
+            <div class="emptyListInfo">
+                Nie znalaziono piosenek o nazwie: <%= query %>
+            </div>
             <% } %>
                 <div id="resultContainer">
                     <% results.forEach(result=> { %>
                         <div class="video" data-hash="<%= JSON.stringify(result) %>">
                             <div class="thumbnail elMargin">
-                                <img src="<%= result.thumbnail %> ">
+                                <img src="<%= result.thumbnail %>">
                             </div>
                             <div class="titleAndCreator elMargin">
                                 <div class="title">

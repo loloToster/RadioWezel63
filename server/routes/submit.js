@@ -52,8 +52,8 @@ module.exports = (io, logger) => {
         }
 
         res.render("submit", {
-            results: searchResults,
-            searching: Boolean(query)
+            query,
+            results: searchResults
         })
     })
 
