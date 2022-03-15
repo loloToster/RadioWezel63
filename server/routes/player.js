@@ -48,7 +48,7 @@ module.exports = (io, logger) => {
 
     router.get("/song", async (req, res) => {
         let mostPopular = await VoteElement.mostPopular()
-        logger.info(`${req.user.name}#${req.user.googleId} requested next song: ${mostPopular.video.title}`)
+        logger.info(`${req.user.name}#${req.user.googleId} requested next song: ${mostPopular?.video.title}`)
         res.json(mostPopular)
         if (!mostPopular) {
             current = {}
