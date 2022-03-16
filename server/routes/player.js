@@ -27,12 +27,19 @@ module.exports = (io, logger) => {
     // check if user is admin
     router.use((req, res, next) => {
         if (req.user && req.user.role.level > 1) next()
-        else res.status(404).render("error")
+        else res.status(403).render("error", {
+            bigText: "403",
+            smallText: "Nie masz dostępu do tej strony"
+        })
     })
 
     // check if there is no other player connected
     router.use((req, res, next) => {
-        if (playerSocket && req.query.key != playerKey) res.status(405).render("player-used")
+        if (playerSocket && req.query.key != playerKey)
+            res.status(405).render("error", {
+                bigText: "405",
+                smallText: "Odtwarzacz jest już używany <br> <a href=\"/\">Wróć na stronę główną</a>"
+            })
         else next()
     })
 

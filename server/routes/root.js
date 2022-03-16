@@ -11,11 +11,12 @@ module.exports = io => {
     }
 
     router.get("/", async (req, res) => {
-        // sort by length of votes
+        // sort by the number of votes
         let currentVoteElements = await VoteElement.aggregate([
             { $project: { votes: 1, video: 1, length: { $size: "$votes" } } },
             { $sort: { length: -1 } }
         ])
+
         res.render("index", {
             votingQueue: currentVoteElements,
             user: req.user,

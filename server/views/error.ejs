@@ -10,14 +10,25 @@
             align-items: center;
             justify-content: center;
             font-weight: bold;
+            text-align: center;
+            color: gray;
+        }
+
+        a {
+            color: darkcyan;
+            text-decoration: underline;
         }
     </style>
 </head>
 
 <body>
     <img style="width: 40vw; height: 40vw;" src="/images/broken-vinyl.png">
-    <span style="font-size: 5vh;color: gray;">404</span>
-    <span style="font-size: 2vh;color: gray;">Nie znaleziono</span>
+    <span style="font-size: 5vh;">
+        <%- bigText %>
+    </span>
+    <span style="font-size: 2vh;">
+        <%- smallText %>
+    </span>
 </body>
 
 </html>

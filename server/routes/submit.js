@@ -12,12 +12,19 @@ module.exports = (io, logger) => {
     // check if logged in
     router.use((req, res, next) => {
         if (req.user) next()
-        else res.status(404).render("error")
+        else res.status(401).render("error", {
+            bigText: "401",
+            smallText: "Aby uzyskać dostęp do tej strony musisz najpierw się <a href=\"/auth/login\">zalogować</a>"
+        })
     })
 
     // check if submitting is blocked
     router.use(async (req, res, next) => {
-        if (await KeyValue.get("block-submitting")) res.status(403).render("error") // TODO: custom page
+        if (await KeyValue.get("block-submitting"))
+            res.status(405).render("error", {
+                bigText: "405",
+                smallText: "Dodawanie piosenek zostało zablokowane przez administratora"
+            })
         else next()
     })
 

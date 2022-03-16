@@ -14,7 +14,10 @@ module.exports = (io, logger) => {
     // check if user is admin or moderator
     router.use((req, res, next) => {
         if (req.user && req.user.role.level > 0) next()
-        else res.status(404).render("error")
+        else res.status(403).render("error", {
+            bigText: "403",
+            smallText: "Nie masz dostępu do tej strony"
+        })
     })
 
     router.get("/", async (req, res) => {
@@ -69,7 +72,10 @@ module.exports = (io, logger) => {
 
     function isAdmin(req, res, next) {
         if (req.user && req.user.role.level > 1) next()
-        else res.status(404).render("error")
+        else res.status(403).render("error", {
+            bigText: "403",
+            smallText: "Nie masz dostępu do tej strony"
+        })
     }
 
     {
@@ -192,11 +198,18 @@ module.exports = (io, logger) => {
     }
 
     router.get("/reset", async (req, res) => {
-        if (req.user.level !== Infinity) return res.status(404).render("error")
+        if (req.user.level !== Infinity)
+            return res.status(403).render("error", {
+                bigText: "403",
+                smallText: "Nie masz dostępu do tej strony"
+            })
+
         logger.info(`${req.user.name}#${req.user.googleId} reseted data`)
+
         await Submition.deleteMany({})
         await VoteElement.deleteMany({})
         await HistoryElement.deleteMany({})
+
         res.redirect("/")
     })
 

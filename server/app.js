@@ -3,8 +3,10 @@ require("dotenv").config()
 
 const logger = require("./config/winston-setup")
 
-const express = require("express"),
-    app = express(),
+const express = require("express")
+require("express-async-errors")
+
+const app = express(),
     server = require("http").createServer(app),
     io = require("socket.io")(server) // , { cors: { origin: "*" } }
 
@@ -38,7 +40,18 @@ app.use("/submit", require("./routes/submit")(io, logger))
 app.use("/player", require("./routes/player")(io, logger))
 
 app.use((req, res) => {
-    res.status(404).render("error")
+    res.status(404).render("error", {
+        bigText: "404",
+        smallText: "Nie znaleziono"
+    })
+})
+
+app.use((err, req, res, next) => {
+    logger.error("Server encountered an error: " + err)
+    res.status(500).render("error", {
+        bigText: "500",
+        smallText: "Serwer napotkał problem"
+    })
 })
 
 const mongoose = require("mongoose")
