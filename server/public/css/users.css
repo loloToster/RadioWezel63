@@ -55,6 +55,10 @@
     font-size: 2vh;
 }
 
+.checkboxWrapper label {
+    font-size: 1.7vh;
+}
+
 #searchResults {
     font-size: 2.2vh;
     color: #ccc;

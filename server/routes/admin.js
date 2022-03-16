@@ -101,6 +101,10 @@ module.exports = (io, logger) => {
             if (searchBy && searchQuery) {
                 searchBy = decodeURIComponent(searchBy)
                 searchQuery = decodeURIComponent(searchQuery)
+
+                if (searchQuery.endsWith("\\"))
+                    searchQuery = searchQuery.substring(0, searchQuery.length - 1)
+
                 field = fieldRenames[searchBy]
             }
 
