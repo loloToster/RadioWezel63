@@ -24,11 +24,15 @@ passport.use(
             let testers = await KeyValue.get("testers")
             check = testers.includes(profile._json.email)
         } else {
-            check = process.env.MAIL_DOMAIN == profile._json.hd
+            const verifiedEmails = await KeyValue.get("verified-emails")
+            if (verifiedEmails.includes(profile._json.email))
+                check = true
+            else
+                check = process.env.MAIL_DOMAIN == profile._json.hd
         }
 
         if (!check)
-            return done(new Error("Error occured"))
+            return done(new Error("Login check fail"))
 
         let currentUser = await User.findOne({ googleId: profile.id })
         if (currentUser) {

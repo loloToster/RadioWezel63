@@ -180,7 +180,12 @@ module.exports = (io, logger) => {
         settingsRouter.use(isAdmin)
 
         settingsRouter.get("/", async (req, res) => {
-            const booleanSettings = await KeyValue.find({ value: { $type: "bool" } })
+            const booleanSettings = await KeyValue.find({
+                $or: [
+                    { value: { $type: "bool" } },
+                    { value: { $type: "array" } }
+                ]
+            })
             res.render("admin-settings", { user: req.user, settings: booleanSettings })
         })
 

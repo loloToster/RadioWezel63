@@ -19,7 +19,18 @@
                     <span class="settingName">
                         <%= setting.key %>
                     </span>
-                    <input id="<%= setting.key %>" type="checkbox" <%=setting.value ? 'checked' : '' %>>
+                    <% if ( typeof setting.value=="boolean" ) { %>
+                        <input id="<%= setting.key %>" type="checkbox" <%=setting.value ? 'checked' : '' %>>
+                        <% } else if (Array.isArray(setting.value) ) { %>
+                            <div id="<%= setting.key %>" class="stringArray">
+                                <% setting.value.forEach(element=> { %>
+                                    <div class="saEl" contenteditable>
+                                        <%= element %>
+                                    </div>
+                                    <% }) %>
+                                        <div class="addEl"> + dodaj element </div>
+                            </div>
+                            <% } %>
                 </div>
                 <% }) %>
                     <div id="saveBtn">Zapisz zmiany</div>

@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: false }))
 app.set("view engine", "ejs")
 app.set("views", "views")
 app.use(cookieSession({
-    maxAge: 24 * 60 * 60 * 1000,
+    maxAge: 72 * 60 * 60 * 1000,
     keys: [COOKIE_SECRET]
 }))
 

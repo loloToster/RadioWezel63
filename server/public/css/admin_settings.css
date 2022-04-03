@@ -5,15 +5,34 @@
 .setting {
     box-sizing: border-box;
     padding: 1vw;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    min-height: 9vw;
+}
+
+.stringArray {
+    box-sizing: border-box;
+    padding: 3vw;
+    max-height: 20vh;
+    overflow-y: scroll;
+    background-color: #4f4f4f;
+    border-radius: 1vh;
+}
+
+.saEl {
+    white-space: nowrap;
+    max-width: 100vw;
+    overflow: scroll;
+    margin-bottom: 1vh;
+}
+
+.addEl {
+    font-weight: bold;
 }
 
 input[type=checkbox] {
     height: 7vw;
     width: 7vw;
     filter: grayscale(100%);
+    float: right;
 }
 
 #saveBtn {
