@@ -1,14 +1,13 @@
 body {
     font-family: Arial;
     width: 100vw;
-    height: 100vh;
+    height: 90vh;
     margin: 0;
     background: linear-gradient(225deg, rgba(0,255,0,1) 0%, rgba(14,213,177,1) 55%, rgba(0,212,255,1) 100%);
 }
 
 img {
-    width: 20vw;
-    height: 20vw;
+    height: 12vh;
     filter: brightness(40%);
 }
 
@@ -36,7 +35,7 @@ img {
     font-size: 1.8vh;
 }
 
-a {
+.loginBtn {
     padding: 1.5vh;
     width: 60%;
     color: white;
