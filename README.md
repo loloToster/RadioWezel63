@@ -25,7 +25,7 @@
 
 </details>
 
-<details>
+<details open>
   <summary> <img src="https://cdn-icons-png.flaticon.com/512/197/197529.png" width="13"> Polskie README</summary>
 
 # Strona główna:
