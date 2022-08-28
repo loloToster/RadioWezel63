@@ -10,27 +10,30 @@
 <img src="https://img.shields.io/badge/-mongodb-47A248?style=for-the-badge&logo=mongodb&logoColor=47A248&labelColor=151515">
 </p>
 
-<details>
-  <summary> <img src="https://cdn-icons-png.flaticon.com/512/197/197374.png" width="13"> English README</summary>
+<details open>
+  <summary> <img src="https://cdn-icons-png.flaticon.com/512/197/197374.png" width="13"> <b>English README</b></summary>
 
-# Bugs:
+### Description
 
-* Vote elements might duplicate when reviving songs from history
+RadioWęzeł63 is one of my biggest projects made for the school council in the high school that i studied at. It's a web app targeted at mobile devices that makes it easier to suggest songs for the broadcasting center. It includes: 
+* a role based authentication with users that add songs and admins that approve them
+* adding/voting system 
+* and an interafce for playing the approved songs.
 
-# ToDo:
+### Example images
 
-* lyrics analyzer
-* auto vote on added song
-* pretty README
+Main Page|Admin Panel|Player
+:-:|:-:|:-:
+![Main Page](readme_assets/english/main_page.png)|![Admin Panel](readme_assets/english/admin_panel.png)|![Player](readme_assets/english/player.png)
 
 </details>
 
 <details open>
-  <summary> <img src="https://cdn-icons-png.flaticon.com/512/197/197529.png" width="13"> Polskie README</summary>
+  <summary> <img src="https://cdn-icons-png.flaticon.com/512/197/197529.png" width="13"> <b>Polskie README</b></summary>
 
 # Strona główna:
 
-<img width="100%" src="readme_assets/main_page.png">
+<img width="100%" src="readme_assets/polish/main_page.png">
 
 Menu:\
 Dla najwyższej roli w menu są dostępne następujące opcje:
@@ -49,13 +52,13 @@ Piosenki są dodawane z youtube music i zanim będą na głównej stronie muszą
 
 Administratorzy mogą również usuwać piosenki które są na głównej stronie. Przytrzymując ikonkę jakiejkolwiek piosenki na każdej z ikonek pojawi się kosz:
 
-<img width="70%" src="readme_assets/delete_song_from_main_page.png">
+<img width="70%" src="readme_assets/polish/delete_song_from_main_page.png">
 
 klikając na kosz piosenka jest usuwana z głównej strony i pojawia się na stronie z historią.
 
 # Admin panel
 
-<img width="100%" src="readme_assets/admin_panel.png">
+<img width="100%" src="readme_assets/polish/admin_panel.png">
 
 Odrzucenie piosenki:\
 Jeżeli piosenka jest pod jakimś względem nieodpowiednia do odtworzenia należy ją usunąć tym przyciskiem.
@@ -73,7 +76,7 @@ Wczytuje tekst piosenki z google.
 
 **Ta strona może być używana przez tylko jedną osobę naraz**
 
-<img width="100%" src="readme_assets/player.png">
+<img width="100%" src="readme_assets/polish/player.png">
 
 Rozpocznij kolejkę / następna piosenka:\
 jeżeli od uruchomienia aplikacji nie została odtworzona żadana piosenka rozpoczyna odtwarzanie. Jeżeli aktualnie jest odtwarzana jakaś piosenka odtwarza następną. Piosenki które zostały odtworzone pojawiają się w historii.
@@ -90,7 +93,7 @@ Jest to tym samym co [Admin panel](#admin-panel) tylko że na stronie z odtwarza
 
 # Użytkownicy
 
-<img width="100%" src="readme_assets/users_page.png">
+<img width="100%" src="readme_assets/polish/users_page.png">
 
 Rola użytkownika:\
 W aplikacji dostępne są 4 role:
